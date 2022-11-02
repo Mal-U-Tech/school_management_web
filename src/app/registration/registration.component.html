@@ -1,0 +1,48 @@
+<div id="registration-container">
+
+  <div id="registration-form-container">
+    <div class="username container">
+      <label for="username-input">Username:</label>
+      <input id="username-input" type="text" [formControl]="username">
+    </div>
+
+    <div class="user-surname container">
+      <label for="user-surname-input">Surname:</label>
+      <input id="user-surname-input" type="text" [formControl]="userSurname">
+    </div>
+
+    <div class="user-contact container">
+      <label for="user-contact-input">Contact:</label>
+      <input id="user-contact-input" type="number" [formControl]="userContact">
+    </div>
+
+    <div class="user-email container">
+      <label for="user-email-input">Email:</label>
+      <input id="user-email-input" type="email" [formControl]="userEmail">
+    </div>
+
+    <div class="school-name container">
+      <label for="school-name-input">School Name:</label>
+      <input id="school-name-input" type="text" [formControl]="schoolName">
+    </div>
+
+    <div class="school-region container">
+      <label for="school-region-input">School Region:</label>
+      <input id="school-region-input" type="text" [formControl]="schoolRegion">
+    </div>
+
+    <div class="user-role container">
+      <label for="user-role-input">User Role:</label>
+      <input id="user-role-input" [readonly]="true" type="text" [formControl]="userRole" >
+    </div>
+
+  </div>
+<!--Register Button-->
+  <div class="register-button"><span>Register</span></div>
+
+  <div class="side-bar">
+    <div class="registration-title"><span>School Management System</span></div>
+    <a routerLink="/splash" routerLinkActive="false"><div class="login-button">Login</div></a>
+
+  </div>
+</div>
