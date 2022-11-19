@@ -2,11 +2,11 @@
   <div class="items-container" [ngStyle]="itemsContainerStyles">
     <div [ngStyle]="splashTitleStyles" class="splash-text">School Management System</div>
     <!--<div [ngStyle]="buttonContainerStyles" class="buttons-container"></div>-->
-    <div class="button login" (click)="openLoginView()"  [ngStyle]="loginButtonStyles"><span>Login</span></div>
-    <div class="button register" [ngStyle]="registerButtonStyles" ><span>Register</span></div>
+    <a routerLink="/login" routerLinkActive="active"><div class="button login" [ngStyle]="loginButtonStyles"><span>Login</span></div></a>
+    <a routerLink="/registration" routerLinkActive="active"><div class="button register" [ngStyle]="registerButtonStyles" ><span>Register</span></div></a>
   </div>
 
-  <div id="form-container" [ngStyle]="formContainerStyles">
+ <!-- <div id="form-container" >
 
     <div id="email-form-input">
       <label for="login-email" class="login label">Email:</label><br />
@@ -18,7 +18,7 @@
       <input id="login-password" [type]="visible ? 'password' : 'text'" [formControl]="password" >
     </div>
 
-    <!--For showing password-->
+    &lt;!&ndash;For showing password&ndash;&gt;
     <p><input type="checkbox" (click)="showPassword()"> Show Password</p>
   </div>
 
@@ -27,5 +27,6 @@
     <div>
       <span class="snack-bar-close" (click)="closeSnackBar()">Close</span>
     </div>
-  </div>
+  </div>-->
 </div>
+
