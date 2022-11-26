@@ -42,7 +42,7 @@ export class RegistrationComponent implements OnInit {
           userRole: this.userRole.value,
         })
         .subscribe((data: {}) => {
-          this.router.navigate(['/splash']);
+          this.router.navigate(['/school-registration']);
         });
     }
   }
