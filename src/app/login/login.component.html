@@ -1,0 +1,34 @@
+<div class="login-container">
+  <div class="items-container">
+    <div [ngStyle]="splashTitleStyles" class="splash-text">School Management System</div>
+    <!--<div [ngStyle]="buttonContainerStyles" class="buttons-container"></div>-->
+    <div (click)="submitForm()" class="button login"><span>Login</span></div>
+    <a class="button register" routerLink="/registration" routerLinkActive="active">
+      <div><span>Register</span></div>
+    </a>
+  </div>
+
+  <div id="form-container-login">
+
+    <div id="email-form-input">
+      <label class="label" for="login-email">Email:</label><br/>
+      <input [formControl]="email" id="login-email" type="email">
+    </div>
+
+    <div id="password-form-input">
+      <label class="label" for="login-password">Password:</label><br/>
+      <input [formControl]="password" [type]="visible ? 'password' : 'text'" id="login-password">
+    </div>
+
+    <!--For showing password-->
+    <p><input (click)="showPassword()" type="checkbox"> Show Password</p>
+  </div>
+
+  <div [ngStyle]="snackBarStyle" class="snack-bar">
+    <span>{{snackbarMessage}}</span>
+    <div>
+      <span (click)="closeSnackBar()" class="snack-bar-close">Close</span>
+    </div>
+  </div>
+</div>
+

@@ -3,46 +3,61 @@
   <div id="registration-form-container">
     <div class="username container">
       <label for="username-input">Username:</label>
-      <input id="username-input" type="text" [formControl]="username">
+      <input [formControl]="username" id="username-input" type="text">
     </div>
 
     <div class="user-surname container">
       <label for="user-surname-input">Surname:</label>
-      <input id="user-surname-input" type="text" [formControl]="userSurname">
+      <input [formControl]="userSurname" id="user-surname-input" type="text">
     </div>
 
     <div class="user-contact container">
       <label for="user-contact-input">Contact:</label>
-      <input id="user-contact-input" type="number" [formControl]="userContact">
+      <input [formControl]="userContact" id="user-contact-input" type="number">
     </div>
 
     <div class="user-email container">
       <label for="user-email-input">Email:</label>
-      <input id="user-email-input" type="email" [formControl]="userEmail">
+      <input [formControl]="userEmail" id="user-email-input" type="email">
     </div>
 
-    <div class="school-name container">
+    <!--<div class="school-name container">
       <label for="school-name-input">School Name:</label>
-      <input id="school-name-input" type="text" [formControl]="schoolName">
+      <input [formControl]="schoolName" id="school-name-input" type="text">
     </div>
 
     <div class="school-region container">
       <label for="school-region-input">School Region:</label>
-      <input id="school-region-input" type="text" [formControl]="schoolRegion">
+      <input [formControl]="schoolRegion" id="school-region-input" type="text">
+    </div>-->
+
+    <div class="user-password-container">
+      <label for="user-password-input">Password:</label>
+      <input [formControl]="password" [type]="visible ? 'password' : 'text'" id="user-password-input">
     </div>
 
+    <div class="user-confirm-password-container">
+      <label for="user-confirm-password-input">Confirm Password:</label>
+      <input [formControl]="confirmPassword" [type]="visible ? 'password' : 'text'" id="user-confirm-password-input">
+    </div>
+
+    <!--For showing password-->
+    <p><input (click)="showPassword()" type="checkbox"> Show Password</p>
+
     <div class="user-role container">
-      <label for="user-role-input">User Role:</label>
-      <input id="user-role-input" [readonly]="true" type="text" [formControl]="userRole" >
+      <label for="user-role-input">UserInterface Role:</label>
+      <input [formControl]="userRole" [readonly]="true" id="user-role-input" type="text">
     </div>
 
   </div>
-<!--Register Button-->
-  <div class="register-button"><span>Register</span></div>
+  <!--Register Button-->
+  <div (click)="submitForm()" class="register-button"><span>Register</span></div>
 
   <div class="side-bar">
     <div class="registration-title"><span>School Management System</span></div>
-    <a routerLink="/splash" routerLinkActive="false"><div class="login-button">Login</div></a>
+    <a routerLink="/login" routerLinkActive="false">
+      <div class="login-button">Login</div>
+    </a>
 
   </div>
 </div>

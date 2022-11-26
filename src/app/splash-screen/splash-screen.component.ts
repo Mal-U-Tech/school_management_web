@@ -45,69 +45,11 @@ export class SplashScreenComponent implements OnInit {
     animationFillMode: ""
   }
 
-  public formContainerStyles = {
-    display: "none",
-    animationName: "",
-    animationDuration: "",
-    animationFillMode: ""
-  }
-
   public snackBarStyle = {
     display: "none",
     animationName: "",
     animationDuration: "",
     animationFillMode: "",
-  }
-
-  public openLoginView() {
-    console.log('Opening login view');
-
-    if (!this.email.value?.length && this.loginButtonStyles.animationName == "") {
-      this.itemsContainerStyles = {
-        width: "25%",
-        height: "100%",
-        backgroundColor: "cornflowerblue",
-        position: "absolute",
-        animationName: "transformLeft",
-        animationDuration: "1s",
-        animationFillMode: "forwards"
-      }
-
-      this.loginButtonStyles = {
-        animationName: "buttonSlideDown",
-        animationDuration: "0.5s",
-        animationFillMode: "forwards",
-        zIndex: "1",
-        position: "absolute"
-      }
-
-      this.registerButtonStyles = {
-        animationName: "transformButton",
-        animationDuration: "1s",
-        animationFillMode: "forwards"
-      }
-
-      this.splashTitleStyles = {
-        animationName: "transformSplashText",
-        animationDuration: "0.7s",
-        animationFillMode: "forwards"
-      }
-
-      this.formContainerStyles = {
-        display: "block"
-        ,      animationName: "fadeInForm",
-        animationDuration: "2s",
-        animationFillMode: "forwards"
-      }
-    }else if(!this.email.value?.length && this.loginButtonStyles.animationName == "buttonSlideDown"/* && (this.snackBarStyle.animationName == "snackbarAnimation" || this.snackBarStyle.animationName == "")*/){
-      // show snackbar here
-      this.showSnackBar('Please fill in your Email.');
-    }else if(!this.password.value?.length && this.loginButtonStyles.animationName == "buttonSlideDown"/* && (this.snackBarStyle.animationName == "snackbarAnimation" || this.snackBarStyle.animationName == "")*/){
-      // show snackbar here
-      this.showSnackBar('Please fill in your Password.');
-    }else{
-      this.submitForm();
-    }
   }
 
   async delay(ms: number){
