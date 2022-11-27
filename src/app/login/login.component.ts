@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
     this.userApi
       .userLogin(this.email.value, this.password.value)
       .subscribe((data: {}) => {
-        this.router.navigate(['/splash']);
+        this.router.navigate(['/school-registration']);
       });
   }
 
