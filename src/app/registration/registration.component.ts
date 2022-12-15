@@ -25,12 +25,10 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {}
 
   public submitForm() {
-    console.log(
-      `Registering. \n${this.password.value} && ${this.confirmPassword.value}`
-    );
-
     if (this.password.value != this.confirmPassword.value) {
       window.alert('Passwords do not match.');
+    } else if (this.password.value == '') {
+      window.alert('Passwords are empty.');
     } else {
       this.userApi
         .userRegister({
@@ -41,8 +39,12 @@ export class RegistrationComponent implements OnInit {
           password: this.password.value,
           userRole: this.userRole.value,
         })
-        .subscribe((data: {}) => {
-          this.router.navigate(['/school-registration']);
+        .subscribe((data: any) => {
+          console.log(data.data);
+          this.router.navigate([
+            `/school-registration/${data.data._id}/${data.data.email}/${data.data.name}/${data.data.surname}/${data.data.contact}`,
+          ]);
+          // this.router.navigate(['/school-registration']);
         });
     }
   }
