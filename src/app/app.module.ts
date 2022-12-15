@@ -9,13 +9,18 @@ import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
+import { ClassnameComponent } from './classname/classname.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
   { path: 'splash', component: SplashScreenComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'school-registration', component: SchoolRegistrationComponent },
+  {
+    path: 'school-registration/:id/:email/:name/:surname/:contact',
+    component: SchoolRegistrationComponent,
+  },
+  { path: 'reg-classnames', component: ClassnameComponent },
 ];
 
 @NgModule({
@@ -25,6 +30,7 @@ const routes: Routes = [
     RegistrationComponent,
     LoginComponent,
     SchoolRegistrationComponent,
+    ClassnameComponent,
   ],
   imports: [
     BrowserModule,
