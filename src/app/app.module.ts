@@ -12,7 +12,7 @@ import { SchoolRegistrationComponent } from './school-registration/school-regist
 import { ClassnameComponent } from './classname/classname.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/splash', pathMatch: 'full' },
+  { path: '', redirectTo: '/reg-classnames', pathMatch: 'full' },
   { path: 'splash', component: SplashScreenComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
