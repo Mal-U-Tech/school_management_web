@@ -1,1 +1,38 @@
-<p>school-registration works!</p>
+<div class="school-reg-container">
+  <!--  School registration title-->
+  <div class="school-reg-title">
+    <p>School Registration</p>
+  </div>
+  <div class="line"></div>
+  <!--  School registration form-->
+  <div class="school-reg-form">
+    <!--    School name-->
+    <div class="school-name-container container">
+      <label for="school-name-input">School Name:</label><br/>
+      <input [formControl]="schoolName" id="school-name-input" type="text"/>
+    </div>
+
+    <!--    School region-->
+    <div class="school-region-container container">
+      <label for="school-region-input">School Region:</label><br/>
+      <input [formControl]="schoolRegion" id="school-region-input" type="text"/>
+    </div>
+
+    <!--    School email-->
+    <div class="school-email-container container">
+      <label for="school-email-input">School Email:</label><br/>
+      <input [formControl]="schoolEmail" id="school-email-input" type="email"/>
+    </div>
+
+    <!--    Administrator-->
+    <div class="school-administrator-container container">
+      <label for="school-administrator-input">School Administrator:</label><br/>
+      <input [formControl]="schoolAdministrator" readonly id="school-administrator-input" type="text"/>
+    </div>
+
+    <!--    Submit button-->
+    <div (click)="confirmSchoolRegistration()" class="submit-button">
+      <span>Confirm</span>
+    </div>
+  </div>
+</div>
