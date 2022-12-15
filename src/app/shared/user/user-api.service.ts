@@ -28,7 +28,7 @@ export class UserApiService {
       .pipe(retry(1), catchError(this.handleError));
   }
 
-  // HttpClient API get() method => login
+  // HttpClient API post() method => login
   userLogin(email: any, password: any): Observable<UserInterface> {
     return this.http
       .post<UserInterface>(

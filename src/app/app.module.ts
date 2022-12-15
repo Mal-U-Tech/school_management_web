@@ -1,36 +1,45 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule} from "@angular/forms";
-import { RouterModule, Routes} from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
+import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
+import { ClassnameComponent } from './classname/classname.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: '/splash', pathMatch: 'full'},
-  {path: 'splash', component: SplashScreenComponent},
-  {path: 'registration', component: RegistrationComponent},
-  {path: 'login', component: LoginComponent}
-]
+  { path: '', redirectTo: '/splash', pathMatch: 'full' },
+  { path: 'splash', component: SplashScreenComponent },
+  { path: 'registration', component: RegistrationComponent },
+  { path: 'login', component: LoginComponent },
+  {
+    path: 'school-registration/:id/:email/:name/:surname/:contact',
+    component: SchoolRegistrationComponent,
+  },
+  { path: 'reg-classnames', component: ClassnameComponent },
+];
 
 @NgModule({
   declarations: [
     AppComponent,
     SplashScreenComponent,
     RegistrationComponent,
-    LoginComponent
+    LoginComponent,
+    SchoolRegistrationComponent,
+    ClassnameComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule,
   ],
   exports: [RouterModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
