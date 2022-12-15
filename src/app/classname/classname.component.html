@@ -1,1 +1,15 @@
-<p>classname works!</p>
+<div class="container">
+    <div class="title-container"><h2>Form Input: Class Name</h2></div>
+    <p>The form below contains input elements for classnames. Click on the Add button to add a new input field.</p>
+    <div id="form-container" class="form-container">
+        <div id="input-container">
+            <input type="text" name="classname" value="" /><br />
+            <input type="text" name="classname" value="" /><br />
+            <input type="text" name="classname" value="" /><br />
+            <input type="text" name="classname" value="" /><br />
+        </div>
+
+        <button class="add button" (click)="appendInput()">Add Class +</button>
+        <button class="submit button" (click)="Geeks()">Submit</button>
+    </div>
+</div>
