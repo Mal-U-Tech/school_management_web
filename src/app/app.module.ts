@@ -13,7 +13,7 @@ import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/reg-classnames', pathMatch: 'full' },
+  { path: '', redirectTo: '/add-departments', pathMatch: 'full' },
   { path: 'splash', component: SplashScreenComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
