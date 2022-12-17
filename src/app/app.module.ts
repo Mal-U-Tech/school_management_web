@@ -10,6 +10,7 @@ import { RegistrationComponent } from './registration/registration.component';
 import { LoginComponent } from './login/login.component';
 import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
 import { ClassnameComponent } from './classname/classname.component';
+import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/reg-classnames', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
     component: SchoolRegistrationComponent,
   },
   { path: 'reg-classnames', component: ClassnameComponent },
+  { path: 'add-departments', component: AddDepartmentsComponent },
 ];
 
 @NgModule({
@@ -31,6 +33,7 @@ const routes: Routes = [
     LoginComponent,
     SchoolRegistrationComponent,
     ClassnameComponent,
+    AddDepartmentsComponent,
   ],
   imports: [
     BrowserModule,
