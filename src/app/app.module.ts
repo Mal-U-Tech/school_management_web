@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
+import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/add-departments', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   },
   { path: 'reg-classnames', component: ClassnameComponent },
   { path: 'add-departments', component: AddDepartmentsComponent },
+  { path: 'add-subjects', component: AddSubjectsComponent },
 ];
 
 @NgModule({
@@ -34,6 +36,7 @@ const routes: Routes = [
     SchoolRegistrationComponent,
     ClassnameComponent,
     AddDepartmentsComponent,
+    AddSubjectsComponent,
   ],
   imports: [
     BrowserModule,
