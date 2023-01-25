@@ -31,19 +31,24 @@ export class AddDepartmentsComponent implements OnInit {
 
   submitDepartments() {
     var input = this.document.getElementsByName('department');
-    var departmentsArray = [];
+    var departmentsArray: { name: string }[] = [];
+    var paramArray: string[] = [];
 
     for (var i = 0; i < input.length; i++) {
       var a = input[i] as HTMLInputElement;
       departmentsArray.push({ name: a.value });
+      paramArray.push(a.value);
     }
 
     // make api call
     this.apiService
       .postDepartmentsArray({ names: departmentsArray })
       .subscribe((data: any) => {
-        console.log(data);
-        // this.router.navigate(['/']);
+        console.log(data.data);
+        this.router.navigate([`/add-subjects`], {
+          queryParams: { departments: JSON.stringify(data.data) },
+          queryParamsHandling: 'merge',
+        });
       });
   }
 }

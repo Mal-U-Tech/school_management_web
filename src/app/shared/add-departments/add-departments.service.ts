@@ -59,7 +59,7 @@ export class AddDepartmentsService {
   // HttpClient API get() => view all departments
   viewAllDepartments(): Observable<AddDepartments> {
     return this.http
-      .get<AddDepartments>(this.apiUrl + 'view-all')
+      .get<AddDepartments>(this.apiUrl + '/view-all')
       .pipe(retry(1), catchError(this.handleError));
   }
 
