@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="title-container"><h2>Form Input: Subjects</h2></div>
+  <p>Add the subjects for each department respectively.</p>
+  <div id="builder" class="form-container">
+    <div *ngFor="let department of elements; let i = index">
+      <div id={{i}}>
+        <h2 class="dept">{{i + 1}}: {{department.name}}</h2>
+        <input type="text" value="" placeholder="Subject" name=subject_{{i}}/>
+        <input placeholder="Level: Secondary/High School" type="text" value="" name="subject_{{i}}"/><br/>
+      </div>
+      <button (click)="addIn(i)">Add + </button>
+
+    </div>
+    <button class="submit" (click)="addSubjects()">Submit</button>
+  </div>
+</div>
