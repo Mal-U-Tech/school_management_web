@@ -71,10 +71,12 @@ export class LoginComponent implements OnInit {
         // console.log(`${typeof data}`)
         // console.log(`${data}`)
 
-        console.log(`This is data from server: ${data.data._id}`);
+        console.log(`This is data from server: ${data._id}`);
         this.router.navigate([
-          `/school-registration/${data.data._id}/${data.data.email}/${data.data.name}/${data.data.surname}/${data.data.contact}`,
+          `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
         ]);
+
+        // route to home, once system is done
       });
   }
 

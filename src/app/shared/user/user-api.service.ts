@@ -7,7 +7,7 @@ import { UserInterface } from './user.interface';
   providedIn: 'root',
 })
 export class UserApiService {
-  apiUrl = 'http://localhost:3000/user';
+  apiUrl = 'http://localhost:2000/user';
   // http options
   httpOptions = {
     headers: new HttpHeaders({
