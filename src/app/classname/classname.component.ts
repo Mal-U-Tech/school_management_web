@@ -32,7 +32,7 @@ export class ClassnameComponent implements OnInit {
       .postClassnamesArray({ names: classnamesArray })
       .subscribe((data) => {
         console.log(data);
-        // this.router.navigate(['/']);
+        this.router.navigate(['/add-departments']);
       });
   }
 

@@ -57,7 +57,7 @@ export class SchoolRegistrationComponent implements OnInit {
         email: this.schoolEmail.value,
       })
       .subscribe((data: any) => {
-        this.router.navigate([`/splash`]);
+        this.router.navigate([`/reg-classnames`]);
       });
   }
 }

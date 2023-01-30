@@ -32,17 +32,18 @@ export class RegistrationComponent implements OnInit {
     } else {
       this.userApi
         .userRegister({
-          name: this.username.value,
-          surname: this.userSurname.value,
-          contact: this.userContact.value,
-          email: this.userEmail.value,
-          password: this.password.value,
-          userRole: this.userRole.value,
+          name: this.username.value!.toString(),
+          surname: this.userSurname.value!.toString(),
+          contact: this.userContact.value!.toString(),
+          email: this.userEmail.value!.toString(),
+          password: this.password.value!.toString(),
+          // user_role: this.userRole.value!.toString(),
         })
         .subscribe((data: any) => {
-          console.log(data.data);
+          console.log('Return from backend:');
+          console.log(data);
           this.router.navigate([
-            `/school-registration/${data.data._id}/${data.data.email}/${data.data.name}/${data.data.surname}/${data.data.contact}`,
+            `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
           ]);
           // this.router.navigate(['/school-registration']);
         });

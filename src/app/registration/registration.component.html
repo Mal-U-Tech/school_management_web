@@ -1,24 +1,27 @@
 <div id="registration-container">
-
   <div id="registration-form-container">
     <div class="username container">
       <label for="username-input">Username:</label>
-      <input [formControl]="username" id="username-input" type="text">
+      <input [formControl]="username" id="username-input" type="text" />
     </div>
 
     <div class="user-surname container">
       <label for="user-surname-input">Surname:</label>
-      <input [formControl]="userSurname" id="user-surname-input" type="text">
+      <input [formControl]="userSurname" id="user-surname-input" type="text" />
     </div>
 
     <div class="user-contact container">
       <label for="user-contact-input">Contact:</label>
-      <input [formControl]="userContact" id="user-contact-input" type="number">
+      <input
+        [formControl]="userContact"
+        id="user-contact-input"
+        type="number"
+      />
     </div>
 
     <div class="user-email container">
       <label for="user-email-input">Email:</label>
-      <input [formControl]="userEmail" id="user-email-input" type="email">
+      <input [formControl]="userEmail" id="user-email-input" type="email" />
     </div>
 
     <!--<div class="school-name container">
@@ -33,31 +36,44 @@
 
     <div class="user-password-container">
       <label for="user-password-input">Password:</label>
-      <input [formControl]="password" [type]="visible ? 'password' : 'text'" id="user-password-input">
+      <input
+        [formControl]="password"
+        [type]="visible ? 'password' : 'text'"
+        id="user-password-input"
+      />
     </div>
 
     <div class="user-confirm-password-container">
       <label for="user-confirm-password-input">Confirm Password:</label>
-      <input [formControl]="confirmPassword" [type]="visible ? 'password' : 'text'" id="user-confirm-password-input">
+      <input
+        [formControl]="confirmPassword"
+        [type]="visible ? 'password' : 'text'"
+        id="user-confirm-password-input"
+      />
     </div>
 
     <!--For showing password-->
-    <p><input (click)="showPassword()" type="checkbox"> Show Password</p>
+    <p><input (click)="showPassword()" type="checkbox" /> Show Password</p>
 
     <div class="user-role container">
-      <label for="user-role-input">UserInterface Role:</label>
-      <input [formControl]="userRole" [readonly]="true" id="user-role-input" type="text">
+      <label for="user-role-input">User Role:</label>
+      <input
+        [formControl]="userRole"
+        [readonly]="true"
+        id="user-role-input"
+        type="text"
+      />
     </div>
-
   </div>
   <!--Register Button-->
-  <div (click)="submitForm()" class="register-button"><span>Register</span></div>
+  <div (click)="submitForm()" class="register-button">
+    <span>Register</span>
+  </div>
 
   <div class="side-bar">
     <div class="registration-title"><span>School Management System</span></div>
     <a routerLink="/login" routerLinkActive="false">
       <div class="login-button">Login</div>
     </a>
-
   </div>
 </div>

@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class ClassnameApiService {
-  apiUrl: string = 'http://localhost:3000/classname';
+  apiUrl: string = 'http://localhost:2000/classname';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };

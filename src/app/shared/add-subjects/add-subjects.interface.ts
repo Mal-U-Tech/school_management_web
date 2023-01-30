@@ -5,5 +5,5 @@ export interface SubjectsInterface {
 }
 
 export interface SubjectsArrayInterface {
-  subjects: [SubjectsInterface];
+  subjects: Array<SubjectsInterface>;
 }

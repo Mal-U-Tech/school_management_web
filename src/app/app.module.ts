@@ -14,7 +14,7 @@ import { AddDepartmentsComponent } from './add-departments/add-departments.compo
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/add-departments', pathMatch: 'full' },
+  { path: '', redirectTo: '/splash', pathMatch: 'full' },
   { path: 'splash', component: SplashScreenComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
