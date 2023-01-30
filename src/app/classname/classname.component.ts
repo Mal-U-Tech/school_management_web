@@ -30,9 +30,9 @@ export class ClassnameComponent implements OnInit {
     // make api call via service
     this.apiService
       .postClassnamesArray({ names: classnamesArray })
-      .subscribe((data) => {
+      .subscribe((data: any) => {
         console.log(data);
-        // this.router.navigate(['/']);
+        this.router.navigate(['/add-departments']);
       });
   }
 
