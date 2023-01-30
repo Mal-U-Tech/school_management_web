@@ -49,15 +49,17 @@ export class SchoolRegistrationComponent implements OnInit {
       `${this.schoolName.value} ${this.schoolRegion.value} ${this.schoolEmail.value} ${this.schoolAdministrator.value}`
     );
 
-    this.schoolRegApi
-      .postSchoolInfo({
-        name: this.schoolName.value,
-        region: this.schoolRegion.value,
-        administrators: { user: this.id },
-        email: this.schoolEmail.value,
-      })
-      .subscribe((data: any) => {
-        this.router.navigate([`/splash`]);
-      });
+    let body = {
+      name: this.schoolName.value,
+      region: this.schoolRegion.value,
+      administrators: { user: this.id },
+      email: this.schoolEmail.value,
+    };
+
+    console.log(JSON.stringify(body));
+    this.schoolRegApi.postSchoolInfo(body).subscribe((data: any) => {
+      console.log(data);
+      this.router.navigate([`/reg-classnames`]);
+    });
   }
 }

@@ -7,7 +7,7 @@ import { SchoolRegInterface } from './school-reg.interface';
   providedIn: 'root',
 })
 export class SchoolRegApiService {
-  apiUrl: string = 'http://localhost:3000/school-info';
+  apiUrl: string = 'http://localhost:2000/school-info';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
