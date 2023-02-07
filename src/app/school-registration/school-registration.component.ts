@@ -48,7 +48,7 @@ export class SchoolRegistrationComponent implements OnInit {
     console.log(
       `${this.schoolName.value} ${this.schoolRegion.value} ${this.schoolEmail.value} ${this.schoolAdministrator.value}`
     );
-
+    
     this.schoolRegApi
       .postSchoolInfo({
         name: this.schoolName.value,

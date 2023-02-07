@@ -3,5 +3,5 @@ export interface ClassnameInterface {
 }
 
 export interface ClassnameArrayInterface {
-  names: ClassnameInterface;
+  names: Array<ClassnameInterface>;
 }
