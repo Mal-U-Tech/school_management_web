@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class AddDepartmentsService {
-  apiUrl: string = 'http://localhost:3000/departments';
+  apiUrl: string = 'http://localhost:2000/departments';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };

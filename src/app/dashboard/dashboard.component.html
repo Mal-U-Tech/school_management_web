@@ -1,0 +1,66 @@
+<!-- <div class="dashboard-container"> -->
+<!--   <div class="navigation-drawer"> -->
+<!--     <div class="school-info-card"> -->
+<!--       <span class="school-name-title">{{ schoolName }}</span -->
+<!--       ><br /> -->
+<!--       <span class="school-region">{{ schoolRegion }}</span> -->
+<!--     </div> -->
+<!--     <div class="dashboard-buttons"> -->
+<!--       <div *ngFor="let button of buttons"> -->
+<!--         <app-nav-button [buttonTitle]="button.title"></app-nav-button> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!--   <div class="body"> -->
+<!--     <div class="top-bar"> -->
+<!--       <div class="hamburgher-icon"> -->
+<!--         <div></div> -->
+<!--         <div></div> -->
+<!--         <div></div> -->
+<!--       </div> -->
+<!---->
+<!--       <div class="top-bar-title"> -->
+<!--         <span class="username">{{ username }}</span> -->
+<!--         <span class="role"> ({{ role }})</span> -->
+<!--       </div> -->
+<!--     </div> -->
+<!---->
+<!--     <div class="body-content"> -->
+<!--       <global-loader -->
+<!--         [messageLoader]="loaderMessage" -->
+<!--         [showLoader]="showLoader" -->
+<!--       ></global-loader> -->
+<!---->
+<!--       <!-- <br /> -->
+<!--       <!-- <button (click)="loader()">Click Me</button> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
+
+<div class="content-wrap" igxLayout>
+  <igx-nav-drawer id="navigation" #drawer [isOpen]="true" [pinThreshold]="0">
+    <ng-template igxDrawer>
+      <nav>
+        <span igxDrawerItem [isHeader]="true">Components</span>
+        <span
+          *ngFor="let item of navItems"
+          igxDrawerItem
+          [active]="item.text === selected"
+          igxRipple
+          (click)="navigate(item)"
+        >
+          <igx-icon family="material">{{ item.name }}</igx-icon>
+          <span>{{ item.text }}</span>
+        </span>
+      </nav>
+    </ng-template>
+  </igx-nav-drawer>
+  <main igxFlex>
+    <!-- app content -->
+    <span igxButton="icon" igxToggleAction="navigation">
+      <igx-icon family="material">menu</igx-icon>
+    </span>
+
+    <h5>{{ selected }} content.</h5>
+  </main>
+</div>

@@ -3,5 +3,5 @@ export interface AddDepartments {
 }
 
 export interface AddDepartmentsArray {
-  names: [AddDepartments];
+  names: Array<AddDepartments>;
 }

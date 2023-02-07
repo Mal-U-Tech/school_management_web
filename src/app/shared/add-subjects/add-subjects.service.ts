@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class AddSubjectsService {
-  apiUrl = 'http://localhost:3000/subjects';
+  apiUrl = 'http://localhost:2000/subjects';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };

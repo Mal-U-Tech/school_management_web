@@ -22,7 +22,7 @@ export class AddDepartmentsComponent implements OnInit {
     // console.log(container.a);
     let input = this.document.createElement('input');
     input.type = 'text';
-    input.name = 'classname';
+    input.name = 'department';
     input.style.cssText =
       'outline:none;margin:5px 0 5px 0;height:25px;font-size:15pt';
     container?.appendChild(input);
