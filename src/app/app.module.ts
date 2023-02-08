@@ -12,6 +12,9 @@ import { SchoolRegistrationComponent } from './school-registration/school-regist
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -43,6 +46,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
     HttpClientModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   exports: [RouterModule],
   providers: [],
