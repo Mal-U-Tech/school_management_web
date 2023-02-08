@@ -1,7 +1,27 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import {
+  FormControl,
+  FormGroupDirective,
+  NgForm,
+  Validators,
+} from '@angular/forms';
 import { UserApiService } from '../shared/user/user-api.service';
 import { Router } from '@angular/router';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(
+    control: FormControl | null,
+    form: FormGroupDirective | NgForm | null
+  ): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(
+      control &&
+      control.invalid &&
+      (control.dirty || control.touched || isSubmitted)
+    );
+  }
+}
 
 @Component({
   selector: 'app-login',
@@ -51,9 +71,10 @@ export class LoginComponent implements OnInit {
   /*
    *  Form control variable : Reactive Forms
    * */
-  public email = new FormControl('');
-  public password = new FormControl('');
-  public visible = true;
+  public email = new FormControl('', [Validators.required, Validators.email]);
+  public password = new FormControl('', [Validators.required]);
+  public visible = false;
+  public matcher = new MyErrorStateMatcher();
 
   constructor(public userApi: UserApiService, public router: Router) {}
 
@@ -78,6 +99,10 @@ export class LoginComponent implements OnInit {
 
         // route to home, once system is done
       });
+  }
+
+  public navToRegister() {
+    this.router.navigate([`/registration`]);
   }
 
   addUser() {}
