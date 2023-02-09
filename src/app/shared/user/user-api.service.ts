@@ -87,7 +87,7 @@ export class UserApiService {
       errorMessage = `Error: ${error.error.message}`;
     }
 
-    window.alert(errorMessage);
+    // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
     });

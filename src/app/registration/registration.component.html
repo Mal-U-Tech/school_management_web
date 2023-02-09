@@ -1,79 +1,136 @@
 <div id="registration-container">
+  <h1 color="primary" class="mat-typography splash-text">
+    School Management System
+  </h1>
+
   <div id="registration-form-container">
-    <div class="username container">
-      <label for="username-input">Username:</label>
-      <input [formControl]="username" id="username-input" type="text" />
-    </div>
+    <form class="form-container">
+      <!-- First name form field -->
+      <mat-form-field class="username container first-name">
+        <mat-label>First name</mat-label>
+        <input [formControl]="username" type="text" matInput />
 
-    <div class="user-surname container">
-      <label for="user-surname-input">Surname:</label>
-      <input [formControl]="userSurname" id="user-surname-input" type="text" />
-    </div>
+        <mat-error *ngIf="username.hasError('required')"
+          >First name is <strong>required</strong></mat-error
+        >
+      </mat-form-field>
 
-    <div class="user-contact container">
-      <label for="user-contact-input">Contact:</label>
-      <input
-        [formControl]="userContact"
-        id="user-contact-input"
-        type="number"
-      />
-    </div>
+      <!-- Surname form field -->
+      <mat-form-field class="user-surname container surname">
+        <mat-label>Surname</mat-label>
+        <input [formControl]="userSurname" type="text" matInput />
+        <mat-error *ngIf="userSurname.hasError('required')"
+          >Surname is <strong>required</strong></mat-error
+        >
+      </mat-form-field>
 
-    <div class="user-email container">
-      <label for="user-email-input">Email:</label>
-      <input [formControl]="userEmail" id="user-email-input" type="email" />
-    </div>
+      <!-- Contact form field -->
+      <mat-form-field class="user-contact container contact">
+        <mat-label>Contact</mat-label>
+        <input [formControl]="userContact" type="tel" matInput />
+        <mat-error *ngIf="userContact.hasError('required')">
+          Contact is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <!--<div class="school-name container">
-      <label for="school-name-input">School Name:</label>
-      <input [formControl]="schoolName" id="school-name-input" type="text">
-    </div>
+      <!-- Email form field -->
+      <mat-form-field class="user-email container contact">
+        <mat-label>Email</mat-label>
+        <input
+          [formControl]="userEmail"
+          type="email"
+          matInput
+          [errorStateMatcher]="matcher"
+          placeholder="mail@example.com"
+        />
+        <mat-error
+          *ngIf="userEmail.hasError('email') && !userEmail.hasError('required')"
+        >
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="userEmail.hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
 
-    <div class="school-region container">
-      <label for="school-region-input">School Region:</label>
-      <input [formControl]="schoolRegion" id="school-region-input" type="text">
-    </div>-->
+      <!-- User role form field -->
+      <mat-form-field class="user-role container">
+        <mat-label>User Role</mat-label>
+        <input
+          matInput
+          [formControl]="userRole"
+          type="text"
+          [readonly]="true"
+        />
+      </mat-form-field>
+    </form>
 
-    <div class="user-password-container">
-      <label for="user-password-input">Password:</label>
-      <input
-        [formControl]="password"
-        [type]="visible ? 'password' : 'text'"
-        id="user-password-input"
-      />
-    </div>
+    <!-- Passwords form group -->
+    <form [formGroup]="passwordForm" class="form-group">
+      <!-- Password form field -->
+      <mat-form-field class="user-password container password">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          formControlName="password"
+          [type]="visible ? 'text' : 'password'"
+        />
+        <mat-icon matSuffix style="cursor: pointer" (click)="showPassword()">
+          {{ !visible ? "visibility" : "visibility_off" }}
+        </mat-icon>
+        <mat-hint>Password should be at least 6 characters long</mat-hint>
+        <mat-error *ngIf="passwordForm.get('password')!.hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
+        <mat-error *ngIf="passwordForm.get('password')!.hasError('pattern')">
+          Password should have a capital letter and a number as part of it
+        </mat-error>
+      </mat-form-field>
 
-    <div class="user-confirm-password-container">
-      <label for="user-confirm-password-input">Confirm Password:</label>
-      <input
-        [formControl]="confirmPassword"
-        [type]="visible ? 'password' : 'text'"
-        id="user-confirm-password-input"
-      />
-    </div>
+      <!-- Confirm password form field -->
+      <mat-form-field class="user-confirm-password container confirm-password">
+        <mat-label>Confirm Password</mat-label>
+        <input
+          matInput
+          formControlName="confirmPassword"
+          [type]="confirmVisible ? 'text' : 'password'"
+        />
+        <mat-icon
+          matSuffix
+          style="cursor: pointer"
+          (click)="showConfirmPassword()"
+        >
+          {{ !confirmVisible ? "visibility" : "visibility_off" }}
+        </mat-icon>
+        <mat-error
+          *ngIf="passwordForm.get('confirmPassword')!.hasError('required')"
+        >
+          Confirmation password is <strong>required</strong>
+        </mat-error>
+        <mat-error
+          *ngIf="passwordForm.get('confirmPassword')!.hasError('matching')"
+        >
+          Passwords must match.
+        </mat-error>
+      </mat-form-field>
+    </form>
+    <!-- Buttons container -->
+    <div class="buttons-container">
+      <!-- login button -->
+      <button class="login-button-material" (click)="navToLogin()" mat-button>
+        Login instead
+      </button>
 
-    <!--For showing password-->
-    <p><input (click)="showPassword()" type="checkbox" /> Show Password</p>
-
-    <div class="user-role container">
-      <label for="user-role-input">User Role:</label>
-      <input
-        [formControl]="userRole"
-        [readonly]="true"
-        id="user-role-input"
-        type="text"
-      />
+      <!-- Register button -->
+      <button
+        class="register-button-material"
+        (click)="submitForm()"
+        mat-raised-button
+        color="primary"
+      >
+        Register
+      </button>
     </div>
   </div>
-  <!--Register Button-->
-  <div (click)="submitForm()" class="register-button">
-    <span>Register</span>
-  </div>
-
-  <div class="side-bar">
-    <div class="registration-title"><span>School Management System</span></div>
-    <a routerLink="/login" routerLinkActive="false">
-      <div class="login-button">Login</div>
-    </a>
-  </div>
+  <div class="add-space"></div>
 </div>

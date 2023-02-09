@@ -1,136 +1,197 @@
-@font-face
-  font-family: "Gold Leaf"
-  src: url("../../assets/GoldleafBoldPersonalUseBold-eZ4dO.ttf")
+// @font-face
+//   font-family: "Gold Leaf"
+//   src: url("../../assets/GoldleafBoldPersonalUseBold-eZ4dO.ttf")
+//
+// @font-face
+//   font-family: "Love Me"
+//   src: url("../../assets/KgDoYouLoveMeRegular-1V4e.ttf")
+//
+// $titleFont: "Gold Leaf", serif
+//
+// div
+//   font-family: $titleFont
+//
+// div#registration-container
+//   width: 100%
+//   height: 120vh
+//   z-index: 10
+//   position: relative
+//   background-color: lightblue
+//   display: block
+//   background-image: url("../../assets/compass.jpg")
+//   background-repeat: repeat
+//
+//
+// .side-bar
+//   width: 30%
+//   height: 50%
+//   background-color: cornflowerblue
+//   position: absolute
+//   right: 7%
+//   top: 22%
+//   display: block
+//   text-align: center
+//
+// .login-button
+//   position: relative
+//   top: 20%
+//   margin: auto
+//   padding: 21px 45px 21px 45px
+//   background-color: whitesmoke
+//   font-family: "Love Me", serif
+//   font-size: 20pt
+//   border-radius: 20px
+//   display: block
+//   width: 140px
+//
+// .login-button:hover
+//   cursor: pointer
+//   z-index: 10
+//   box-shadow: 5px 5px 10px #000000
+//
+// .register-button
+//   position: relative
+//   top: 8%
+//   left: 28%
+//   padding: 21px 45px 21px 45px
+//   background-color: cornflowerblue
+//   color: white
+//   font-family: "Love Me", serif
+//   font-size: 20pt
+//   border-radius: 20px
+//
+//   display: block
+//   width: 140px
+//   z-index: 10
+//   text-align: center
+//
+// a
+//   color: inherit
+//   text-decoration: none
+//
+// .register-button:hover
+//   cursor: pointer
+//   z-index: 10
+//   box-shadow: 5px 5px 10px #000000
+//
+// a
+//   background-color: green
+//   z-index: 12
+//
+// .registration-title
+//   position: relative
+//   top: 17%
+//   font-size: 40pt
+//   display: block
+//   justify-content: center
+//   z-index: 10
+//   margin: auto
+//   font-family: "Love Me", serif
+//   width: 45%
+//
+// #registration-form-container
+//   position: relative
+//   width: 40%
+//   background-color: whitesmoke
+//   top: 5%
+//   left: 14%
+//   padding: 14px
+//   border-radius: 12px
+//   border: solid 2px black
+//
+// input[type=text], input[type=password], input[type=email], input[type=number]
+//   width: 100%
+//   // height: 35px
+//   // font-family: 'Gold Leaf', serif
+//   // font-size: 20pt
+//   padding: 2px
+//
+// .user-password-container, .user-confirm-password-container
+//   // width: 40%
+//   margin: auto
+//
+// #registration-form-container > p
+//   width: 40%
+//   margin: 7px auto 0 auto
+//   text-align: left
+//   font-size: 20pt
+//
+// input[type=checkbox]
+//   width: 20px
+//   height: 20px
+//
+// input[type = number]
+//   font-family: "Love Me", serif
+//
+// label
+//   font-size: 25pt
+//   display: block
+//   margin-right: 24px
+//
+// .container
+//   text-align: left
+//   // width: 40%
+//   margin: auto
+//   display: block
 
-@font-face
-  font-family: "Love Me"
-  src: url("../../assets/KgDoYouLoveMeRegular-1V4e.ttf")
-
-$titleFont: "Gold Leaf", serif
-
-div
-  font-family: $titleFont
-
-div#registration-container
+// material theme styles
+#registration-container
   width: 100%
-  height: 120vh
-  z-index: 10
-  position: relative
-  background-color: lightblue
-  display: block
-  background-image: url("../../assets/compass.jpg")
-  background-repeat: repeat
-
-
-.side-bar
-  width: 30%
-  height: 50%
-  background-color: cornflowerblue
-  position: absolute
-  right: 7%
-  top: 22%
-  display: block
-  text-align: center
-
-.login-button
-  position: relative
-  top: 20%
-  margin: auto
-  padding: 21px 45px 21px 45px
-  background-color: whitesmoke
-  font-family: "Love Me", serif
-  font-size: 20pt
-  border-radius: 20px
-  display: block
-  width: 140px
-
-.login-button:hover
-  cursor: pointer
-  z-index: 10
-  box-shadow: 5px 5px 10px #000000
-
-.register-button
-  position: relative
-  top: 8%
-  left: 28%
-  padding: 21px 45px 21px 45px
-  background-color: cornflowerblue
-  color: white
-  font-family: "Love Me", serif
-  font-size: 20pt
-  border-radius: 20px
-
-  display: block
-  width: 140px
-  z-index: 10
-  text-align: center
-
-a
-  color: inherit
-  text-decoration: none
-
-.register-button:hover
-  cursor: pointer
-  z-index: 10
-  box-shadow: 5px 5px 10px #000000
-
-a
-  background-color: green
-  z-index: 12
-
-.registration-title
-  position: relative
-  top: 17%
-  font-size: 40pt
-  display: block
-  justify-content: center
-  z-index: 10
-  margin: auto
-  font-family: "Love Me", serif
-  width: 45%
+  height: 100%
 
 #registration-form-container
-  position: relative
   width: 40%
-  background-color: whitesmoke
-  top: 5%
-  left: 14%
-  padding: 14px
-  border-radius: 12px
-  border: solid 2px black
-
-input[type=text], input[type=password], input[type=email], input[type=number]
-  width: 100%
-  height: 35px
-  font-family: 'Gold Leaf', serif
-  font-size: 20pt
-  padding: 2px
-
-.user-password-container, .user-confirm-password-container
-  width: 40%
+  height: auto
+  background-color: #eee
   margin: auto
+  padding: 20px
+  border-radius: 12px
+  position: relative
+  top: 15%
 
-#registration-form-container > p
-  width: 40%
-  margin: 7px auto 0 auto
-  text-align: left
-  font-size: 20pt
-
-input[type=checkbox]
-  width: 20px
-  height: 20px
-
-input[type = number]
-  font-family: "Love Me", serif
-
-label
-  font-size: 25pt
-  display: block
-  margin-right: 24px
+.form-container
+  min-width: 120px
+  max-width: 500px
+  width: 100%
+  position: relative
+  margin: 20px auto
 
 .container
-  text-align: left
-  width: 40%
-  margin: auto
-  display: block
+  width: 100%
+  margin: 7px auto
 
+.form-group
+  // background-color: red
+  min-width: 120px
+  max-width: 500px
+  width: 100%
+  margin: -3% auto
+
+.buttons-container
+  // background-color: green
+  text-align: right
+  max-width: 500px
+  margin: auto
+
+.register-button-material
+  min-width: 90px
+  max-width: 170px
+  width: 100%
+  margin: 12px
+
+.splash-text
+  font-family: Calibri
+  font-size: 6rem
+  margin: auto
+  background-color: cornflowerblue
+  text-align: center
+  position: relative
+  top: 12%
+  height: 36px
+
+.add-space
+  height: 240px
+  width: 100%
+  background-color: transparent
+  position: relative
+  z-index: -2

@@ -53,18 +53,12 @@
             (click)="submitForm()"
             mat-raised-button
             color="primary"
+            type="button"
           >
             Login
           </button>
         </div>
       </form>
-    </div>
-
-    <div [ngStyle]="snackBarStyle" class="snack-bar">
-      <span>{{ snackbarMessage }}</span>
-      <div>
-        <span (click)="closeSnackBar()" class="snack-bar-close">Close</span>
-      </div>
     </div>
   </div>
 </div>
