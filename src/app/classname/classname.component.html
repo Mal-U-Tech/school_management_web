@@ -1,15 +1,45 @@
 <div class="container">
-    <div class="title-container"><h2>Form Input: Class Name</h2></div>
-    <p>The form below contains input elements for classnames. Click on the Add button to add a new input field.</p>
-    <div id="form-container" class="form-container">
-        <div id="input-container">
-            <input type="text" name="classname" value="" /><br />
-            <input type="text" name="classname" value="" /><br />
-            <input type="text" name="classname" value="" /><br />
-            <input type="text" name="classname" value="" /><br />
-        </div>
+  <div class="mat-typography title-container">
+    <span>Form Input: Streams</span>
+  </div>
+  <p class="mat-typography instructions">
+    The form below contains input elements for streams (classnames). Click on
+    the <strong>Add Class +</strong> button to add a new input field.
+  </p>
+  <div id="form-container" class="form-container">
+    <form id="input-container" class="form">
+      <div *ngFor="let inside of classNames">
+        <mat-form-field class="form-field">
+          <mat-label>Name</mat-label>
+          <input
+            type="text"
+            name="classname"
+            matInput
+            placeholder="e.g. Form 1A"
+            [ngModel]="inside.name"
+            (ngModelChange)="inside.name = $event"
+          />
+        </mat-form-field>
+      </div>
+    </form>
 
-        <button class="add button" (click)="appendInput()">Add Class +</button>
-        <button class="submit button" (click)="Geeks()">Submit</button>
+    <div class="button-container">
+      <button
+        class="add button"
+        mat-button
+        color="primary"
+        (click)="appendInput()"
+      >
+        Add Class +
+      </button>
+      <button
+        class="submit button"
+        mat-raised-button
+        color="primary"
+        (click)="Geeks()"
+      >
+        Submit
+      </button>
     </div>
+  </div>
 </div>
