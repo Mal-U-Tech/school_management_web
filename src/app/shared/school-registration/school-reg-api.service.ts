@@ -64,10 +64,10 @@ export class SchoolRegApiService {
       errorMessage = error.error.message;
     } else {
       // Get server side error
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = error.error.message;
     }
 
-    window.alert(errorMessage);
+    // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
     });

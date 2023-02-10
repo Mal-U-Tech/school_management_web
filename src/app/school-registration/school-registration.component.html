@@ -1,38 +1,90 @@
 <div class="school-reg-container">
   <!--  School registration title-->
-  <div class="school-reg-title">
-    <p>School Registration</p>
+  <div class="mat-typography school-reg-title">
+    <span>School Registration</span>
   </div>
-  <div class="line"></div>
+  <!-- <div class="line"></div> -->
   <!--  School registration form-->
   <div class="school-reg-form">
-    <!--    School name-->
-    <div class="school-name-container container">
-      <label for="school-name-input">School Name:</label><br/>
-      <input [formControl]="schoolName" id="school-name-input" type="text"/>
-    </div>
+    <form class="registration-form">
+      <!-- School name -->
+      <mat-form-field class="container school-name">
+        <mat-label>School Name</mat-label>
+        <input type="text" matInput [formControl]="schoolName" />
+        <mat-icon matIconPrefix>work</mat-icon>
+      </mat-form-field>
 
-    <!--    School region-->
-    <div class="school-region-container container">
-      <label for="school-region-input">School Region:</label><br/>
-      <input [formControl]="schoolRegion" id="school-region-input" type="text"/>
-    </div>
+      <!-- School Region -->
+      <mat-form-field class="container school-region">
+        <mat-label>School Region</mat-label>
+        <input type="text" matInput [formControl]="schoolRegion" />
+        <mat-icon matIconPrefix>location_on</mat-icon>
+      </mat-form-field>
 
-    <!--    School email-->
-    <div class="school-email-container container">
-      <label for="school-email-input">School Email:</label><br/>
-      <input [formControl]="schoolEmail" id="school-email-input" type="email"/>
-    </div>
+      <!-- School Email -->
+      <mat-form-field class="container school-email">
+        <mat-label>School Email</mat-label>
+        <input type="email" matInput [formControl]="schoolEmail" />
+        <mat-icon matIconPrefix>email</mat-icon>
+      </mat-form-field>
 
-    <!--    Administrator-->
-    <div class="school-administrator-container container">
-      <label for="school-administrator-input">School Administrator:</label><br/>
-      <input [formControl]="schoolAdministrator" readonly id="school-administrator-input" type="text"/>
-    </div>
+      <!-- Administrator -->
+      <mat-form-field class="container administrator">
+        <mat-label>Administrator</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="schoolAdministrator"
+          readonly
+        />
+        <mat-icon matIconPrefix>person</mat-icon>
+      </mat-form-field>
 
-    <!--    Submit button-->
-    <div (click)="confirmSchoolRegistration()" class="submit-button">
-      <span>Confirm</span>
-    </div>
+      <button
+        mat-raised-button
+        (click)="confirmSchoolRegistration()"
+        type="button"
+        color="primary"
+      >
+        Confirm
+      </button>
+    </form>
+    <!-- <div class="school-name-container container"> -->
+    <!--   <label for="school-name-input">School Name:</label><br /> -->
+    <!--   <input [formControl]="schoolName" id="school-name-input" type="text" /> -->
+    <!-- </div> -->
+    <!---->
+    <!-- <!--    School region-->
+    <!-- <div class="school-region-container container"> -->
+    <!--   <label for="school-region-input">School Region:</label><br /> -->
+    <!--   <input -->
+    <!--     [formControl]="schoolRegion" -->
+    <!--     id="school-region-input" -->
+    <!--     type="text" -->
+    <!--   /> -->
+    <!-- </div> -->
+    <!---->
+    <!-- <!--    School email-->
+    <!-- <div class="school-email-container container"> -->
+    <!--   <label for="school-email-input">School Email:</label><br /> -->
+    <!--   <input [formControl]="schoolEmail" id="school-email-input" type="email" /> -->
+    <!-- </div> -->
+    <!---->
+    <!-- <!--    Administrator-->
+    <!-- <div class="school-administrator-container container"> -->
+    <!--   <label for="school-administrator-input">School Administrator:</label -->
+    <!--   ><br /> -->
+    <!--   <input -->
+    <!--     [formControl]="schoolAdministrator" -->
+    <!--     readonly -->
+    <!--     id="school-administrator-input" -->
+    <!--     type="text" -->
+    <!--   /> -->
+    <!-- </div> -->
+    <!---->
+    <!-- <!--    Submit button-->
+    <!-- <div (click)="confirmSchoolRegistration()" class="submit-button"> -->
+    <!--   <span>Confirm</span> -->
+    <!-- </div> -->
   </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchoolRegApiService } from '../shared/school-registration/school-reg-api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-school-registration',
@@ -17,7 +18,8 @@ export class SchoolRegistrationComponent implements OnInit {
   constructor(
     private _Activatedroute: ActivatedRoute,
     public schoolRegApi: SchoolRegApiService,
-    public router: Router
+    public router: Router,
+    private _snackBar: MatSnackBar
   ) {}
   public sub: any;
 
@@ -56,8 +58,22 @@ export class SchoolRegistrationComponent implements OnInit {
         administrators: { user: this.id },
         email: this.schoolEmail.value,
       })
-      .subscribe((data: any) => {
-        this.router.navigate([`/reg-classnames`]);
+      .subscribe({
+        next: (data: any) => {
+          this.openSnackBar(
+            'Successfully registered school information!',
+            'Close'
+          );
+          this.router.navigate([`/reg-classnames`]);
+        },
+        error: (error) => {
+          console.log(`This is error ${error}`);
+          this.openSnackBar(error, 'Close');
+        },
       });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }
