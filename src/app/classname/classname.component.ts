@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-classname',
@@ -10,42 +10,35 @@ import { ClassnameApiService } from '../shared/classname/classname-api.service';
 })
 export class ClassnameComponent implements OnInit {
   constructor(
-    @Inject(DOCUMENT) private document: Document,
+    private _snackBar: MatSnackBar,
     public apiService: ClassnameApiService,
     public router: Router
   ) {}
 
   ngOnInit(): void {}
 
-  Geeks() {
-    var input = this.document.getElementsByName('classname');
-    var classnamesArray = [];
-    for (var i = 0; i < input.length; i++) {
-      var a = input[i] as HTMLInputElement;
-      // console.log(`This is the value ${a.value}`);
-      // var k = k + 'array[' + i + '].value= ' + a + '';
-      classnamesArray.push({ name: a.value });
-    }
+  public classNames = [{ name: '' }, { name: '' }];
 
+  Geeks() {
     // make api call via service
-    this.apiService
-      .postClassnamesArray({ names: classnamesArray })
-      .subscribe((data) => {
+    this.apiService.postClassnamesArray({ names: this.classNames }).subscribe({
+      next: (data: any) => {
         console.log(data);
+        this.openSnackBar('Successfully added streams', 'Close');
         this.router.navigate(['/add-departments']);
-      });
+      },
+      error: (error) => {
+        this.openSnackBar(error, 'Close');
+      },
+    });
+    console.log(this.classNames);
   }
 
   appendInput() {
-    let container = this.document.getElementById('input-container');
-    // console.log(container.a);
-    let input = this.document.createElement('input');
-    input.type = 'text';
-    input.name = 'classname';
-    input.style.cssText =
-      'outline:none;margin:5px 0 5px 0;height:25px;font-size:15pt';
-    container?.appendChild(input);
-    container?.appendChild(this.document.createElement('br'));
-    // this.document.body.appendChild(input);
+    this.classNames.push({ name: '' });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }
