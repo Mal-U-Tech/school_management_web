@@ -1,7 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-departments',
@@ -10,45 +10,38 @@ import { AddDepartmentsService } from '../shared/add-departments/add-departments
 })
 export class AddDepartmentsComponent implements OnInit {
   constructor(
-    @Inject(DOCUMENT) private document: Document,
+    private _snackBar: MatSnackBar,
     public apiService: AddDepartmentsService,
     public router: Router
   ) {}
 
   ngOnInit(): void {}
 
+  public departmentsArray = [{ name: '' }, { name: '' }];
+
   appendInput() {
-    let container = this.document.getElementById('input-container');
-    // console.log(container.a);
-    let input = this.document.createElement('input');
-    input.type = 'text';
-    input.name = 'department';
-    input.style.cssText =
-      'outline:none;margin:5px 0 5px 0;height:25px;font-size:15pt';
-    container?.appendChild(input);
-    container?.appendChild(this.document.createElement('br'));
+    this.departmentsArray.push({ name: '' });
   }
 
   submitDepartments() {
-    var input = this.document.getElementsByName('department');
-    var departmentsArray: { name: string }[] = [];
-    var paramArray: string[] = [];
-
-    for (var i = 0; i < input.length; i++) {
-      var a = input[i] as HTMLInputElement;
-      departmentsArray.push({ name: a.value });
-      paramArray.push(a.value);
-    }
-
     // make api call
     this.apiService
-      .postDepartmentsArray({ names: departmentsArray })
-      .subscribe((data: any) => {
-        console.log(data.data);
-        this.router.navigate([`/add-subjects`], {
-          queryParams: { departments: JSON.stringify(data.data) },
-          queryParamsHandling: 'merge',
-        });
+      .postDepartmentsArray({ names: this.departmentsArray })
+      .subscribe({
+        next: (data: any) => {
+          this.openSnackBar('Successfully added departments.', 'Close');
+          this.router.navigate([`/add-subjects`], {
+            queryParams: { departments: JSON.stringify(data.data) },
+            queryParamsHandling: 'merge',
+          });
+        },
+        error: (error) => {
+          this.openSnackBar(error, 'Close');
+        },
       });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }
