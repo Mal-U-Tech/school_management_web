@@ -1,17 +1,46 @@
 <div class="container">
-  <div class="title-container"><h2>Form Input: Departments</h2></div>
-  <p>
-    The form below contains input elements for departments. Click on the Add
-    button to add a new input field.
-  </p>
+  <div class="mat-typography title-container">
+    <span>Form Input: Departments</span>
+  </div>
+  <div class="mat-typography instructions">
+    <span>
+      The form below contains input elements for departments. Click on the Add
+      button to add a new input field.
+    </span>
+  </div>
   <div class="form-container">
-    <div id="input-container">
-      <input type="text" name="department" value="" /><br />
-      <input type="text" name="department" value="" /><br />
-      <input type="text" name="department" value="" /><br />
-    </div>
+    <form class="form">
+      <div *ngFor="let dept of departmentsArray">
+        <mat-form-field class="form-field">
+          <mat-label>Department</mat-label>
+          <input
+            name="department"
+            matInput
+            type="text"
+            [(ngModel)]="dept.name"
+            placeholder="Languages Department"
+          />
+        </mat-form-field>
+      </div>
+    </form>
 
-    <button class="add button" (click)="appendInput()">Add Department +</button>
-    <button class="submit button" (click)="submitDepartments()">Submit</button>
+    <div class="buttons-container">
+      <button
+        class="add button"
+        mat-button
+        color="primary"
+        (click)="appendInput()"
+      >
+        Add Department +
+      </button>
+      <button
+        class="submit button"
+        mat-raised-button
+        color="primary"
+        (click)="submitDepartments()"
+      >
+        Submit
+      </button>
+    </div>
   </div>
 </div>
