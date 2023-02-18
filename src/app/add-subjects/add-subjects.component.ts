@@ -1,6 +1,7 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-subjects',
@@ -9,19 +10,26 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AddSubjectsComponent implements OnInit {
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private _Activatedroute: ActivatedRoute
+    private _Activatedroute: ActivatedRoute,
+    private apiService: AddSubjectsService,
+    private _snackBar: MatSnackBar,
+    public router: Router
   ) {}
   public sub: any;
   public depts: any[] = [];
   public elements: any[] = [];
 
+  public deptSubs: any[] = [];
   ngOnInit(): void {
     this.sub = this._Activatedroute.queryParams.subscribe((params) => {
       this.depts = JSON.parse(params['departments']);
       this.depts.forEach((el) => {
-        // console.log(el);
-        this.elements.push(el);
+        console.log(el);
+        this.elements.push({
+          dept_id: el._id,
+          dept_name: el.name,
+          subjects: [{ name: '', level: '' }],
+        });
       });
     });
   }
@@ -30,73 +38,45 @@ export class AddSubjectsComponent implements OnInit {
     if (this.sub) this.sub.unsubscribe();
   }
 
-  buildDepartment() {
-    let container = this.document.getElementById('builder');
-
-    // for each department build a title and add inputs for the
-  }
-
   addIn(num: any) {
-    console.log(`This is the current index ${num}`);
-
-    var container = this.document.getElementById(`${num}`);
-    var input = this.document.createElement('input');
-    input.type = 'text';
-    input.name = `subject_${num}`;
-    input.value = '';
-    input.placeholder = 'Subject';
-    input.style.cssText =
-      'outline:none;margin:5px auto 5px auto;height:25px;font-size:15pt;display:flex;width:50%;';
-    container?.appendChild(input);
-    // container?.appendChild(this.document.createElement('br'));
-
-    var input = this.document.createElement('input');
-    input.type = 'text';
-    input.name = `subject_${num}`;
-    input.value = '';
-    input.placeholder = 'Level: Secondary/High School';
-    input.style.cssText =
-      'outline:none;margin:5px auto 5px auto;height:25px;font-size:15pt;display:flex;width:50%;';
-    container?.appendChild(input);
-    container?.appendChild(this.document.createElement('br'));
+    this.elements[num].subjects.push({ name: '', level: '' });
   }
 
   addSubjects() {
     var data: any[] = [];
-    for (var i = 0; i < this.depts.length; i++) {
-      var div = this.document.getElementById(`${i}`);
 
-      let subjects = this.document.getElementsByName(
-        `subject_${i}`
-      ) as NodeListOf<HTMLInputElement>;
+    for (let i = 0; i < this.elements.length; i = i + 1) {
+      const dept = this.elements[i];
 
-      // let level = this.document.getElementsByName(
-      //   `level_${i}`
-      // ) as NodeListOf<HTMLInputElement>;
-
-      // console.log(`Department: ${this.depts[i].name}`);
-      // // console.log(`Subject: ${subjects[1].value}`);
-      // subjects.forEach((element) => {
-      //   console.log(`${element.value}`);
-      // });
-      for (let j = 0; j < subjects.length; j = j + 2) {
-        console.log(
-          `Department ${this.depts[i].name} \nSubject ${
-            subjects[j].value
-          } \nLevel ${subjects[j + 1].value}`
-        );
-
+      for (let j = 0; j < dept.subjects.length; j = j + 1) {
+        const sub = dept.subjects[j];
         data.push({
-          department_id: this.depts[i]._id,
-          name: subjects[j].value,
-          level: subjects[j + 1].value,
+          department_id: dept.dept_id,
+          name: sub.name,
+          level: sub.level,
         });
       }
-      // level.forEach((element) => {
-      //   console.log(`Level: ${element.value}`);
-      // });
     }
 
-    console.log(data);
+    this.apiService.postSubjects({ subjects: data }).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        // this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.openSnackBar(error, 'Close');
+      },
+    });
+
+    console.log({ subjects: data });
+  }
+
+  removeSubject(i: number, j: number) {
+    console.log(this.elements[i].subjects[j]);
+    delete this.elements[i].subjects[j];
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }

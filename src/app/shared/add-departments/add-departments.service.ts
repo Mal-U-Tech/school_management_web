@@ -25,10 +25,10 @@ export class AddDepartmentsService {
       errorMessage = error.error.message;
     } else {
       // Server side error
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = `${error.error.message}`;
     }
 
-    window.alert(errorMessage);
+    // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
     });

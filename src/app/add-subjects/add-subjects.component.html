@@ -1,16 +1,55 @@
 <div class="container">
-  <div class="title-container"><h2>Form Input: Subjects</h2></div>
-  <p>Add the subjects for each department respectively.</p>
+  <div class="mat-typography title-container">
+    <span>Form Input: Subjects</span>
+  </div>
+  <div class="instructions">
+    <span> Add the subjects for each department respectively.</span>
+  </div>
   <div id="builder" class="form-container">
-    <div *ngFor="let department of elements; let i = index">
-      <div id={{i}}>
-        <h2 class="dept">{{i + 1}}: {{department.name}}</h2>
-        <input type="text" value="" placeholder="Subject" name=subject_{{i}}/>
-        <input placeholder="Level: Secondary/High School" type="text" value="" name="subject_{{i}}"/><br/>
-      </div>
-      <button (click)="addIn(i)">Add + </button>
+    <div class="form-field" *ngFor="let department of elements; let i = index">
+      <div id="{{ i }}">
+        <h2 class="mat-typography dept">
+          {{ i + 1 }}: {{ department.dept_name }}
+        </h2>
+        <div *ngFor="let sub of department.subjects; let j = index">
+          <mat-form-field>
+            <mat-label>Subject</mat-label>
+            <input
+              type="text"
+              [value]="sub.name"
+              [(ngModel)]="sub.name"
+              name="subject_{{ i }}"
+              matInput
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Level: Secondary/High School</mat-label>
+            <input
+              type="text"
+              [value]="sub.level"
+              [(ngModel)]="sub.level"
+              name="subject_{{ i }}"
+              matInput
+            />
+          </mat-form-field>
+          <!-- <button mat-button color="primary" (click)="removeSubject(i, j)"> -->
+          <!--   <mat-icon>close</mat-icon> -->
+          <!-- </button> -->
+        </div>
 
+        <!-- <h2 class="dept">{{i + 1}}: {{department.name}}</h2> -->
+        <!-- <input type="text" value="" placeholder="Subject" name=subject_{{i}}/> -->
+        <!-- <input placeholder="Level: Secondary/High School" type="text" value="" name="subject_{{i}}"/><br/> -->
+      </div>
+      <button (click)="addIn(i)" mat-raised-button>Add +</button>
     </div>
-    <button class="submit" (click)="addSubjects()">Submit</button>
+    <button
+      class="submit"
+      mat-stroked-button
+      color="primary"
+      (click)="addSubjects()"
+    >
+      Submit
+    </button>
   </div>
 </div>

@@ -34,6 +34,10 @@ export class ClassnameComponent implements OnInit {
     console.log(this.classNames);
   }
 
+  jumpToDashboard() {
+    this.router.navigate(['/splash']);
+  }
+
   appendInput() {
     this.classNames.push({ name: '' });
   }

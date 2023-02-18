@@ -24,10 +24,10 @@ export class AddSubjectsService {
     if (error.error instanceof ErrorEvent) {
       errorMessage = error.error.message;
     } else {
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = `${error.error.message}`;
     }
 
-    window.alert(errorMessage);
+    // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
     });
