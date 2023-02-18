@@ -39,6 +39,11 @@ export class LoginComponent implements OnInit {
   public visible = false;
   public matcher = new MyErrorStateMatcher();
 
+  public spinner = {
+    opacity: '0',
+    display: 'none',
+  };
+
   constructor(
     public userApi: UserApiService,
     public router: Router,
@@ -51,15 +56,47 @@ export class LoginComponent implements OnInit {
     this.userApi.userLogin(this.email.value, this.password.value).subscribe({
       next: (data: any) => {
         console.log(`This is data: ${data}`);
-        this.router.navigate([
-          `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
-        ]);
 
         // TODO: route to home, once system is done
+
+        this.spinner = {
+          opacity: '1',
+          display: 'block',
+        };
+        this.checkModules(data);
       },
       error: (error: any) => {
         console.log(`This is error: ${error}`);
         this.openSnackBar(error, 'Close');
+      },
+    });
+  }
+
+  public checkModules(data: any) {
+    console.log(data);
+    this.userApi.checkModules(data._id).subscribe({
+      next: (res: any) => {
+        console.log(res);
+
+        if (res.missing.length) {
+          const missing = res.missing[0].name;
+
+          if (missing === 'school-info') {
+            this.router.navigate([
+              `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
+            ]);
+          } else if (missing === 'classnames') {
+            this.router.navigate(['/reg-classnames']);
+          }
+        }
+
+        if (res.success === 400) {
+          this.router.navigate(['/splash']);
+        } else if (res.success === 300) {
+        }
+      },
+      error: (error: any) => {
+        console.log(error);
       },
     });
   }
@@ -77,6 +114,6 @@ export class LoginComponent implements OnInit {
   }
 
   openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action);
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }

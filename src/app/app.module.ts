@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -54,6 +55,7 @@ const routes: Routes = [
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
   ],
   exports: [RouterModule],
   providers: [],

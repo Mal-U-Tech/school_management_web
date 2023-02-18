@@ -39,6 +39,17 @@ export class UserApiService {
       .pipe(retry(1), catchError(this.handleError));
   }
 
+  // HttpClient API post() method => check modules
+  checkModules(adminId: string): Observable<any> {
+    return this.http
+      .post<any>(
+        `http://localhost:2000/check-modules/${adminId}`,
+        JSON.stringify({}),
+        this.httpOptions
+      )
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
   // HttpClient API post() method => register
   userRegister(user: any): Observable<UserInterface> {
     console.log(user);
@@ -84,7 +95,7 @@ export class UserApiService {
       errorMessage = error.error.message;
     } else {
       // Get server side error
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = `${error.error.message}`;
     }
 
     // window.alert(errorMessage);
