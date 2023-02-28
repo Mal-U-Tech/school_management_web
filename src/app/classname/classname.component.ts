@@ -35,7 +35,7 @@ export class ClassnameComponent implements OnInit {
   }
 
   jumpToDashboard() {
-    this.router.navigate(['/splash']);
+    this.router.navigate(['/dashboard']);
   }
 
   appendInput() {

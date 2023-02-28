@@ -18,6 +18,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { SessionStorageService } from './shared/session-state/session-storage.service';
+import { AcademicsComponent } from './academics/academics.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NavDashboardComponent } from './nav-dashboard/nav-dashboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -31,6 +42,14 @@ const routes: Routes = [
   { path: 'reg-classnames', component: ClassnameComponent },
   { path: 'add-departments', component: AddDepartmentsComponent },
   { path: 'add-subjects', component: AddSubjectsComponent },
+  {
+    path: 'dashboard',
+    component: NavDashboardComponent,
+    children: [
+      { path: 'academics', component: AcademicsComponent },
+      { path: 'login', component: LoginComponent },
+    ],
+  },
 ];
 
 @NgModule({
@@ -43,6 +62,8 @@ const routes: Routes = [
     ClassnameComponent,
     AddDepartmentsComponent,
     AddSubjectsComponent,
+    AcademicsComponent,
+    NavDashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,9 +77,17 @@ const routes: Routes = [
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    MatTooltipModule,
   ],
   exports: [RouterModule],
-  providers: [],
+  providers: [SessionStorageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
