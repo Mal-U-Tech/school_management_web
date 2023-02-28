@@ -9,6 +9,7 @@ import { UserApiService } from '../shared/user/user-api.service';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SessionStorageService } from '../shared/session-state/session-storage.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -47,7 +48,8 @@ export class LoginComponent implements OnInit {
   constructor(
     public userApi: UserApiService,
     public router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private readonly storageService: SessionStorageService
   ) {}
 
   ngOnInit(): void {}
@@ -63,6 +65,13 @@ export class LoginComponent implements OnInit {
           opacity: '1',
           display: 'block',
         };
+        // save user data for
+        this.storageService.set('id', data._id);
+        this.storageService.set('name', data.name);
+        this.storageService.set('contact', data.contact);
+        this.storageService.set('surname', data.surname);
+        this.storageService.set('email', data.email);
+
         this.checkModules(data);
       },
       error: (error: any) => {
@@ -91,7 +100,7 @@ export class LoginComponent implements OnInit {
         }
 
         if (res.success === 400) {
-          this.router.navigate(['/splash']);
+          this.router.navigate(['/dashboard']);
         } else if (res.success === 300) {
         }
       },
@@ -115,5 +124,9 @@ export class LoginComponent implements OnInit {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, { duration: 3000 });
+  }
+
+  public saveSession(key: string, value: string) {
+    localStorage.setItem(key, value);
   }
 }
