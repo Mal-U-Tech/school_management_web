@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { ClassnameApiService } from '../shared/classname/classname-api.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-academics',
@@ -41,5 +44,41 @@ export class AcademicsComponent {
     })
   );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private api: ClassnameApiService,
+    private _snackBar: MatSnackBar,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.getStreams();
+  }
+
+  public larger = '350px';
+  public smaller = '150px';
+  public streamsCount = '0';
+
+  getStreams() {
+    this.api.viewAllClasses(0, 0).subscribe({
+      next: (data: any) => {
+        console.log(data.length);
+        this.streamsCount = data.length.toString();
+        console.log(this.streamsCount);
+      },
+      error: (err) => {
+        this.showSnackBar(err.toString(), 'Close');
+      },
+    });
+  }
+
+  // function to navigate to add streams component
+  navigate = (path: string): void => {
+    this.router.navigate(['add-streams']);
+  };
+
+  // function to display snackbar
+  showSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
+  }
 }

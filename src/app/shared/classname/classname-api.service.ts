@@ -57,9 +57,14 @@ export class ClassnameApiService {
   }
 
   // HttpClient API get() => view all classnames
-  viewAllClasses(): Observable<ClassnameInterface> {
+  viewAllClasses(
+    currentPage: number,
+    pageSize: number
+  ): Observable<ClassnameInterface> {
     return this.http
-      .get<ClassnameInterface>(this.apiUrl + '/view-all')
+      .get<ClassnameInterface>(
+        this.apiUrl + `/view-all/${currentPage}/${pageSize}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
