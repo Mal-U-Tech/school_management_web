@@ -1,0 +1,51 @@
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+      {{ title }}
+      <button
+        mat-icon-button
+        class="more-button"
+        [matMenuTriggerFor]="menu"
+        aria-label="Toggle menu"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item>Expand</button>
+        <button mat-menu-item>Remove</button>
+      </mat-menu>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+    <div *ngIf="title != 'Overview'">
+      <mat-grid-list cols="3" rowHeight="80px">
+        <mat-grid-tile
+          [style.backgroundColor]="
+            numberOfItems[index] == '0' ? warnColor : greyColor
+          "
+          [style.color]="numberOfItems[index] != '0' ? blackColor : whiteColor"
+          ><div class="mat-h1" style="line-height: 20px">
+            Number of {{ section | lowercase }}:&nbsp;{{ numberOfItems[index] }}
+          </div>
+        </mat-grid-tile>
+        <mat-grid-tile
+          ><button
+            mat-raised-button
+            (click)="openDialog(navLinks[index].add)"
+            color="primary"
+          >
+            <mat-icon>add</mat-icon> Add
+          </button></mat-grid-tile
+        ><mat-grid-tile
+          ><button
+            mat-raised-button
+            class="view-button"
+            [routerLink]="navLinks[index].view"
+          >
+            <mat-icon>visibility</mat-icon> View
+          </button></mat-grid-tile
+        >
+      </mat-grid-list>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -28,7 +29,19 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import {
+  MatDialogModule,
+  MatDialogRef,
+  MatDialog,
+} from '@angular/material/dialog';
 import { NavDashboardComponent } from './nav-dashboard/nav-dashboard.component';
+import { DashboardCardComponent } from './academics/dashboard-card/dashboard-card.component';
+import { ViewStreamsTableComponent } from './classname/view-streams-table/view-streams-table.component';
+import { AddDialogComponent } from './add-dialog/add-dialog.component';
+import { DialogConfirmDeleteComponent } from './classname/dialog-confirm-delete/dialog-confirm-delete.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -46,11 +59,20 @@ const routes: Routes = [
     path: 'dashboard',
     component: NavDashboardComponent,
     children: [
-      { path: 'academics', component: AcademicsComponent },
+      {
+        path: 'academics',
+        component: AcademicsComponent,
+        children: [],
+      },
       { path: 'login', component: LoginComponent },
+      { path: 'add-streams', component: ClassnameComponent },
+      { path: 'view-streams', component: ViewStreamsTableComponent },
+      { path: 'add-dialog/:name', component: AddDialogComponent },
     ],
   },
 ];
+
+// const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
 
 @NgModule({
   declarations: [
@@ -64,6 +86,10 @@ const routes: Routes = [
     AddSubjectsComponent,
     AcademicsComponent,
     NavDashboardComponent,
+    DashboardCardComponent,
+    ViewStreamsTableComponent,
+    AddDialogComponent,
+    DialogConfirmDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,6 +103,7 @@ const routes: Routes = [
     MatIconModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     LayoutModule,
     MatToolbarModule,
     MatSidenavModule,
@@ -85,9 +112,13 @@ const routes: Routes = [
     MatCardModule,
     MatMenuModule,
     MatTooltipModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatDialogModule,
   ],
   exports: [RouterModule],
-  providers: [SessionStorageService],
+  providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
