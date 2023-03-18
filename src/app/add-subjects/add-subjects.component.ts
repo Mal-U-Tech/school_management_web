@@ -111,9 +111,12 @@ export class AddSubjectsComponent implements OnInit {
     this.apiService.postSubjects({ subjects: data }).subscribe({
       next: (data: any) => {
         console.log(data);
+        this.closeSubjectDialog();
+        this.openSnackBar('Successfully added subjects', 'Close');
         // this.router.navigate(['/dashboard']);
       },
       error: (error) => {
+        this.closeSubjectDialog();
         this.openSnackBar(error, 'Close');
       },
     });
