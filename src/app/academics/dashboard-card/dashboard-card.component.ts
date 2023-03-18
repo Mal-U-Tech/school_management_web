@@ -79,6 +79,13 @@ export class DashboardCardComponent {
           `These are the current elements ${this.instance.elements[0].dept_name}`
         );
         this.instance.addSubjects();
+        setTimeout(() => {
+          if (this.instance.deletedCount == 1) {
+            this.numberOfItems[2] = (
+              Number(this.numberOfItems[2]) + 1
+            ).toString();
+          }
+        }, 2000);
       });
     }
   }
