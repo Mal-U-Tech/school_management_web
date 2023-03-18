@@ -28,7 +28,13 @@ export class ViewSubjectsTableComponent {
   currentPage = 0;
   pageSizeOptions: number[] = [1, 3, 5, 10, 25, 100];
 
-  displayedColumns: string[] = ['index', 'department', 'subject', 'actions'];
+  displayedColumns: string[] = [
+    'index',
+    'department',
+    'subject',
+    'level',
+    'actions',
+  ];
   dataSource: MatTableDataSource<SUBJECT> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
