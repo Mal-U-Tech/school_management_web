@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
-import { ClassnameInterface } from 'src/app/shared/classname/classname.interface';
 
 @Component({
   selector: 'app-dashboard-card',
@@ -14,6 +14,8 @@ export class DashboardCardComponent {
   @Input() section = '';
   @Input() index: number = 0;
   @Input() streamsCount: string = '0';
+  @Input() subjectCount: string = '0';
+
   // @ViewChild(ClassnameComponent) private streamComponent!: ClassnameComponent;
 
   dialogRef: any;
@@ -21,7 +23,7 @@ export class DashboardCardComponent {
   numberOfItems = [
     '0',
     this.streamsCount,
-    '0',
+    this.subjectCount,
     '0',
     '0',
     '0',
@@ -61,13 +63,30 @@ export class DashboardCardComponent {
       this.dialogRef.afterClosed().subscribe((result: any) => {
         console.log(`Dialog result: ${this.instance.classNames[0].name}`);
       });
+    } else if (component == 'AddSubjectsComponent') {
+      dialogConfig.width = '65%';
+      dialogConfig.height = '80%';
+      this.dialogRef = this.dialog.open(AddSubjectsComponent, dialogConfig);
+      this.instance = this.dialogRef.componentInstance;
+
+      this.instance.onClose.subscribe(() => {
+        this.dialogRef.close();
+      });
+
+      this.instance.onSubmit.subscribe(() => {
+        console.log('Submitting subjects to api.');
+        console.log(
+          `These are the current elements ${this.instance.elements[0].dept_name}`
+        );
+        this.instance.addSubjects();
+      });
     }
   }
 
   navLinks = [
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
-    { add: '', view: '' },
+    { add: 'AddSubjectsComponent', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
@@ -83,8 +102,17 @@ export class DashboardCardComponent {
   whiteColor = 'white';
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes['streamsCount'].currentValue);
-    this.numberOfItems[1] = changes['streamsCount'].currentValue;
+    if (changes['streamsCount'].currentValue != '0') {
+      console.log(changes['streamsCount'].currentValue);
+      this.numberOfItems[1] = changes['streamsCount'].currentValue;
+    }
+
+    if (changes['subjectCount'].currentValue != '0') {
+      console.log(
+        `This is subjects count: ${changes['subjectCount'].currentValue}`
+      );
+      this.numberOfItems[2] = changes['subjectCount'].currentValue;
+    }
   }
 
   // constructor(private breakpointObserver: BreakpointObserver){}

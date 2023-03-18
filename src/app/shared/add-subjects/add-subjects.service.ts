@@ -10,7 +10,7 @@ import {
   providedIn: 'root',
 })
 export class AddSubjectsService {
-  apiUrl = 'http://localhost:2000/subjects';
+  apiUrl = 'http://localhost:2000/dept-subject';
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -56,9 +56,14 @@ export class AddSubjectsService {
   }
 
   // HttpClient API get() => get all subjects
-  getAllSubjects(): Observable<SubjectsArrayInterface> {
+  getAllSubjects(
+    pageNo: number,
+    pageSize: number
+  ): Observable<SubjectsArrayInterface> {
     return this.http
-      .get<SubjectsArrayInterface>(this.apiUrl + '/view-all')
+      .get<SubjectsArrayInterface>(
+        this.apiUrl + `/view-all/${pageNo}/${pageSize}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
