@@ -86,7 +86,7 @@ export class DashboardCardComponent {
   navLinks = [
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
-    { add: 'AddSubjectsComponent', view: '' },
+    { add: 'AddSubjectsComponent', view: '../view-subjects' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
