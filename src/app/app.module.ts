@@ -32,16 +32,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import {
-  MatDialogModule,
-  MatDialogRef,
-  MatDialog,
-} from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { NavDashboardComponent } from './nav-dashboard/nav-dashboard.component';
 import { DashboardCardComponent } from './academics/dashboard-card/dashboard-card.component';
 import { ViewStreamsTableComponent } from './classname/view-streams-table/view-streams-table.component';
 import { AddDialogComponent } from './add-dialog/add-dialog.component';
 import { DialogConfirmDeleteComponent } from './classname/dialog-confirm-delete/dialog-confirm-delete.component';
+import { ViewSubjectsTableComponent } from './add-subjects/view-subjects-table/view-subjects-table.component';
+import { DialogConfirmSubjectDeleteComponent } from './add-subjects/dialog-confirm-subject-delete/dialog-confirm-subject-delete.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -68,6 +66,7 @@ const routes: Routes = [
       { path: 'add-streams', component: ClassnameComponent },
       { path: 'view-streams', component: ViewStreamsTableComponent },
       { path: 'add-dialog/:name', component: AddDialogComponent },
+      { path: 'view-subjects', component: ViewSubjectsTableComponent },
     ],
   },
 ];
@@ -90,6 +89,8 @@ const routes: Routes = [
     ViewStreamsTableComponent,
     AddDialogComponent,
     DialogConfirmDeleteComponent,
+    ViewSubjectsTableComponent,
+    DialogConfirmSubjectDeleteComponent,
   ],
   imports: [
     BrowserModule,
