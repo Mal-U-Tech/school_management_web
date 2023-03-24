@@ -67,6 +67,7 @@ const routes: Routes = [
       { path: 'view-streams', component: ViewStreamsTableComponent },
       { path: 'add-dialog/:name', component: AddDialogComponent },
       { path: 'view-subjects', component: ViewSubjectsTableComponent },
+      { path: 'add-depts', component: AddDepartmentsComponent },
     ],
   },
 ];
