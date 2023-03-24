@@ -66,7 +66,7 @@ export class AddSubjectsComponent implements OnInit {
   }
 
   retrieveDepartmentsService() {
-    this.departmentsService.viewAllDepartments().subscribe({
+    this.departmentsService.viewAllDepartments(0, 0).subscribe({
       next: (data: any) => {
         console.log(data);
         data.forEach((el: any) => {
