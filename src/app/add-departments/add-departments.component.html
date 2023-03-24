@@ -1,46 +1,50 @@
-<div class="container">
-  <div class="mat-typography title-container">
-    <span>Form Input: Departments</span>
-  </div>
-  <div class="mat-typography instructions">
-    <span>
-      The form below contains input elements for departments. Click on the Add
-      button to add a new input field.
-    </span>
-  </div>
-  <div class="form-container">
-    <form class="form">
-      <div *ngFor="let dept of departmentsArray">
-        <mat-form-field class="form-field">
-          <mat-label>Department</mat-label>
-          <input
-            name="department"
-            matInput
-            type="text"
-            [(ngModel)]="dept.name"
-            placeholder="Languages Department"
-          />
-        </mat-form-field>
-      </div>
-    </form>
-
-    <div class="buttons-container">
-      <button
-        class="add button"
-        mat-button
-        color="primary"
-        (click)="appendInput()"
-      >
-        Add Department +
-      </button>
-      <button
-        class="submit button"
-        mat-raised-button
-        color="primary"
-        (click)="submitDepartments()"
-      >
-        Submit
-      </button>
+<app-add-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="mat-typography instructions">
+      <span>
+        The form below contains input elements for departments. Click on the
+        <strong>Add Department +</strong>
+        button to add a new input field.
+      </span>
+    </div>
+    <div class="form-container" id="form-container">
+      <form class="form" id="input-container">
+        <div *ngFor="let dept of departmentsArray; let i = index">
+          <mat-form-field class="form-field">
+            <mat-label>Department</mat-label>
+            <input
+              id="{{ i }}"
+              #inputField
+              name="department{{ i }}"
+              matInput
+              type="text"
+              [(ngModel)]="dept.name"
+              placeholder="Languages Department"
+            />
+          </mat-form-field>
+        </div>
+      </form>
     </div>
   </div>
-</div>
+  <mat-dialog-actions class="dialogButtons button-container">
+    <button mat-raised-button color="warn" (click)="(closeDepartmentDialog)">
+      Close
+    </button>
+    <button
+      class="add button mat-typography"
+      mat-button
+      color="primary"
+      (click)="appendInput()"
+    >
+      Add Department +
+    </button>
+    <button
+      class="submit button"
+      mat-raised-button
+      color="primary"
+      (click)="submitDepartments()"
+    >
+      Submit
+    </button>
+  </mat-dialog-actions>
+</app-add-dialog>
