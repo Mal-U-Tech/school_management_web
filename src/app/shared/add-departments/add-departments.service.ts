@@ -57,9 +57,12 @@ export class AddDepartmentsService {
   }
 
   // HttpClient API get() => view all departments
-  viewAllDepartments(): Observable<AddDepartments> {
+  viewAllDepartments(
+    currentPage: number,
+    pageSize: number
+  ): Observable<AddDepartments> {
     return this.http
-      .get<AddDepartments>(this.apiUrl + '/view-all')
+      .get<AddDepartments>(this.apiUrl + `/view-all/${currentPage}/${pageSize}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
