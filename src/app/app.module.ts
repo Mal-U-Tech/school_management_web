@@ -40,6 +40,8 @@ import { AddDialogComponent } from './add-dialog/add-dialog.component';
 import { DialogConfirmDeleteComponent } from './classname/dialog-confirm-delete/dialog-confirm-delete.component';
 import { ViewSubjectsTableComponent } from './add-subjects/view-subjects-table/view-subjects-table.component';
 import { DialogConfirmSubjectDeleteComponent } from './add-subjects/dialog-confirm-subject-delete/dialog-confirm-subject-delete.component';
+import { ViewDepartmentsTableComponent } from './add-departments/view-departments-table/view-departments-table.component';
+import { DialogConfirmDeptDeleteComponent } from './add-departments/dialog-confirm-dept-delete/dialog-confirm-dept-delete.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -68,6 +70,7 @@ const routes: Routes = [
       { path: 'add-dialog/:name', component: AddDialogComponent },
       { path: 'view-subjects', component: ViewSubjectsTableComponent },
       { path: 'add-depts', component: AddDepartmentsComponent },
+      { path: 'view-depts', component: ViewDepartmentsTableComponent },
     ],
   },
 ];
@@ -92,6 +95,8 @@ const routes: Routes = [
     DialogConfirmDeleteComponent,
     ViewSubjectsTableComponent,
     DialogConfirmSubjectDeleteComponent,
+    ViewDepartmentsTableComponent,
+    DialogConfirmDeptDeleteComponent,
   ],
   imports: [
     BrowserModule,
