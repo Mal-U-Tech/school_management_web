@@ -5,6 +5,7 @@ import { ClassnameApiService } from '../shared/classname/classname-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
+import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
 
 @Component({
   selector: 'app-academics',
@@ -49,6 +50,7 @@ export class AcademicsComponent {
     private breakpointObserver: BreakpointObserver,
     private api: ClassnameApiService,
     private subjectsApi: AddSubjectsService,
+    private deptApi: AddDepartmentsService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -56,12 +58,14 @@ export class AcademicsComponent {
   ngOnInit(): void {
     this.getStreams();
     this.getSubjects();
+    this.getDepartments();
   }
 
   public larger = '350px';
   public smaller = '150px';
   public streamsCount = '0';
   public subjectCount = '0';
+  public deptCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
@@ -80,6 +84,17 @@ export class AcademicsComponent {
     this.subjectsApi.getAllSubjects(0, 0).subscribe({
       next: (data: any) => {
         this.subjectCount = data.length.toString();
+      },
+      error: (err) => {
+        this.showSnackBar(err.toString(), 'Close');
+      },
+    });
+  }
+
+  getDepartments() {
+    this.deptApi.viewAllDepartments(0, 0).subscribe({
+      next: (data: any) => {
+        this.deptCount = data.length.toString();
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');

@@ -1,5 +1,6 @@
 import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { AddDepartmentsComponent } from 'src/app/add-departments/add-departments.component';
 import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 
@@ -15,8 +16,7 @@ export class DashboardCardComponent {
   @Input() index: number = 0;
   @Input() streamsCount: string = '0';
   @Input() subjectCount: string = '0';
-
-  // @ViewChild(ClassnameComponent) private streamComponent!: ClassnameComponent;
+  @Input() deptCount: string = '0';
 
   dialogRef: any;
   instance: any;
@@ -24,7 +24,7 @@ export class DashboardCardComponent {
     '0',
     this.streamsCount,
     this.subjectCount,
-    '0',
+    this.deptCount,
     '0',
     '0',
     '0',
@@ -80,12 +80,32 @@ export class DashboardCardComponent {
         );
         this.instance.addSubjects();
         setTimeout(() => {
-          if (this.instance.deletedCount == 1) {
+          if (this.instance.res == 1) {
             this.numberOfItems[2] = (
               Number(this.numberOfItems[2]) + 1
             ).toString();
           }
         }, 2000);
+      });
+    } else if (component == 'AddDepartmentsComponent') {
+      dialogConfig.width = '65%';
+      dialogConfig.height = '80%';
+      this.dialogRef = this.dialog.open(AddDepartmentsComponent, dialogConfig);
+      this.instance = this.dialogRef.componentInstance;
+
+      this.instance.onClose.subscribe(() => {
+        this.dialogRef.close();
+      });
+
+      this.instance.onSubmit.subscribe(() => {
+        this.instance.submitDepartments();
+        setTimeout(() => {
+          if (this.instance.res == 1) {
+            this.numberOfItems[3] = (
+              Number(this.numberOfItems[3]) + 1
+            ).toString();
+          }
+        });
       });
     }
   }
@@ -94,7 +114,7 @@ export class DashboardCardComponent {
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
     { add: 'AddSubjectsComponent', view: '../view-subjects' },
-    { add: '', view: '' },
+    { add: 'AddDepartmentsComponent', view: '../view-depts' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
@@ -109,16 +129,20 @@ export class DashboardCardComponent {
   whiteColor = 'white';
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log(`${changes['deptCount']}`);
     if (changes['streamsCount'].currentValue != '0') {
-      console.log(changes['streamsCount'].currentValue);
       this.numberOfItems[1] = changes['streamsCount'].currentValue;
     }
 
     if (changes['subjectCount'].currentValue != '0') {
-      console.log(
-        `This is subjects count: ${changes['subjectCount'].currentValue}`
-      );
       this.numberOfItems[2] = changes['subjectCount'].currentValue;
+    }
+
+    if (changes['deptCount'].currentValue != '0') {
+      console.log(
+        `This is departments count: ${changes['deptCount'].currentValue}`
+      );
+      this.numberOfItems[3] = changes['deptCount'].currentValue;
     }
   }
 

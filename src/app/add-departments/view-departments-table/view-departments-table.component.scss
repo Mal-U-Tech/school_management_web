@@ -1,0 +1,25 @@
+.full-width-table {
+  width: 60%;
+}
+
+table {
+  width: 60%;
+}
+
+td {
+  background-color: whitesmoke;
+  text-align: center;
+}
+
+.table-container {
+  // background-color: blue;
+  border: 0 solid black;
+  margin: auto;
+}
+
+div.buttons-container > button {
+  margin: 25px auto;
+  height: 49px;
+  width: 15%;
+  display: block;
+}
