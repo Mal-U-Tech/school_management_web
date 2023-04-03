@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
+import { TeacherService } from '../shared/teacher/teacher.service';
 
 @Component({
   selector: 'app-academics',
@@ -51,6 +52,7 @@ export class AcademicsComponent {
     private api: ClassnameApiService,
     private subjectsApi: AddSubjectsService,
     private deptApi: AddDepartmentsService,
+    private teacherApi: TeacherService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -59,6 +61,7 @@ export class AcademicsComponent {
     this.getStreams();
     this.getSubjects();
     this.getDepartments();
+    this.getTeachers();
   }
 
   public larger = '350px';
@@ -66,6 +69,7 @@ export class AcademicsComponent {
   public streamsCount = '0';
   public subjectCount = '0';
   public deptCount = '0';
+  public teacherCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
@@ -95,6 +99,18 @@ export class AcademicsComponent {
     this.deptApi.viewAllDepartments(0, 0).subscribe({
       next: (data: any) => {
         this.deptCount = data.length.toString();
+      },
+      error: (err) => {
+        this.showSnackBar(err.toString(), 'Close');
+      },
+    });
+  }
+
+  getTeachers() {
+    this.teacherApi.getAllTeachers(0, 0).subscribe({
+      next: (data: any) => {
+        console.log(`This is teacher count in api function ${data}`);
+        this.teacherCount = data.length.toString();
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');

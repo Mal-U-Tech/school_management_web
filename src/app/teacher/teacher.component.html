@@ -1,0 +1,85 @@
+<app-add-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="mat-typography instructions">
+      The form below contains input elements for teachers. Click on the
+      <b>Add Teacher +</b> button to add a new input field.
+    </div>
+
+    <div id="form-container" class="form-container">
+      <form id="input-container" class="form">
+        <mat-form-field class="form-field-name">
+          <mat-label>Name</mat-label>
+          <input
+            id="name"
+            #inputField
+            type="text"
+            name="teacherName"
+            matInput
+            placeholder="e.g. Mazwi"
+            [(ngModel)]="name"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="form-field-surname">
+          <mat-label>Surname</mat-label>
+          <input
+            id="surname"
+            type="text"
+            name="teacherSurname"
+            matInput
+            placeholder="e.g. Sihlongonyane"
+            [(ngModel)]="surname"
+          />
+        </mat-form-field>
+        <mat-form-field class="form-field-contact">
+          <mat-label>Contact</mat-label>
+          <input
+            id="contact"
+            type="text"
+            name="teacherContact"
+            matInput
+            placeholder="e.g. 78123456"
+            [(ngModel)]="contact"
+          />
+        </mat-form-field>
+        <div class="form-field menu gender">
+          <button mat-raised-button [matMenuTriggerFor]="gender">
+            {{ genderSelection }}
+          </button>
+          <mat-menu #gender="matMenu">
+            <button mat-menu-item (click)="selectGender('Female')">
+              Female
+            </button>
+            <button mat-menu-item (click)="selectGender('Male')">Male</button>
+          </mat-menu>
+        </div>
+        <div class="form-field menu marital-status">
+          <button mat-raised-button [matMenuTriggerFor]="maritalStatus">
+            {{ maritalStatusSelection }}
+          </button>
+          <mat-menu #maritalStatus="matMenu">
+            <button mat-menu-item (click)="selectMaritalStatus('Single')">
+              Single
+            </button>
+            <button mat-menu-item (click)="selectMaritalStatus('Married')">
+              Married
+            </button>
+          </mat-menu>
+        </div>
+      </form>
+    </div>
+  </div>
+  <mat-dialog-actions class="dialogButtons buttons-container">
+    <button mat-raised-button color="warn" (click)="closeTeacherDialog()">
+      Close
+    </button>
+    <button
+      class="submit"
+      mat-raised-button
+      color="primary"
+      (click)="submitTeacherRequest()"
+    >
+      Submit
+    </button>
+  </mat-dialog-actions>
+</app-add-dialog>

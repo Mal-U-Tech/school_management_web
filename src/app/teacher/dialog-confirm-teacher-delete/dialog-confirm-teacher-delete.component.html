@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>{{ data.title }}</h1>
+<mat-dialog-content class="mat-typography">
+  <p>
+    You are about to delete the teacher
+    <b>{{ data.teacher_title }} {{ data.name }} {{ data.surname }}</b
+    >. Are you sure you want to delete
+    {{ data.teacher_title == "Mr." ? "him" : "her" }} completely?
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="deleteConfirmed()">
+    Confirm
+  </button>
+</mat-dialog-actions>
