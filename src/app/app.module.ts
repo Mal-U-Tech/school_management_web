@@ -42,6 +42,9 @@ import { ViewSubjectsTableComponent } from './add-subjects/view-subjects-table/v
 import { DialogConfirmSubjectDeleteComponent } from './add-subjects/dialog-confirm-subject-delete/dialog-confirm-subject-delete.component';
 import { ViewDepartmentsTableComponent } from './add-departments/view-departments-table/view-departments-table.component';
 import { DialogConfirmDeptDeleteComponent } from './add-departments/dialog-confirm-dept-delete/dialog-confirm-dept-delete.component';
+import { TeacherComponent } from './teacher/teacher.component';
+import { ViewTeacherTableComponent } from './teacher/view-teacher-table/view-teacher-table.component';
+import { DialogConfirmTeacherDeleteComponent } from './teacher/dialog-confirm-teacher-delete/dialog-confirm-teacher-delete.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -71,6 +74,8 @@ const routes: Routes = [
       { path: 'view-subjects', component: ViewSubjectsTableComponent },
       { path: 'add-depts', component: AddDepartmentsComponent },
       { path: 'view-depts', component: ViewDepartmentsTableComponent },
+      { path: 'add-teachers', component: TeacherComponent },
+      { path: 'view-teachers', component: ViewTeacherTableComponent },
     ],
   },
 ];
@@ -97,6 +102,9 @@ const routes: Routes = [
     DialogConfirmSubjectDeleteComponent,
     ViewDepartmentsTableComponent,
     DialogConfirmDeptDeleteComponent,
+    TeacherComponent,
+    ViewTeacherTableComponent,
+    DialogConfirmTeacherDeleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -123,6 +131,7 @@ const routes: Routes = [
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
+    MatMenuModule,
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
