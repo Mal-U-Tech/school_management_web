@@ -1,1 +1,70 @@
-<p>class-students works!</p>
+<add-app-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="mat-typography instructions">
+      The form below contains input fields for class learner.
+    </div>
+
+    <div id="form-container" class="form-container">
+      <form id="input-container" class="form">
+        <mat-form-field class="form-field name">
+          <mat-label>Name</mat-label>
+          <input
+            id="name"
+            type="text"
+            name="learnerName"
+            matInput
+            placeholder="e.g. Mazwi"
+            [(ngModel)]="name"
+          />
+        </mat-form-field>
+        <mat-form-field class="form-field surname">
+          <mat-label>Surname</mat-label>
+          <input
+            id="surname"
+            type="text"
+            name="learnerSurname"
+            matInput
+            placeholder="e.g. Simelane"
+            [(ngModel)]="surname"
+          />
+        </mat-form-field>
+        <mat-form-field class="form-field learner-contact">
+          <mat-label>Learner Contact</mat-label>
+          <input
+            id="learner_contact"
+            type="text"
+            name="learnerContact"
+            matInput
+            placeholder="e.g. 78123456"
+            [(ngModel)]="contact"
+          />
+        </mat-form-field>
+        <mat-form-field class="form-field year">
+          <mat-label>Year</mat-label>
+          <input
+            id="year"
+            type="text"
+            name="year"
+            matInput
+            placeholder="e.g.
+          2019"
+            [(ngModel)]="year"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <mat-dialog-actions class="dialogButtons buttons-container">
+    <button mat-raised-button color="warn" (click)="closeTeacherDialog()">
+      Close
+    </button>
+    <button
+      class="submit"
+      mat-raised-button
+      color="primary"
+      (click)="submitClassLearnerRequest()"
+    >
+      Submit
+    </button>
+  </mat-dialog-actions>
+</add-app-dialog>
