@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
 import { TeacherService } from '../shared/teacher/teacher.service';
+import { ClassStudentsService } from '../shared/class-students/class-students.service';
 
 @Component({
   selector: 'app-academics',
@@ -53,6 +54,7 @@ export class AcademicsComponent {
     private subjectsApi: AddSubjectsService,
     private deptApi: AddDepartmentsService,
     private teacherApi: TeacherService,
+    private clasStudentsApi: ClassStudentsService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -62,6 +64,7 @@ export class AcademicsComponent {
     this.getSubjects();
     this.getDepartments();
     this.getTeachers();
+    this.getClassStudents();
   }
 
   public larger = '350px';
@@ -70,11 +73,13 @@ export class AcademicsComponent {
   public subjectCount = '0';
   public deptCount = '0';
   public teacherCount = '0';
+  public classStudentsCount = '0';
+  public classStreams: any[] = [];
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
       next: (data: any) => {
-        console.log(data.length);
+        this.classStreams = data;
         this.streamsCount = data.length.toString();
         console.log(this.streamsCount);
       },
@@ -109,11 +114,21 @@ export class AcademicsComponent {
   getTeachers() {
     this.teacherApi.getAllTeachers(0, 0).subscribe({
       next: (data: any) => {
-        console.log(`This is teacher count in api function ${data}`);
         this.teacherCount = data.length.toString();
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
+      },
+    });
+  }
+
+  getClassStudents() {
+    this.clasStudentsApi.getAllLearners(0, 0).subscribe({
+      next: (data: any) => {
+        this.classStudentsCount = data.length.toString();
+      },
+      error: (error) => {
+        this.showSnackBar(error.toString(), 'Close');
       },
     });
   }
