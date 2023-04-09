@@ -1,4 +1,4 @@
-<add-app-dialog [dialogTitle]="title">
+<app-add-dialog [dialogTitle]="title">
   <div class="dialogContent">
     <div class="mat-typography instructions">
       The form below contains input fields for class learner.
@@ -6,6 +6,18 @@
 
     <div id="form-container" class="form-container">
       <form id="input-container" class="form">
+        <div class="form-field menu class-stream">
+          <button mat-raised-button [matMenuTriggerFor]="classStream">
+            {{ classSelection.name }}
+          </button>
+          <mat-menu #classStream="matMenu">
+            <div *ngFor="let class of data; let i = index">
+              <button mat-menu-item (click)="selectClassname(class)">
+                {{ class.name }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
         <mat-form-field class="form-field name">
           <mat-label>Name</mat-label>
           <input
@@ -28,6 +40,18 @@
             [(ngModel)]="surname"
           />
         </mat-form-field>
+
+        <div class="form-field menu gender">
+          <button mat-raised-button [matMenuTriggerFor]="gender">
+            {{ genderSelection }}
+          </button>
+          <mat-menu #gender="matMenu">
+            <button mat-menu-item (click)="selectGender('Female')">
+              Female
+            </button>
+            <button mat-menu-item (click)="selectGender('Male')">Male</button>
+          </mat-menu>
+        </div>
         <mat-form-field class="form-field learner-contact">
           <mat-label>Learner Contact</mat-label>
           <input
@@ -36,7 +60,7 @@
             name="learnerContact"
             matInput
             placeholder="e.g. 78123456"
-            [(ngModel)]="contact"
+            [(ngModel)]="student_contact"
           />
         </mat-form-field>
         <mat-form-field class="form-field year">
@@ -46,8 +70,7 @@
             type="text"
             name="year"
             matInput
-            placeholder="e.g.
-          2019"
+            placeholder="e.g. 2019"
             [(ngModel)]="year"
           />
         </mat-form-field>
@@ -55,16 +78,16 @@
     </div>
   </div>
   <mat-dialog-actions class="dialogButtons buttons-container">
-    <button mat-raised-button color="warn" (click)="closeTeacherDialog()">
+    <button mat-raised-button color="warn" (click)="closeClassStudentDialog()">
       Close
     </button>
     <button
       class="submit"
       mat-raised-button
       color="primary"
-      (click)="submitClassLearnerRequest()"
+      (click)="submitClassStudent()"
     >
       Submit
     </button>
   </mat-dialog-actions>
-</add-app-dialog>
+</app-add-dialog>
