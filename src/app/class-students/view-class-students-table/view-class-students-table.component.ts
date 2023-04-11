@@ -8,7 +8,7 @@ import { DialogConfirmClassStudentDeleteComponent } from '../dialog-confirm-clas
 
 interface CLASS_STUDENT {
   _id: string;
-  class_id: string;
+  class: { _id: string; name: string };
   index: string;
   name: string;
   surname: string;
@@ -31,6 +31,7 @@ export class ViewClassStudentsTableComponent {
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
   displayedColumns: string[] = [
     'index',
+    'class',
     'name',
     'surname',
     'student_contact',
@@ -62,12 +63,28 @@ export class ViewClassStudentsTableComponent {
         console.log(data);
 
         let arr: CLASS_STUDENT[] = [];
+        let tempArray: any;
+        let stream: any;
+        if (sessionStorage.getItem('streams') != null) {
+          tempArray = JSON.parse(sessionStorage.getItem('streams')!);
+        }
 
         for (let i = 0; i < data.data.length; i++) {
           let temp = data.data[i];
+
+          tempArray.forEach((element: any) => {
+            console.log(`This is the index ${element}`);
+            // const stream = temp[i];
+
+            if (element._id == temp.class_id) {
+              stream = element.name;
+            }
+            console.log(element.name);
+          });
+
           arr.push({
             _id: temp._id,
-            class_id: temp.class_id,
+            class: { _id: temp.class_id, name: stream },
             index: `${i + 1}`,
             name: temp.name,
             surname: temp.surname,
