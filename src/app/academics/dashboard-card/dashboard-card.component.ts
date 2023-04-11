@@ -160,7 +160,7 @@ export class DashboardCardComponent {
     { add: 'AddSubjectsComponent', view: '../view-subjects' },
     { add: 'AddDepartmentsComponent', view: '../view-depts' },
     { add: 'AddTeacherComponent', view: '../view-teachers' },
-    { add: 'AddClassStudentComponent', view: '../view/class-students' },
+    { add: 'AddClassStudentComponent', view: '../view-class-students' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },

@@ -80,6 +80,8 @@ export class AcademicsComponent {
     this.api.viewAllClasses(0, 0).subscribe({
       next: (data: any) => {
         this.classStreams = data;
+        console.log(`This is data from the stream api method: ${data[0].name}`);
+        sessionStorage.setItem('streams', JSON.stringify(data));
         this.streamsCount = data.length.toString();
         console.log(this.streamsCount);
       },
