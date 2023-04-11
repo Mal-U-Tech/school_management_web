@@ -2,6 +2,7 @@ import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddDepartmentsComponent } from 'src/app/add-departments/add-departments.component';
 import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
+import { ClassStudentsComponent } from 'src/app/class-students/class-students.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
@@ -19,6 +20,8 @@ export class DashboardCardComponent {
   @Input() subjectCount: string = '0';
   @Input() deptCount: string = '0';
   @Input() teacherCount: string = '0';
+  @Input() classStudentsCount: string = '0';
+  @Input() classStreams: any[] = [];
 
   dialogRef: any;
   instance: any;
@@ -28,7 +31,7 @@ export class DashboardCardComponent {
     this.subjectCount,
     this.deptCount,
     this.teacherCount,
-    '0',
+    this.classStudentsCount,
     '0',
     '0',
     '0',
@@ -59,11 +62,7 @@ export class DashboardCardComponent {
             this.numberOfItems[1] = (
               Number(this.numberOfItems[1]) + 1
             ).toString();
-        }, 3000);
-      });
-
-      this.dialogRef.afterClosed().subscribe((result: any) => {
-        console.log(`Dialog result: ${this.instance.classNames[0].name}`);
+        }, 1000);
       });
     } else if (component == 'AddSubjectsComponent') {
       dialogConfig.width = '65%';
@@ -76,10 +75,6 @@ export class DashboardCardComponent {
       });
 
       this.instance.onSubmit.subscribe(() => {
-        console.log('Submitting subjects to api.');
-        console.log(
-          `These are the current elements ${this.instance.elements[0].dept_name}`
-        );
         this.instance.addSubjects();
         setTimeout(() => {
           if (this.instance.res == 1) {
@@ -87,7 +82,7 @@ export class DashboardCardComponent {
               Number(this.numberOfItems[2]) + 1
             ).toString();
           }
-        }, 2000);
+        }, 1000);
       });
     } else if (component == 'AddDepartmentsComponent') {
       dialogConfig.width = '65%';
@@ -107,10 +102,12 @@ export class DashboardCardComponent {
               Number(this.numberOfItems[3]) + 1
             ).toString();
           }
-        });
+        }, 1000);
       });
     } else if (component == 'AddTeacherComponent') {
       this.buildAddTeacherDialog(dialogConfig);
+    } else if (component == 'AddClassStudentComponent') {
+      this.buidAddClassStudentsDialog(dialogConfig);
     }
   }
 
@@ -124,7 +121,6 @@ export class DashboardCardComponent {
     });
 
     this.instance.onSubmit.subscribe(() => {
-      console.log(`\n\n\nInside onSubmit\n\n\n`);
       this.instance.saveTeacher();
       setTimeout(() => {
         if (this.instance.res == 1) {
@@ -132,7 +128,29 @@ export class DashboardCardComponent {
             Number(this.numberOfItems[4]) + 1
           ).toString();
         }
-      });
+      }, 1000);
+    });
+  }
+
+  // function to build add class students dialog
+  buidAddClassStudentsDialog(dialogConfig: MatDialogConfig) {
+    dialogConfig.data = this.classStreams;
+    this.dialogRef = this.dialog.open(ClassStudentsComponent, dialogConfig);
+    this.instance = this.dialogRef.componentInstance;
+
+    this.instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    this.instance.onSubmit.subscribe(() => {
+      this.instance.saveClassStudent();
+      setTimeout(() => {
+        if (this.instance.res == 1) {
+          this.numberOfItems[5] = (
+            Number(this.numberOfItems[5]) + 1
+          ).toString();
+        }
+      }, 1000);
     });
   }
 
@@ -142,7 +160,7 @@ export class DashboardCardComponent {
     { add: 'AddSubjectsComponent', view: '../view-subjects' },
     { add: 'AddDepartmentsComponent', view: '../view-depts' },
     { add: 'AddTeacherComponent', view: '../view-teachers' },
-    { add: '', view: '' },
+    { add: 'AddClassStudentComponent', view: '../view-class-students' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
@@ -161,7 +179,7 @@ export class DashboardCardComponent {
         this.numberOfItems[1] = changes['streamsCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting streams count: ${error.toString()}`);
+      // console.log(`Error while getting streams count: ${error.toString()}`);
     }
 
     try {
@@ -169,29 +187,31 @@ export class DashboardCardComponent {
         this.numberOfItems[2] = changes['subjectCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting subjects count: ${error.toString()}`);
+      // console.log(`Error while getting subjects count: ${error.toString()}`);
     }
 
     try {
       if (changes['deptCount'].currentValue != '0') {
-        console.log(
-          `This is departments count: ${changes['deptCount'].currentValue}`
-        );
         this.numberOfItems[3] = changes['deptCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting departments count ${error.toString()}`);
+      // console.log(`Error while getting departments count ${error.toString()}`);
     }
 
     try {
       if (changes['teacherCount'].currentValue != '0') {
-        console.log(
-          `This is the teachers count: ${changes['teacherCount'].currentValue}`
-        );
         this.numberOfItems[4] = changes['teacherCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting teachers ${error.toString()}`);
+      // console.log(`Error while getting teachers ${error.toString()}`);
+    }
+
+    try {
+      if (changes['classStudentsCount'].currentValue != '0') {
+        this.numberOfItems[5] = changes['classStudentsCount'].currentValue;
+      }
+    } catch (error: any) {
+      console.log(`Error while getting class students ${error.toString()}`);
     }
   }
 }
