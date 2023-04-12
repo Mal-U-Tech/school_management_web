@@ -2,7 +2,6 @@ import { Component, EventEmitter, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
-import { ClassnameApiService } from '../shared/classname/classname-api.service';
 
 export interface StreamDialogData {
   _id: string;
@@ -22,13 +21,7 @@ export class ClassStudentsComponent {
     @Inject(MAT_DIALOG_DATA) public data: StreamDialogData[]
   ) {}
 
-  ngAfterViewInit(): void {
-    for (let i = 0; i < this.data.length; i++) {
-      console.log(
-        `This is the classnames from classStudentComponent: ${this.data[i].name}`
-      );
-    }
-  }
+  ngAfterViewInit(): void {}
 
   // dialog title
   public title = 'Add Student';
