@@ -18,7 +18,7 @@
   color: black;
   margin: auto;
   text-align: center;
-  font-size: 1.7rem;
+  font-size: 1.2rem;
 }
 
 .form-container {
@@ -32,21 +32,23 @@
 }
 
 .form-field {
-  margin: 12px auto;
-  padding: 12px;
+  margin: 14px auto;
   border-radius: 12px;
 }
 
-mat-form-field {
-  width: 100%;
+.form-field {
+  width: 80%;
+  margin: 12px auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .buttons-container {
   text-align: center;
-  // background-container: green;
 }
 
 .menu {
-  margin: auto;
+  margin: 7px auto;
   text-align: center;
 }

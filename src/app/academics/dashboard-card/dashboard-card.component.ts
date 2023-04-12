@@ -1,9 +1,10 @@
-import { Component, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddDepartmentsComponent } from 'src/app/add-departments/add-departments.component';
 import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
 import { ClassStudentsComponent } from 'src/app/class-students/class-students.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
+import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
 @Component({
@@ -22,6 +23,7 @@ export class DashboardCardComponent {
   @Input() teacherCount: string = '0';
   @Input() classStudentsCount: string = '0';
   @Input() classStreams: any[] = [];
+  @Input() subjectTeachersCount = '0';
 
   dialogRef: any;
   instance: any;
@@ -32,7 +34,7 @@ export class DashboardCardComponent {
     this.deptCount,
     this.teacherCount,
     this.classStudentsCount,
-    '0',
+    this.subjectTeachersCount,
     '0',
     '0',
     '0',
@@ -43,8 +45,8 @@ export class DashboardCardComponent {
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.closeOnNavigation = true;
-    dialogConfig.width = '65%';
-    dialogConfig.height = '80%';
+    dialogConfig.width = '45%';
+    // dialogConfig.height = '80%';
     // dialogConfig.data = { name: 'Form 4A' };
 
     if (component == 'ClassnameComponent') {
@@ -65,8 +67,6 @@ export class DashboardCardComponent {
         }, 1000);
       });
     } else if (component == 'AddSubjectsComponent') {
-      dialogConfig.width = '65%';
-      dialogConfig.height = '80%';
       this.dialogRef = this.dialog.open(AddSubjectsComponent, dialogConfig);
       this.instance = this.dialogRef.componentInstance;
 
@@ -85,8 +85,6 @@ export class DashboardCardComponent {
         }, 1000);
       });
     } else if (component == 'AddDepartmentsComponent') {
-      dialogConfig.width = '65%';
-      dialogConfig.height = '80%';
       this.dialogRef = this.dialog.open(AddDepartmentsComponent, dialogConfig);
       this.instance = this.dialogRef.componentInstance;
 
@@ -108,6 +106,8 @@ export class DashboardCardComponent {
       this.buildAddTeacherDialog(dialogConfig);
     } else if (component == 'AddClassStudentComponent') {
       this.buidAddClassStudentsDialog(dialogConfig);
+    } else if (component == 'AddSubjectTeacherComponent') {
+      this.buildAddSubjectTeacherDialog(dialogConfig);
     }
   }
 
@@ -154,6 +154,27 @@ export class DashboardCardComponent {
     });
   }
 
+  // function to build add subject teacher dialog
+  buildAddSubjectTeacherDialog(dialogConfig: MatDialogConfig) {
+    this.dialogRef = this.dialog.open(SubjectTeacherComponent, dialogConfig);
+    this.instance = this.dialogRef.componentInstance;
+
+    this.instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    })
+
+    this.instance.onSubmit.subscribe(() => {
+      this.instance.saveSubjectTeacher();
+      setTimeout(() => {
+        if (this.instance.res == 1) {
+          this.numberOfItems[6] = (
+            Number(this.numberOfItems[6]) + 1
+          ).toString();
+        }
+      }, 1000);
+    });
+  }
+
   navLinks = [
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
@@ -161,7 +182,7 @@ export class DashboardCardComponent {
     { add: 'AddDepartmentsComponent', view: '../view-depts' },
     { add: 'AddTeacherComponent', view: '../view-teachers' },
     { add: 'AddClassStudentComponent', view: '../view-class-students' },
-    { add: '', view: '' },
+    { add: 'AddSubjectTeacherComponent', view: '../view-subject-teachers' },
     { add: '', view: '' },
     { add: '', view: '' },
     { add: '', view: '' },
@@ -212,6 +233,14 @@ export class DashboardCardComponent {
       }
     } catch (error: any) {
       console.log(`Error while getting class students ${error.toString()}`);
+    }
+
+    try {
+      if (changes['subjectTeachersCount'].currentValue != '0') {
+        this.numberOfItems[6] = changes['subjectTeachersCount'].currentValue;
+      }
+    } catch (error: any) {
+      console.log(`Errro while getting subject teachers ${error.toString()}`);
     }
   }
 }

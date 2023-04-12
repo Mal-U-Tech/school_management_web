@@ -8,6 +8,7 @@ import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service'
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
+import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 
 @Component({
   selector: 'app-academics',
@@ -55,6 +56,7 @@ export class AcademicsComponent {
     private deptApi: AddDepartmentsService,
     private teacherApi: TeacherService,
     private clasStudentsApi: ClassStudentsService,
+    private subjectTeacherApi: SubjectTeacherService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -65,6 +67,7 @@ export class AcademicsComponent {
     this.getDepartments();
     this.getTeachers();
     this.getClassStudents();
+    this.getSubjectTeachers();
   }
 
   public larger = '350px';
@@ -75,15 +78,14 @@ export class AcademicsComponent {
   public teacherCount = '0';
   public classStudentsCount = '0';
   public classStreams: any[] = [];
+  public subjectTeachersCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
       next: (data: any) => {
         this.classStreams = data;
-        console.log(`This is data from the stream api method: ${data[0].name}`);
         sessionStorage.setItem('streams', JSON.stringify(data));
         this.streamsCount = data.length.toString();
-        console.log(this.streamsCount);
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
@@ -95,6 +97,7 @@ export class AcademicsComponent {
     this.subjectsApi.getAllSubjects(0, 0).subscribe({
       next: (data: any) => {
         this.subjectCount = data.length.toString();
+        sessionStorage.setItem('subjects', JSON.stringify(data));
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
@@ -106,6 +109,7 @@ export class AcademicsComponent {
     this.deptApi.viewAllDepartments(0, 0).subscribe({
       next: (data: any) => {
         this.deptCount = data.length.toString();
+        sessionStorage.setItem('departments', JSON.stringify(data));
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
@@ -117,6 +121,7 @@ export class AcademicsComponent {
     this.teacherApi.getAllTeachers(0, 0).subscribe({
       next: (data: any) => {
         this.teacherCount = data.length.toString();
+        sessionStorage.setItem('teachers', JSON.stringify(data));
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
@@ -128,6 +133,17 @@ export class AcademicsComponent {
     this.clasStudentsApi.getAllLearners(0, 0).subscribe({
       next: (data: any) => {
         this.classStudentsCount = data.length.toString();
+      },
+      error: (error) => {
+        this.showSnackBar(error.toString(), 'Close');
+      },
+    });
+  }
+
+  getSubjectTeachers() {
+    this.subjectTeacherApi.getAllSubjectTeachers(0, 0).subscribe({
+      next: (data: any) => {
+        this.subjectTeachersCount = data.length.toString();
       },
       error: (error) => {
         this.showSnackBar(error.toString(), 'Close');

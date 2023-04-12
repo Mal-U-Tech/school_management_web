@@ -48,6 +48,7 @@ import { DialogConfirmTeacherDeleteComponent } from './teacher/dialog-confirm-te
 import { ClassStudentsComponent } from './class-students/class-students.component';
 import { ViewClassStudentsTableComponent } from './class-students/view-class-students-table/view-class-students-table.component';
 import { DialogConfirmClassStudentDeleteComponent } from './class-students/dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
+import { SubjectTeacherComponent } from './subject-teacher/subject-teacher.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -116,6 +117,7 @@ const routes: Routes = [
     ClassStudentsComponent,
     ViewClassStudentsTableComponent,
     DialogConfirmClassStudentDeleteComponent,
+    SubjectTeacherComponent,
   ],
   imports: [
     BrowserModule,
