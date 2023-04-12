@@ -49,6 +49,7 @@ import { ClassStudentsComponent } from './class-students/class-students.componen
 import { ViewClassStudentsTableComponent } from './class-students/view-class-students-table/view-class-students-table.component';
 import { DialogConfirmClassStudentDeleteComponent } from './class-students/dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
 import { SubjectTeacherComponent } from './subject-teacher/subject-teacher.component';
+import { ViewSubTeacherTableComponent } from './subject-teacher/view-sub-teacher-table/view-sub-teacher-table.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -118,6 +119,7 @@ const routes: Routes = [
     ViewClassStudentsTableComponent,
     DialogConfirmClassStudentDeleteComponent,
     SubjectTeacherComponent,
+    ViewSubTeacherTableComponent,
   ],
   imports: [
     BrowserModule,
