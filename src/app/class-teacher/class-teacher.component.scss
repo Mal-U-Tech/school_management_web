@@ -1,0 +1,50 @@
+// material styles
+.container {
+  width: 100%;
+}
+
+.title-container {
+  text-align: center;
+  font-size: 5rem;
+  position: relative;
+  top: 50px;
+  background-color: cornflowerblue;
+}
+
+.instructions {
+  position: relative;
+  width: 70%;
+  line-height: 30px;
+  color: black;
+  margin: auto;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.form-container {
+  background-color: #eee;
+  padding: 24px;
+  position: relative;
+  top: 30px;
+  width: 50%;
+  border-radius: 12px;
+  margin: 24px auto;
+}
+
+.form-field {
+  margin: 12px auto;
+  border-radius: 12px;
+  width: 80%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.button-container {
+  text-align: center;
+}
+
+.menu {
+  margin: 7px auto;
+  text-align: center;
+}

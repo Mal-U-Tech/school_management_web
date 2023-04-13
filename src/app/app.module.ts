@@ -51,6 +51,7 @@ import { DialogConfirmClassStudentDeleteComponent } from './class-students/dialo
 import { SubjectTeacherComponent } from './subject-teacher/subject-teacher.component';
 import { ViewSubTeacherTableComponent } from './subject-teacher/view-sub-teacher-table/view-sub-teacher-table.component';
 import { DialogConfirmSubTeacherDeleteComponent } from './subject-teacher/dialog-confirm-sub-teacher-delete/dialog-confirm-sub-teacher-delete.component';
+import { ClassTeacherComponent } from './class-teacher/class-teacher.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -92,6 +93,7 @@ const routes: Routes = [
         path: 'view-subject-teachers',
         component: ViewSubTeacherTableComponent,
       },
+      { path: 'add-class-teacher', component: ClassTeacherComponent },
     ],
   },
 ];
@@ -127,6 +129,7 @@ const routes: Routes = [
     SubjectTeacherComponent,
     ViewSubTeacherTableComponent,
     DialogConfirmSubTeacherDeleteComponent,
+    ClassTeacherComponent,
   ],
   imports: [
     BrowserModule,
