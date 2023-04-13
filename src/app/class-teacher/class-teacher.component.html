@@ -8,7 +8,8 @@
       <form id="input-container" class="form">
         <div class="form-field teacher">
           <button mat-raised-button [matMenuTriggerFor]="teacher">
-            {{ teacherSelection }}
+            {{ teacherSelection.title }} {{ teacherSelection.name }}
+            {{ teacherSelection.surname }}
           </button>
           <mat-menu #teacher="matMenu">
             <div *ngFor="let teach of teachers; let i = index">
@@ -20,10 +21,10 @@
         </div>
         <div class="form-field class">
           <button mat-raised-button [matMenuTriggerFor]="class">
-            {{ classSelection }}
+            {{ classSelection.name }}
           </button>
           <mat-menu #class="matMenu">
-            <div *ngFor="let stream; in: classes; let i = index">
+            <div *ngFor="let stream of classes; let i = index">
               <button mat-menu-item (click)="selectClass(stream)">
                 {{ stream.name }}
               </button>
