@@ -1,0 +1,60 @@
+<app-add-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="mat-typography instructions">
+      The form below contains input elements for adding a class teacher
+    </div>
+
+    <div id="form-container" class="form-container">
+      <form id="input-container" class="form">
+        <div class="form-field teacher">
+          <button mat-raised-button [matMenuTriggerFor]="teacher">
+            {{ teacherSelection }}
+          </button>
+          <mat-menu #teacher="matMenu">
+            <div *ngFor="let teach of teachers; let i = index">
+              <button mat-menu-item (click)="selectTeacher(teach)">
+                {{ teach.title }} {{ teach.name }} {{ teach.surname }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <div class="form-field class">
+          <button mat-raised-button [matMenuTriggerFor]="class">
+            {{ classSelection }}
+          </button>
+          <mat-menu #class="matMenu">
+            <div *ngFor="let stream; in: classes; let i = index">
+              <button mat-menu-item (click)="selectClass(stream)">
+                {{ stream.name }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <mat-form-field class="form-field year">
+          <mat-label>Year</mat-label>
+          <input
+            id="year"
+            type="text"
+            name="year"
+            matInput
+            placeholder="e.g. 2010"
+            [(ngModel)]="year"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <mat-dialog-actions class="dialogButtons buttons-container">
+    <button mat-raised-button color="warn" (click)="closeClassTeacherDialog()">
+      Close
+    </button>
+    <button
+      class="submit"
+      mat-raised-button
+      color="primary"
+      (click)="submitClassTeacher()"
+    >
+      Submit
+    </button>
+  </mat-dialog-actions>
+</app-add-dialog>
