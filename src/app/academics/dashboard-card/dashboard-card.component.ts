@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddDepartmentsComponent } from 'src/app/add-departments/add-departments.component';
 import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
 import { ClassStudentsComponent } from 'src/app/class-students/class-students.component';
+import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
@@ -24,6 +25,7 @@ export class DashboardCardComponent {
   @Input() classStudentsCount: string = '0';
   @Input() classStreams: any[] = [];
   @Input() subjectTeachersCount = '0';
+  @Input() classTeachersCount = '0';
 
   dialogRef: any;
   instance: any;
@@ -35,7 +37,7 @@ export class DashboardCardComponent {
     this.teacherCount,
     this.classStudentsCount,
     this.subjectTeachersCount,
-    '0',
+    this.classTeachersCount,
     '0',
     '0',
   ];
@@ -108,6 +110,8 @@ export class DashboardCardComponent {
       this.buidAddClassStudentsDialog(dialogConfig);
     } else if (component == 'AddSubjectTeacherComponent') {
       this.buildAddSubjectTeacherDialog(dialogConfig);
+    } else if (component == 'AddClassTeachersComponent') {
+      this.buildAddClassTeacherDialog(dialogConfig);
     }
   }
 
@@ -161,7 +165,7 @@ export class DashboardCardComponent {
 
     this.instance.onClose.subscribe(() => {
       this.dialogRef.close();
-    })
+    });
 
     this.instance.onSubmit.subscribe(() => {
       this.instance.saveSubjectTeacher();
@@ -169,6 +173,27 @@ export class DashboardCardComponent {
         if (this.instance.res == 1) {
           this.numberOfItems[6] = (
             Number(this.numberOfItems[6]) + 1
+          ).toString();
+        }
+      }, 1000);
+    });
+  }
+
+  // function to build add class teacher dialog
+  buildAddClassTeacherDialog(dialogConfig: MatDialogConfig) {
+    this.dialogRef = this.dialog.open(ClassTeacherComponent, dialogConfig);
+    this.instance = this.dialogRef.componentInstance;
+
+    this.instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    this.instance.onSubmit.subscribe(() => {
+      this.instance.saveClassTeacher();
+      setTimeout(() => {
+        if (this.instance.res == 1) {
+          this.numberOfItems[7] = (
+            Number(this.numberOfItems[7]) + 1
           ).toString();
         }
       }, 1000);
@@ -183,7 +208,7 @@ export class DashboardCardComponent {
     { add: 'AddTeacherComponent', view: '../view-teachers' },
     { add: 'AddClassStudentComponent', view: '../view-class-students' },
     { add: 'AddSubjectTeacherComponent', view: '../view-subject-teachers' },
-    { add: '', view: '' },
+    { add: 'AddClassTeachersComponent', view: '../view-class-teachers' },
     { add: '', view: '' },
     { add: '', view: '' },
   ];
@@ -240,7 +265,15 @@ export class DashboardCardComponent {
         this.numberOfItems[6] = changes['subjectTeachersCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Errro while getting subject teachers ${error.toString()}`);
+      console.log(`Error while getting subject teachers ${error.toString()}`);
+    }
+
+    try {
+      if (changes['classTeachersCount'].currentValue != '0') {
+        this.numberOfItems[7] = changes['classTeachersCount'].currentValue;
+      }
+    } catch (error: any) {
+      console.log(`Error while getting class teachers: ${error.toString()}`);
     }
   }
 }
