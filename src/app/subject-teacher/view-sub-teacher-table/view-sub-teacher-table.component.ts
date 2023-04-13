@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
+import { DialogConfirmSubTeacherDeleteComponent } from '../dialog-confirm-sub-teacher-delete/dialog-confirm-sub-teacher-delete.component';
 import { SubjectTeacherComponent } from '../subject-teacher.component';
 
 interface SUBJECT_TEACHER {
@@ -20,9 +21,10 @@ interface SUBJECT_TEACHER {
   styleUrls: ['./view-sub-teacher-table.component.scss'],
 })
 export class ViewSubTeacherTableComponent {
+  ELEMENT_DATA: SUBJECT_TEACHER[] = [];
   isLoading = false;
   totalRows = 0;
-  pageSize = 0;
+  pageSize = 10;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
   displayedColumns: string[] = [
@@ -51,16 +53,17 @@ export class ViewSubTeacherTableComponent {
 
     this.api.getAllSubjectTeachers(this.currentPage, this.pageSize).subscribe({
       next: (data: any) => {
-        console.log(data);
+        console.log(data.data);
 
         let arr: SUBJECT_TEACHER[] = [];
 
         for (let i = 0; i < data.data.length; i++) {
           const temp = data.data[i];
+
           arr.push({
             _id: temp._id,
             subject_id: temp.subject_id,
-            teacher_id: temp.subject_id,
+            teacher_id: temp.teacher_id,
             class_id: temp.class_id,
             index: `${i + 1}`,
             title: this.computeTeacherTitle(
@@ -68,6 +71,8 @@ export class ViewSubTeacherTableComponent {
               temp.teacher_id.marital_status
             ),
           });
+
+          console.log(arr);
         }
 
         this.dataSource.data = arr;
@@ -75,7 +80,7 @@ export class ViewSubTeacherTableComponent {
         setTimeout(() => {
           this.paginator.pageIndex = this.currentPage;
           this.paginator.length = data.count;
-        }, 1000);
+        });
         this.isLoading = false;
       },
       error: (error) => {
@@ -108,7 +113,7 @@ export class ViewSubTeacherTableComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        console.log();
+        console.log(error.toString());
       },
     });
   }
@@ -129,7 +134,7 @@ export class ViewSubTeacherTableComponent {
     this.dialogRef = this.dialog.open(SubjectTeacherComponent, dialogConfig);
     let instance = this.dialogRef.componentInstance;
 
-    instance.onClose(() => {
+    instance.onClose.subscribe(() => {
       this.dialogRef.close();
     });
 
@@ -149,7 +154,7 @@ export class ViewSubTeacherTableComponent {
     console.log(teacher);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
-    dialogConfigl.autoFocus = true;
+    dialogConfig.autoFocus = true;
     dialogConfig.data = {
       title: 'Confirm subject teacher deletion',
       name: teacher.teacher_id.name,
@@ -160,7 +165,7 @@ export class ViewSubTeacherTableComponent {
     };
 
     const dialog = this.dialog.open(
-      DialogConfirmSubjectTeacherDeleteComponent,
+      DialogConfirmSubTeacherDeleteComponent,
       dialogConfig
     );
 
