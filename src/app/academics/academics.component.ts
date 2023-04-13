@@ -9,6 +9,7 @@ import { AddDepartmentsService } from '../shared/add-departments/add-departments
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
+import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
 
 @Component({
   selector: 'app-academics',
@@ -57,6 +58,7 @@ export class AcademicsComponent {
     private teacherApi: TeacherService,
     private clasStudentsApi: ClassStudentsService,
     private subjectTeacherApi: SubjectTeacherService,
+    private classTeacherApi: ClassTeacherService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -68,6 +70,7 @@ export class AcademicsComponent {
     this.getTeachers();
     this.getClassStudents();
     this.getSubjectTeachers();
+    this.getClassTeachers();
   }
 
   public larger = '350px';
@@ -79,6 +82,7 @@ export class AcademicsComponent {
   public classStudentsCount = '0';
   public classStreams: any[] = [];
   public subjectTeachersCount = '0';
+  public classTeachersCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
@@ -144,6 +148,17 @@ export class AcademicsComponent {
     this.subjectTeacherApi.getAllSubjectTeachers(0, 0).subscribe({
       next: (data: any) => {
         this.subjectTeachersCount = data.length.toString();
+      },
+      error: (error) => {
+        this.showSnackBar(error.toString(), 'Close');
+      },
+    });
+  }
+
+  getClassTeachers() {
+    this.classTeacherApi.getAllClassTeachers(0, 0).subscribe({
+      next: (data: any) => {
+        this.classTeachersCount = data.length.toString();
       },
       error: (error) => {
         this.showSnackBar(error.toString(), 'Close');
