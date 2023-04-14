@@ -8,9 +8,8 @@ describe('ViewClassTeacherTableComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewClassTeacherTableComponent ]
-    })
-    .compileComponents();
+      declarations: [ViewClassTeacherTableComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ViewClassTeacherTableComponent);
     component = fixture.componentInstance;
@@ -21,3 +20,4 @@ describe('ViewClassTeacherTableComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+// some comment
