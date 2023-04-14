@@ -4,6 +4,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClassTeacherService } from 'src/app/shared/class-teacher/class-teacher.service';
 import { ClassTeacherComponent } from '../class-teacher.component';
+import { DialogConfirmClassTeacherDeleteComponent } from '../dialog-confirm-class-teacher-delete/dialog-confirm-class-teacher-delete.component';
 
 interface CLASS_TEACHER {
   _id: string;
@@ -28,7 +29,7 @@ export class ViewClassTeacherTableComponent {
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
   displayedColumns: string[] = ['index', 'teacher', 'class', 'year', 'actions'];
   dataSource: MatTableDataSource<CLASS_TEACHER> = new MatTableDataSource();
-  dialogReg: any;
+  dialogRef: any;
 
   constructor(private api: ClassTeacherService, public dialog: MatDialog) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -123,7 +124,7 @@ export class ViewClassTeacherTableComponent {
 
     this.dialogRef = this.dialog.open(ClassTeacherComponent, dialogConfig);
     let instance = this.dialogRef.componentInstance;
-    instance.onClose.subscrib(() => {
+    instance.onClose.subscribe(() => {
       this.dialogRef.close();
     });
 
@@ -139,7 +140,7 @@ export class ViewClassTeacherTableComponent {
     console.log(teacher);
   }
 
-  onDeleteSubjectTeacherDialog(teacher: any) {
+  openDeleteClassTeacherDialog(teacher: any) {
     console.log(teacher);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
