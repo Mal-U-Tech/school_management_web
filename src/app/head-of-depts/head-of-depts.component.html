@@ -1,0 +1,63 @@
+<app-add-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="mat-typography instructions">
+      The form below contains input elements for selecting a head of department.
+    </div>
+
+    <div id="form-container" class="form-container">
+      <form id="input-container" class="form">
+        <div class="form-field teacher">
+          <buton mat-raised-button [matMenuTriggerFor]="teacher">
+            {{ teacherSelection.title }}
+            {{ teacherSelection.name.subString(0, 1) }}.
+            {{ teacherSelection.surname }}
+          </buton>
+          <mat-menu #teacher="matMenu">
+            <div *ngFor="let teacher of teachers; let i = index">
+              <button mat-menu-item (click)="selectTeacher(teacher)">
+                {{ teacher.title }} {{ teacher.name.subString(0, 1) }}.
+                {{ teacher.surname }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <div class="form-field department">
+          <button mat-raised-button [matMenuTriggerFor]="dept">
+            {{ departmentSelection.name }}
+          </button>
+          <mat-menu #dept="matMenu">
+            <div *ngFor="let department of departments; let i = index">
+              <button mat-menu-item (click)="selectDepartment(department)">
+                {{ department.name }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <mat-form-field class="form-field year">
+          <mat-label>Year</mat-label>
+          <input
+            id="year"
+            type="text"
+            name="year"
+            matInput
+            placeholder="e.g. 2010"
+            [(ngModel)]="year"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+  <mat-dialog-actions class="dialogButtons buttons-container">
+    <button mat-raised-button color="warn" (click)="closeHODDepartment()">
+      Close
+    </button>
+    <button
+      class="submit"
+      mat-raised-button
+      color="primary"
+      (click)="submitClassTeacher()"
+    >
+      Submit
+    </button>
+  </mat-dialog-actions>
+</app-add-dialog>
