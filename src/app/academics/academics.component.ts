@@ -10,6 +10,17 @@ import { TeacherService } from '../shared/teacher/teacher.service';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
+import { HodService } from '../shared/hod/hod.service';
+
+interface TEACHER {
+  _id: string;
+  title: string;
+  name: string;
+  surname: string;
+  contact: string;
+  gender: string;
+  marital_status: string;
+}
 
 @Component({
   selector: 'app-academics',
@@ -59,6 +70,7 @@ export class AcademicsComponent {
     private clasStudentsApi: ClassStudentsService,
     private subjectTeacherApi: SubjectTeacherService,
     private classTeacherApi: ClassTeacherService,
+    private hodApi: HodService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -71,6 +83,7 @@ export class AcademicsComponent {
     this.getClassStudents();
     this.getSubjectTeachers();
     this.getClassTeachers();
+    this.getHOD();
   }
 
   public larger = '350px';
@@ -83,6 +96,7 @@ export class AcademicsComponent {
   public classStreams: any[] = [];
   public subjectTeachersCount = '0';
   public classTeachersCount = '0';
+  public hodCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
@@ -125,12 +139,47 @@ export class AcademicsComponent {
     this.teacherApi.getAllTeachers(0, 0).subscribe({
       next: (data: any) => {
         this.teacherCount = data.length.toString();
-        sessionStorage.setItem('teachers', JSON.stringify(data));
+
+        // compute teacher title and store in session storage
+        sessionStorage.setItem(
+          'teachers',
+          JSON.stringify(this.assignTeacherTitles(data))
+        );
       },
       error: (err) => {
         this.showSnackBar(err.toString(), 'Close');
       },
     });
+  }
+
+  // function to assign teacher title for all teachers
+  assignTeacherTitles(teachers: any[]) {
+    const arr: TEACHER[] = [];
+    for (let i = 0; i < teachers.length; i++) {
+      const temp = teachers[i];
+      arr.push({
+        _id: temp._id,
+        title: this.computeTeacherTitle(temp.gender, temp.marital_status),
+        name: temp.name,
+        surname: temp.surname,
+        gender: temp.gender,
+        marital_status: temp.marital_status,
+        contact: temp.contact,
+      });
+    }
+
+    return arr;
+  }
+
+  // function to compute teacher title
+  computeTeacherTitle(gender: string, maritalStatus: string): string {
+    if (gender === 'Male') {
+      return 'Mr.';
+    } else if (gender === 'Female' && maritalStatus === 'Single') {
+      return 'Ms.';
+    } else {
+      return 'Mrs.';
+    }
   }
 
   getClassStudents() {
@@ -159,6 +208,17 @@ export class AcademicsComponent {
     this.classTeacherApi.getAllClassTeachers(0, 0).subscribe({
       next: (data: any) => {
         this.classTeachersCount = data.length.toString();
+      },
+      error: (error) => {
+        this.showSnackBar(error.toString(), 'Close');
+      },
+    });
+  }
+
+  getHOD() {
+    this.hodApi.getAllHODs(0, 0).subscribe({
+      next: (data: any) => {
+        this.hodCount = data.length.toString();
       },
       error: (error) => {
         this.showSnackBar(error.toString(), 'Close');
