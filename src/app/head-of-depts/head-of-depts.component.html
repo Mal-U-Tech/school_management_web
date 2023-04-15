@@ -7,16 +7,16 @@
     <div id="form-container" class="form-container">
       <form id="input-container" class="form">
         <div class="form-field teacher">
-          <buton mat-raised-button [matMenuTriggerFor]="teacher">
+          <button mat-raised-button [matMenuTriggerFor]="teacher">
             {{ teacherSelection.title }}
-            {{ teacherSelection.name.substring(0, 1) }}.
+            {{ teacherSelection.name }}
             {{ teacherSelection.surname }}
-          </buton>
+          </button>
           <mat-menu #teacher="matMenu">
-            <div *ngFor="let teacher of teachers; let i = index">
+            <div *ngFor="let teach of teachers; let i = index">
               <button mat-menu-item (click)="selectTeacher(teacher)">
-                {{ teacher.title }} {{ teacher.name.subString(0, 1) }}.
-                {{ teacher.surname }}
+                {{ teach.title }} {{ teach.name.substring(0, 1) }}.
+                {{ teach.surname }}
               </button>
             </div>
           </mat-menu>
