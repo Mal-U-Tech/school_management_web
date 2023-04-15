@@ -10,6 +10,7 @@ import { TeacherService } from '../shared/teacher/teacher.service';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
+import { HodService } from '../shared/hod/hod.service';
 
 @Component({
   selector: 'app-academics',
@@ -59,6 +60,7 @@ export class AcademicsComponent {
     private clasStudentsApi: ClassStudentsService,
     private subjectTeacherApi: SubjectTeacherService,
     private classTeacherApi: ClassTeacherService,
+    private hodApi: HodService,
     private _snackBar: MatSnackBar,
     private router: Router
   ) {}
@@ -71,6 +73,7 @@ export class AcademicsComponent {
     this.getClassStudents();
     this.getSubjectTeachers();
     this.getClassTeachers();
+    this.getHOD();
   }
 
   public larger = '350px';
@@ -83,6 +86,7 @@ export class AcademicsComponent {
   public classStreams: any[] = [];
   public subjectTeachersCount = '0';
   public classTeachersCount = '0';
+  public hodCount = '0';
 
   getStreams() {
     this.api.viewAllClasses(0, 0).subscribe({
@@ -159,6 +163,17 @@ export class AcademicsComponent {
     this.classTeacherApi.getAllClassTeachers(0, 0).subscribe({
       next: (data: any) => {
         this.classTeachersCount = data.length.toString();
+      },
+      error: (error) => {
+        this.showSnackBar(error.toString(), 'Close');
+      },
+    });
+  }
+
+  getHOD() {
+    this.hodApi.getAllHODs(0, 0).subscribe({
+      next: (data: any) => {
+        this.hodCount = data.length.toString();
       },
       error: (error) => {
         this.showSnackBar(error.toString(), 'Close');
