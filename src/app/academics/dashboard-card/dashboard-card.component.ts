@@ -5,6 +5,7 @@ import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.componen
 import { ClassStudentsComponent } from 'src/app/class-students/class-students.component';
 import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
+import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
@@ -26,6 +27,7 @@ export class DashboardCardComponent {
   @Input() classStreams: any[] = [];
   @Input() subjectTeachersCount = '0';
   @Input() classTeachersCount = '0';
+  @Input() hodCount = '0';
 
   dialogRef: any;
   instance: any;
@@ -38,7 +40,7 @@ export class DashboardCardComponent {
     this.classStudentsCount,
     this.subjectTeachersCount,
     this.classTeachersCount,
-    '0',
+    this.hodCount,
     '0',
   ];
 
@@ -112,6 +114,8 @@ export class DashboardCardComponent {
       this.buildAddSubjectTeacherDialog(dialogConfig);
     } else if (component == 'AddClassTeachersComponent') {
       this.buildAddClassTeacherDialog(dialogConfig);
+    } else if (component == 'AddHODComponent') {
+      this.buildAddHODDialog(dialogConfig);
     }
   }
 
@@ -200,6 +204,27 @@ export class DashboardCardComponent {
     });
   }
 
+  // function to build add HOD dialog
+  buildAddHODDialog(dialogConfig: MatDialogConfig) {
+    this.dialogRef = this.dialog.open(HeadOfDeptsComponent, dialogConfig);
+    this.instance = this.dialogRef.componentInstance;
+
+    this.instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    this.instance.onSubmit.subscribe(() => {
+      this.instance.saveHOD();
+      setTimeout(() => {
+        if (this.instance.res == 1) {
+          this.numberOfItems[8] = (
+            Number(this.numberOfItems[8]) + 1
+          ).toString();
+        }
+      }, 1000);
+    });
+  }
+
   navLinks = [
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
@@ -209,7 +234,7 @@ export class DashboardCardComponent {
     { add: 'AddClassStudentComponent', view: '../view-class-students' },
     { add: 'AddSubjectTeacherComponent', view: '../view-subject-teachers' },
     { add: 'AddClassTeachersComponent', view: '../view-class-teachers' },
-    { add: '', view: '' },
+    { add: 'AddHODComponent', view: '../view-hods' },
     { add: '', view: '' },
   ];
 
@@ -274,6 +299,14 @@ export class DashboardCardComponent {
       }
     } catch (error: any) {
       console.log(`Error while getting class teachers: ${error.toString()}`);
+    }
+
+    try {
+      if (changes['hodCount'].currentValue != '0') {
+        this.numberOfItems[8] = changes['hodCount'].currentValue;
+      }
+    } catch (error: any) {
+      console.log(`Error while getting HODs: ${error.toString()}`);
     }
   }
 }
