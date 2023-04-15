@@ -9,7 +9,7 @@
         <div class="form-field teacher">
           <buton mat-raised-button [matMenuTriggerFor]="teacher">
             {{ teacherSelection.title }}
-            {{ teacherSelection.name.subString(0, 1) }}.
+            {{ teacherSelection.name.substring(0, 1) }}.
             {{ teacherSelection.surname }}
           </buton>
           <mat-menu #teacher="matMenu">
