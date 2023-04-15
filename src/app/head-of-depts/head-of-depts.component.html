@@ -14,7 +14,7 @@
           </button>
           <mat-menu #teacher="matMenu">
             <div *ngFor="let teach of teachers; let i = index">
-              <button mat-menu-item (click)="selectTeacher(teacher)">
+              <button mat-menu-item (click)="selectTeacher(teach)">
                 {{ teach.title }} {{ teach.name.substring(0, 1) }}.
                 {{ teach.surname }}
               </button>
