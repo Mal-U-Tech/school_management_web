@@ -1,5 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HodService } from '../shared/hod/hod.service';
 
 @Component({
   selector: 'app-head-of-depts',
@@ -7,10 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./head-of-depts.component.scss'],
 })
 export class HeadOfDeptsComponent {
-  constructor(
-    private apiService: HeadOfDeptService,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private apiService: HodService, private _snackBar: MatSnackBar) {}
 
   // variables for teachers and department
   public teachers: any;
@@ -95,6 +93,6 @@ export class HeadOfDeptsComponent {
 
   // show snack bar
   openSnackBar(message: string, action: string) {
-    this._snackBar.open(messgae, action, { duration: 3000 });
+    this._snackBar.open(message, action, { duration: 3000 });
   }
 }
