@@ -100,6 +100,7 @@ const routes: Routes = [
         path: 'view-class-teachers',
         component: ViewClassTeacherTableComponent,
       },
+      { path: 'add-hod', component: HeadOfDeptsComponent },
     ],
   },
 ];
