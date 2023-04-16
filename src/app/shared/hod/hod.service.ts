@@ -59,7 +59,7 @@ export class HodService {
   updateHOD(id: string, teacher: any): Observable<HODInterface> {
     return this.http
       .put<HODInterface>(
-        this.apiUrl + `/update/:id`,
+        this.apiUrl + `/update/${id}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
