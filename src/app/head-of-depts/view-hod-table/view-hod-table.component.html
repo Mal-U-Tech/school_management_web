@@ -27,6 +27,12 @@
       </td>
     </ng-container>
 
+    <!-- Year Column -->
+    <ng-container matColumnDef="year">
+      <th mat-header *matHeaderCellDef>Year</th>
+      <td mat-cell *matCellDef="let element">{{ element.year }}</td>
+    </ng-container>
+
     <!-- Actions Column -->
     <ng-container matColumnDef="actions">
       <th mat-header *matHeaderCellDef></th>
@@ -46,10 +52,11 @@
 
   <mat-paginator
     #paginator
-    [length]='totalRows'
+    [length]="totalRows"
     [pageIndex]="currentPage"
     [pageSize]="pageSize"
     [pageSizeOptions]="pageSizeOptions"
     (page)="pageChanged($event)"
-    arial-label="Select page"></mat-paginator>
+    arial-label="Select page"
+  ></mat-paginator>
 </div>
