@@ -55,6 +55,7 @@ import { ViewClassTeacherTableComponent } from './class-teacher/view-class-teach
 import { DialogConfirmClassTeacherDeleteComponent } from './class-teacher/dialog-confirm-class-teacher-delete/dialog-confirm-class-teacher-delete.component';
 import { HeadOfDeptsComponent } from './head-of-depts/head-of-depts.component';
 import { ViewHodTableComponent } from './head-of-depts/view-hod-table/view-hod-table.component';
+import { DialogConfirmHODDeleteComponent } from './head-of-depts/dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -102,6 +103,7 @@ const routes: Routes = [
         component: ViewClassTeacherTableComponent,
       },
       { path: 'add-hod', component: HeadOfDeptsComponent },
+      { path: 'view-hods', component: ViewHodTableComponent },
     ],
   },
 ];
@@ -142,6 +144,7 @@ const routes: Routes = [
     DialogConfirmClassTeacherDeleteComponent,
     HeadOfDeptsComponent,
     ViewHodTableComponent,
+    DialogConfirmHODDeleteComponent,
   ],
   imports: [
     BrowserModule,
