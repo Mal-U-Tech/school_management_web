@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { HodService } from 'src/app/shared/hod/hod.service';
+import { DialogConfirmHODDeleteComponent } from '../dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 import { HeadOfDeptsComponent } from '../head-of-depts.component';
 
 interface HOD {
@@ -11,6 +12,7 @@ interface HOD {
   teacher: object;
   department: object;
   title: string;
+  year: string;
 }
 
 @Component({
@@ -25,7 +27,13 @@ export class ViewHodTableComponent {
   pageSize = 10;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
-  displayColumns: string[] = ['index', 'teacher', 'department', 'actions'];
+  displayColumns: string[] = [
+    'index',
+    'teacher',
+    'department',
+    'year',
+    'actions',
+  ];
   dataSource: MatTableDataSource<HOD> = new MatTableDataSource();
   dialogRef: any;
 
@@ -62,6 +70,7 @@ export class ViewHodTableComponent {
               temp.teacher_id.gender,
               temp.teacher_id.marital_status
             ),
+            year: temp.year,
           });
 
           console.log(arr);
