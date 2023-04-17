@@ -138,7 +138,7 @@ export class ViewHodTableComponent {
     });
   }
 
-  openUpdateHODDialgo(teacher: any) {
+  openUpdateHODDialog(teacher: any) {
     console.log(teacher);
   }
 
