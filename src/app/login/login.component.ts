@@ -57,8 +57,6 @@ export class LoginComponent implements OnInit {
   public submitForm() {
     this.userApi.userLogin(this.email.value, this.password.value).subscribe({
       next: (data: any) => {
-        console.log(`This is data: ${data}`);
-
         // TODO: route to home, once system is done
 
         this.spinner = {
@@ -76,7 +74,7 @@ export class LoginComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(`This is error: ${error}`);
-        this.openSnackBar(error, 'Close');
+        this.userApi.errorToast(error);
       },
     });
   }

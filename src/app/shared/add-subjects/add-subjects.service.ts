@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import {
   SubjectsArrayInterface,
   SubjectsInterface,
@@ -9,13 +11,12 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class AddSubjectsService {
-  apiUrl = 'http://localhost:2000/dept-subject';
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+export class AddSubjectsService extends SharedApiConstants {
+  module = 'dept-subject';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, snackbar: MatSnackBar) {
+    super(snackbar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -37,7 +38,7 @@ export class AddSubjectsService {
   postSubjects(subjects: any): Observable<SubjectsArrayInterface> {
     return this.http
       .post<SubjectsArrayInterface>(
-        this.apiUrl + '/register-array',
+        this.apiUrl + `${this.module}/register-array`,
         JSON.stringify(subjects),
         this.httpOptions
       )
@@ -48,7 +49,7 @@ export class AddSubjectsService {
   postSubject(subject: any): Observable<SubjectsInterface> {
     return this.http
       .post<SubjectsInterface>(
-        this.apiUrl + '/register',
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(subject),
         this.httpOptions
       )
@@ -62,7 +63,7 @@ export class AddSubjectsService {
   ): Observable<SubjectsArrayInterface> {
     return this.http
       .get<SubjectsArrayInterface>(
-        this.apiUrl + `/view-all/${pageNo}/${pageSize}`
+        this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -70,7 +71,7 @@ export class AddSubjectsService {
   // HttpClient API get() => get one subject
   getSubject(id: string): Observable<SubjectsInterface> {
     return this.http
-      .get<SubjectsInterface>(this.apiUrl + `/view-one/${id}`)
+      .get<SubjectsInterface>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -78,7 +79,7 @@ export class AddSubjectsService {
   updateSubject(id: string, subject: any): Observable<SubjectsInterface> {
     return this.http
       .put<SubjectsInterface>(
-        this.apiUrl + `/update/${id}`,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(subject),
         this.httpOptions
       )
@@ -88,7 +89,7 @@ export class AddSubjectsService {
   // HttpClient API delete() => delete subject
   deleteSubject(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

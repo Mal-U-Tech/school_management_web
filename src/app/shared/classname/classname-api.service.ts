@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import {
   ClassnameArrayInterface,
   ClassnameInterface,
@@ -9,14 +11,13 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class ClassnameApiService {
-  apiUrl: string = 'http://localhost:2000/classname';
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+export class ClassnameApiService extends SharedApiConstants {
+  module = 'classname';
 
   // CRUD methods to consume RESTful API
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -38,7 +39,7 @@ export class ClassnameApiService {
   postClassnamesArray(classnames: any): Observable<ClassnameArrayInterface> {
     return this.http
       .post<ClassnameArrayInterface>(
-        this.apiUrl + '/register-array',
+        this.apiUrl + `${this.module}/register-array`,
         JSON.stringify(classnames),
         this.httpOptions
       )
@@ -49,7 +50,7 @@ export class ClassnameApiService {
   postClassname(classname: any): Observable<ClassnameInterface> {
     return this.http
       .post<ClassnameInterface>(
-        this.apiUrl + '/register',
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(classname),
         this.httpOptions
       )
@@ -63,7 +64,7 @@ export class ClassnameApiService {
   ): Observable<ClassnameInterface> {
     return this.http
       .get<ClassnameInterface>(
-        this.apiUrl + `/view-all/${currentPage}/${pageSize}`
+        this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -72,7 +73,7 @@ export class ClassnameApiService {
   updateClassname(id: string, classname: any): Observable<ClassnameInterface> {
     return this.http
       .put<ClassnameInterface>(
-        this.apiUrl + '/update/' + id,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(classname),
         this.httpOptions
       )
@@ -82,7 +83,7 @@ export class ClassnameApiService {
   // HttpClient API delete() => delete classname by id
   deleteClassname(id: string) {
     return this.http
-      .delete(this.apiUrl + '/delete/' + id, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

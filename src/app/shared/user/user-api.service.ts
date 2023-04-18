@@ -2,37 +2,31 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { UserInterface } from './user.interface';
+import { SharedApiConstants } from '../shared.constants';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
-export class UserApiService {
-  apiUrl = 'http://localhost:2000/user';
-  // http options
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-
+export class UserApiService extends SharedApiConstants {
   /*========================================
    CRUD Methods for consuming RESTful API
  =========================================*/
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // HttpClient API get() method => Fetch users
   getUsers(): Observable<UserInterface> {
-    return this.http
-      .get<UserInterface>(this.apiUrl + '/view-all')
-      .pipe(retry(1), catchError(this.handleError));
+    return this.http.get<UserInterface>(this.apiUrl + 'user/view-all');
   }
 
   // HttpClient API post() method => login
   userLogin(email: any, password: any): Observable<UserInterface> {
     return this.http
       .post<UserInterface>(
-        this.apiUrl + '/login',
+        this.apiUrl + 'user/login',
         JSON.stringify({ email: email, password: password }),
         this.httpOptions
       )
@@ -43,7 +37,7 @@ export class UserApiService {
   checkModules(adminId: string): Observable<any> {
     return this.http
       .post<any>(
-        `http://localhost:2000/check-modules/${adminId}`,
+        this.apiUrl + `check-modules/${adminId}`,
         JSON.stringify({}),
         this.httpOptions
       )
@@ -55,7 +49,7 @@ export class UserApiService {
     console.log(user);
     return this.http
       .post<UserInterface>(
-        this.apiUrl + '/create',
+        this.apiUrl + 'user/create',
         JSON.stringify(user),
         this.httpOptions
       )
@@ -65,7 +59,7 @@ export class UserApiService {
   // HttpClient API view-one method => view using id
   viewOne(id: string): Observable<UserInterface> {
     return this.http
-      .get<UserInterface>(this.apiUrl + '/view-one/' + id)
+      .get<UserInterface>(this.apiUrl + 'user/view-one/' + id)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -73,7 +67,7 @@ export class UserApiService {
   updateUser(id: string, user: any): Observable<UserInterface> {
     return this.http
       .put<UserInterface>(
-        this.apiUrl + '/update/' + id,
+        this.apiUrl + 'user/update/' + id,
         JSON.stringify(user),
         this.httpOptions
       )
@@ -82,7 +76,7 @@ export class UserApiService {
 
   deleteUser(id: string) {
     return this.http
-      .delete(this.apiUrl + '/delete/' + id, this.httpOptions)
+      .delete(this.apiUrl + 'user/delete/' + id, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 

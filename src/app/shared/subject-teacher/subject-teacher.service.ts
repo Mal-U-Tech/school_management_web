@@ -1,19 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import { SubjectTeacherInterface } from './subject-teacher.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SubjectTeacherService {
-  apiUrl = 'http://localhost:2000/subject-teacher';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-  constructor(private http: HttpClient) {}
+export class SubjectTeacherService extends SharedApiConstants {
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -34,7 +32,7 @@ export class SubjectTeacherService {
   postSubjectTeacher(teacher: any): Observable<SubjectTeacherInterface> {
     return this.http
       .post<SubjectTeacherInterface>(
-        this.apiUrl + `/register`,
+        this.apiUrl + `subject-teacher/register`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -48,7 +46,7 @@ export class SubjectTeacherService {
   ): Observable<SubjectTeacherInterface[]> {
     return this.http
       .get<SubjectTeacherInterface[]>(
-        this.apiUrl + `/view-all/${pageNo}/${pageSize}`
+        this.apiUrl + `subject-teacher/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -61,7 +59,7 @@ export class SubjectTeacherService {
   ): Observable<SubjectTeacherInterface> {
     return this.http
       .get<SubjectTeacherInterface>(
-        this.apiUrl + `/view-on/${id}/${pageNo}/${pageSize}`
+        this.apiUrl + `subject-teacher/view-on/${id}/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -73,7 +71,7 @@ export class SubjectTeacherService {
   ): Observable<SubjectTeacherInterface> {
     return this.http
       .put<SubjectTeacherInterface>(
-        this.apiUrl + `/update/${id}`,
+        this.apiUrl + `subject-teacher/update/${id}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -83,7 +81,7 @@ export class SubjectTeacherService {
   // HttpClient API delete() => delete subject teacher in db
   deleteSubjectTeachere(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `subject-teacher/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

@@ -1,19 +1,17 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import { TeacherInterface } from './teacher.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TeacherService {
-  apiUrl = 'http://localhost:2000/teacher';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-  constructor(private http: HttpClient) {}
+export class TeacherService extends SharedApiConstants {
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -34,7 +32,7 @@ export class TeacherService {
   postTeacher(teacher: any): Observable<TeacherInterface> {
     return this.http
       .post<TeacherInterface>(
-        this.apiUrl + '/register',
+        this.apiUrl + 'teacher/register',
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -47,7 +45,9 @@ export class TeacherService {
     pageSize: number
   ): Observable<TeacherInterface[]> {
     return this.http
-      .get<TeacherInterface[]>(this.apiUrl + `/view-all/${pageNo}/${pageSize}`)
+      .get<TeacherInterface[]>(
+        this.apiUrl + `teacher/view-all/${pageNo}/${pageSize}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -55,7 +55,7 @@ export class TeacherService {
   updateTeacher(id: string, teacher: any): Observable<TeacherInterface> {
     return this.http
       .put<TeacherInterface>(
-        this.apiUrl + `/update/${id}`,
+        this.apiUrl + `teacher/update/${id}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -65,7 +65,7 @@ export class TeacherService {
   // HttpClient API delete() => delete teacher
   deleteTeacher(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `teacher/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import {
   AddDepartments,
   AddDepartmentsArray,
@@ -9,12 +11,11 @@ import {
 @Injectable({
   providedIn: 'root',
 })
-export class AddDepartmentsService {
-  apiUrl: string = 'http://localhost:2000/departments';
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
-  constructor(private http: HttpClient) {}
+export class AddDepartmentsService extends SharedApiConstants {
+  module = 'departments';
+  constructor(private http: HttpClient, snackbar: MatSnackBar) {
+    super(snackbar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -38,7 +39,7 @@ export class AddDepartmentsService {
   postDepartmentsArray(departments: any): Observable<AddDepartmentsArray> {
     return this.http
       .post<AddDepartmentsArray>(
-        this.apiUrl + '/register-array',
+        this.apiUrl + `${this.module}/register-array`,
         JSON.stringify(departments),
         this.httpOptions
       )
@@ -49,7 +50,7 @@ export class AddDepartmentsService {
   postDepartment(department: any): Observable<AddDepartments> {
     return this.http
       .post<AddDepartments>(
-        this.apiUrl + '/create',
+        this.apiUrl + `${this.module}/create`,
         JSON.stringify(department),
         this.httpOptions
       )
@@ -62,7 +63,9 @@ export class AddDepartmentsService {
     pageSize: number
   ): Observable<AddDepartments> {
     return this.http
-      .get<AddDepartments>(this.apiUrl + `/view-all/${currentPage}/${pageSize}`)
+      .get<AddDepartments>(
+        this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -70,7 +73,7 @@ export class AddDepartmentsService {
   updateDepartment(id: string, department: any): Observable<AddDepartments> {
     return this.http
       .put<AddDepartments>(
-        this.apiUrl + '/update/' + id,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(department),
         this.httpOptions
       )
@@ -80,7 +83,7 @@ export class AddDepartmentsService {
   // HttpClient API delete() => delete department by id
   deleteDepartment(id: string) {
     return this.http
-      .delete(this.apiUrl + '/delete/' + id, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

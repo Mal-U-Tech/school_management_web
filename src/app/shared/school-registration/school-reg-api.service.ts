@@ -1,28 +1,27 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import { SchoolRegInterface } from './school-reg.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SchoolRegApiService {
-  apiUrl: string = 'http://localhost:2000/school-info';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+export class SchoolRegApiService extends SharedApiConstants {
+  module = 'school-info';
 
   // CRUD methods to consume RESTful API
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // HTTPClient API post() method => create School Info record
   postSchoolInfo(school: any): Observable<SchoolRegInterface> {
     return this.http
       .post<SchoolRegInterface>(
-        this.apiUrl + '/create',
+        this.apiUrl + `${this.module}/create`,
         JSON.stringify(school),
         this.httpOptions
       )
@@ -32,7 +31,9 @@ export class SchoolRegApiService {
   // HTTPClient API get() method => get school info
   getSchoolInfo(id: any): Observable<SchoolRegInterface> {
     return this.http
-      .get<SchoolRegInterface>(this.apiUrl + `/view-profile/${id}`)
+      .get<SchoolRegInterface>(
+        this.apiUrl + `${this.module}/view-profile/${id}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -40,7 +41,7 @@ export class SchoolRegApiService {
   updateSchoolInfo(id: string, school: any): Observable<SchoolRegInterface> {
     return this.http
       .put<SchoolRegInterface>(
-        this.apiUrl + `update/${id}`,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(school),
         this.httpOptions
       )
@@ -50,7 +51,7 @@ export class SchoolRegApiService {
   // HTTPClient API delete() method => Delete School info
   deleteSchoolInfo(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 
