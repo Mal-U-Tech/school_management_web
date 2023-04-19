@@ -58,9 +58,6 @@ import { ViewHodTableComponent } from './head-of-depts/view-hod-table/view-hod-t
 import { DialogConfirmHODDeleteComponent } from './head-of-depts/dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 import { CommitteesComponent } from './committees/committees.component';
 import { ConfirmScoresheetModulesCreatedComponent } from './scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
-import { CreateScoresheetComponent } from './scoresheet/create-scoresheet/create-scoresheet.component';
-import { ScoresheetDetailsComponent } from './scoresheet/create-scoresheet/scoresheet-details/scoresheet-details.component';
-import { ScoresheetClassesComponent } from './scoresheet/create-scoresheet/scoresheet-classes/scoresheet-classes.component';
 import { DetailsComponent } from './scoresheet/create-scoresheet/details/details.component';
 import { ClassesComponent } from './scoresheet/create-scoresheet/classes/classes.component';
 import { AddMarksComponent } from './scoresheet/create-scoresheet/add-marks/add-marks.component';
@@ -155,9 +152,6 @@ const routes: Routes = [
     DialogConfirmHODDeleteComponent,
     CommitteesComponent,
     ConfirmScoresheetModulesCreatedComponent,
-    CreateScoresheetComponent,
-    ScoresheetDetailsComponent,
-    ScoresheetClassesComponent,
     DetailsComponent,
     ClassesComponent,
     AddMarksComponent,
