@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
@@ -11,6 +10,8 @@ import { ClassStudentsService } from '../shared/class-students/class-students.se
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
 import { HodService } from '../shared/hod/hod.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmScoresheetModulesCreatedComponent } from '../scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
 
 interface TEACHER {
   _id: string;
@@ -71,8 +72,8 @@ export class AcademicsComponent {
     private subjectTeacherApi: SubjectTeacherService,
     private classTeacherApi: ClassTeacherService,
     private hodApi: HodService,
-    private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -106,7 +107,7 @@ export class AcademicsComponent {
         this.streamsCount = data.length.toString();
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.api.errorToast(err.toString());
       },
     });
   }
@@ -118,7 +119,7 @@ export class AcademicsComponent {
         sessionStorage.setItem('subjects', JSON.stringify(data));
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.subjectsApi.errorToast(err.toString());
       },
     });
   }
@@ -130,7 +131,7 @@ export class AcademicsComponent {
         sessionStorage.setItem('departments', JSON.stringify(data));
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.deptApi.errorToast(err.toString());
       },
     });
   }
@@ -147,7 +148,7 @@ export class AcademicsComponent {
         );
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.teacherApi.errorToast(err.toString());
       },
     });
   }
@@ -188,7 +189,7 @@ export class AcademicsComponent {
         this.classStudentsCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.clasStudentsApi.errorToast(error.toString());
       },
     });
   }
@@ -199,7 +200,7 @@ export class AcademicsComponent {
         this.subjectTeachersCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.subjectTeacherApi.errorToast(error.toString());
       },
     });
   }
@@ -210,7 +211,7 @@ export class AcademicsComponent {
         this.classTeachersCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.classTeacherApi.errorToast(error.toString());
       },
     });
   }
@@ -221,7 +222,7 @@ export class AcademicsComponent {
         this.hodCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.hodApi.errorToast(error.toString());
       },
     });
   }
@@ -231,8 +232,14 @@ export class AcademicsComponent {
     this.router.navigate(['add-streams']);
   };
 
-  // function to display snackbar
-  showSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+  // open modal dialog for scoresheets
+  openScoresheetModalDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'scoresheet-confirmation-modal';
+    dialogConfig.height = '350px';
+    dialogConfig.width = '600px';
+    this.dialog.open(ConfirmScoresheetModulesCreatedComponent, dialogConfig);
   }
 }

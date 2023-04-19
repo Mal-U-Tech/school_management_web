@@ -1,7 +1,13 @@
 <div class="grid-container">
   <h1 class="mat-h1">Academics</h1>
   <div class="scoresheet buttons-container">
-    <button mat-raised-button color="accent">Create Scoresheet</button>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="openScoresheetModalDialog()"
+    >
+      Create Scoresheet
+    </button>
   </div>
   <mat-grid-list cols="2" rowHeight="250px">
     <mat-grid-tile
