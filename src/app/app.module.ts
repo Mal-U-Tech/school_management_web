@@ -57,6 +57,7 @@ import { HeadOfDeptsComponent } from './head-of-depts/head-of-depts.component';
 import { ViewHodTableComponent } from './head-of-depts/view-hod-table/view-hod-table.component';
 import { DialogConfirmHODDeleteComponent } from './head-of-depts/dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 import { CommitteesComponent } from './committees/committees.component';
+import { ConfirmScoresheetModulesCreatedComponent } from './scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -147,6 +148,7 @@ const routes: Routes = [
     ViewHodTableComponent,
     DialogConfirmHODDeleteComponent,
     CommitteesComponent,
+    ConfirmScoresheetModulesCreatedComponent,
   ],
   imports: [
     BrowserModule,
