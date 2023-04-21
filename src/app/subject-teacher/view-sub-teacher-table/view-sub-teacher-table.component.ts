@@ -85,6 +85,7 @@ export class ViewSubTeacherTableComponent {
       },
       error: (error) => {
         console.log(error.toString());
+        this.dataSource.data = [];
         this.isLoading = false;
       },
     });
