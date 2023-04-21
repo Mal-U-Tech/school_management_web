@@ -68,6 +68,7 @@ export class ViewDepartmentsTableComponent {
       },
       error: (err) => {
         console.log(err);
+        this.dataSource.data = [];
         this.isLoading = false;
       },
     });
