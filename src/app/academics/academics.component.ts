@@ -36,8 +36,8 @@ export class AcademicsComponent {
         return [
           { title: 'Overview', cols: 1, rows: 1 },
           { title: 'Streams', cols: 1, rows: 1 },
-          { title: 'Subjects', cols: 1, rows: 1 },
           { title: 'Departments', cols: 1, rows: 1 },
+          { title: 'Subjects', cols: 1, rows: 1 },
           { title: 'Teachers', cols: 1, rows: 1 },
           { title: 'Class Students', cols: 1, rows: 1 },
           { title: 'Subject Teachers', cols: 1, rows: 1 },
@@ -50,8 +50,8 @@ export class AcademicsComponent {
       return [
         { title: 'Overview', cols: 2, rows: 1 },
         { title: 'Streams', cols: 1, rows: 1 },
-        { title: 'Subjects', cols: 1, rows: 1 },
         { title: 'Departments', cols: 1, rows: 1 },
+        { title: 'Subjects', cols: 1, rows: 1 },
         { title: 'Teachers', cols: 1, rows: 1 },
         { title: 'Class Students', cols: 1, rows: 1 },
         { title: 'Subject Teachers', cols: 1, rows: 1 },
@@ -117,6 +117,7 @@ export class AcademicsComponent {
       next: (data: any) => {
         this.subjectCount = data.length.toString();
         sessionStorage.setItem('subjects', JSON.stringify(data));
+        this.subjectsApi.assignSubjectsToLevels(data);
       },
       error: (err) => {
         this.subjectsApi.errorToast(err.toString());
