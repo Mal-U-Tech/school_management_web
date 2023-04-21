@@ -5,7 +5,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
@@ -17,7 +17,6 @@ import { AddDepartmentsService } from '../shared/add-departments/add-departments
 })
 export class AddSubjectsComponent implements OnInit {
   constructor(
-    private _Activatedroute: ActivatedRoute,
     private apiService: AddSubjectsService,
     private departmentsService: AddDepartmentsService,
     private _snackBar: MatSnackBar,
@@ -28,7 +27,7 @@ export class AddSubjectsComponent implements OnInit {
     {
       dept_id: '',
       dept_name: '',
-      subjects: [{ name: '', level: '' }],
+      subjects: [{ name: '', secondary: false, high_school: false }],
     },
   ];
   public elements: any[] = [];
@@ -74,7 +73,7 @@ export class AddSubjectsComponent implements OnInit {
           this.elements.push({
             dept_id: el._id,
             dept_name: el.name,
-            subjects: [{ name: '', level: '' }],
+            subjects: [{ name: '', secondary: false, high_school: false }],
           });
         });
       },
@@ -100,13 +99,38 @@ export class AddSubjectsComponent implements OnInit {
 
       for (let j = 0; j < dept.subjects.length; j = j + 1) {
         const sub = dept.subjects[j];
-        data.push({
-          department_id: dept.dept_id,
-          name: sub.name,
-          level: sub.level,
-        });
+
+        // add subjects to service variables
+        if (sub.secondary) {
+          data.push({
+            department_id: dept.dept_id,
+            name: sub.name,
+            level: 'Secondary',
+          });
+
+          this.apiService.secondarySubjects.push({
+            department_id: dept.dept_id,
+            name: sub.name,
+            level: 'Secondary',
+          });
+        }
+
+        if (sub.high_school) {
+          data.push({
+            department_id: dept.dept_id,
+            name: sub.name,
+            level: 'High School',
+          });
+          this.apiService.highSchoolSubjects.push({
+            department_id: dept.dept_id,
+            name: sub.name,
+            level: 'High School',
+          });
+        }
       }
     }
+
+    console.log(data);
 
     this.apiService.postSubjects({ subjects: data }).subscribe({
       next: (data: any) => {
