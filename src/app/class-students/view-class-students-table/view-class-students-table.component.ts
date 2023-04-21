@@ -103,6 +103,7 @@ export class ViewClassStudentsTableComponent {
       },
       error: (err) => {
         console.log(err);
+        this.dataSource.data = [];
         this.isLoading = false;
       },
     });
