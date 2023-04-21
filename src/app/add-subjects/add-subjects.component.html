@@ -26,16 +26,26 @@
                 matInput
               />
             </mat-form-field>
-            <mat-form-field>
-              <mat-label>Level: Secondary/High School</mat-label>
-              <input
-                type="text"
-                #inputFieldLevel
-                [(ngModel)]="sub.level"
-                name="level{{ i }}"
-                matInput
-              />
-            </mat-form-field>
+            <!-- <mat-form-field> -->
+            <!--   <mat-label>Level: Secondary/High School</mat-label> -->
+            <!--   <input -->
+            <!--     type="text" -->
+            <!--     #inputFieldLevel -->
+            <!--     [(ngModel)]="sub.level" -->
+            <!--     name="level{{ i }}" -->
+            <!--     matInput -->
+            <!--   /> -->
+            <!--   -->
+            <!-- </mat-form-field> -->
+            <!---->
+            <mat-checkbox [(ngModel)]="sub.secondary" color="primary"
+              >Secondary</mat-checkbox
+            >
+            <hr />
+            <mat-checkbox [(ngModel)]="sub.high_school"
+              >High School</mat-checkbox
+            >
+            <hr />
           </div>
         </div>
         <button
