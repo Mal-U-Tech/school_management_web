@@ -14,6 +14,9 @@ import {
 export class AddSubjectsService extends SharedApiConstants {
   module = 'dept-subject';
 
+  secondarySubjects: any[] = [];
+  highSchoolSubjects: any[] = [];
+
   constructor(private http: HttpClient, snackbar: MatSnackBar) {
     super(snackbar);
   }
