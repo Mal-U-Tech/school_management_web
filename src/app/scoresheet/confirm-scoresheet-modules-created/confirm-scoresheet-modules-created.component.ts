@@ -12,12 +12,14 @@ export class ConfirmScoresheetModulesCreatedComponent {
   ) {}
 
   ngOnInit() {}
+  routerLink = 'create-scoresheet-steps';
+  isConfirmed = false;
 
   closeConfirmationDialog() {
     this.dialogRef.close();
   }
 
-  confirmScoresheetCreation(): string {
-    return 'create-scoresheet-steps';
+  confirmScoresheetCreation() {
+    this.dialogRef.close();
   }
 }
