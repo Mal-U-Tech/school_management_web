@@ -61,6 +61,9 @@ import { ConfirmScoresheetModulesCreatedComponent } from './scoresheet/confirm-s
 import { DetailsComponent } from './scoresheet/create-scoresheet/details/details.component';
 import { ClassesComponent } from './scoresheet/create-scoresheet/classes/classes.component';
 import { AddMarksComponent } from './scoresheet/create-scoresheet/add-marks/add-marks.component';
+import { CreateScoresheetComponent } from './scoresheet/create-scoresheet/create-scoresheet/create-scoresheet.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -111,6 +114,7 @@ const routes: Routes = [
       { path: 'view-hods', component: ViewHodTableComponent },
     ],
   },
+  { path: 'create-scoresheet-steps', component: CreateScoresheetComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -155,6 +159,7 @@ const routes: Routes = [
     DetailsComponent,
     ClassesComponent,
     AddMarksComponent,
+    CreateScoresheetComponent,
   ],
   imports: [
     BrowserModule,
@@ -182,6 +187,8 @@ const routes: Routes = [
     MatSortModule,
     MatDialogModule,
     MatMenuModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
