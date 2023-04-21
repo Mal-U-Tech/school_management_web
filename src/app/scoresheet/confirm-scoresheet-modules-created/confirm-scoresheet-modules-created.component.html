@@ -25,7 +25,8 @@
         mat-raised-button
         id="modal-action-button"
         color="primary"
-        [routerLink]="confirmScoresheetCreation()"
+        (click)="confirmScoresheetCreation()"
+        [routerLink]="routerLink"
       >
         Confirm
       </button>
