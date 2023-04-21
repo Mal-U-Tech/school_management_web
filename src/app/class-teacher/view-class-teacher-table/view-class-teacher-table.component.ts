@@ -77,6 +77,7 @@ export class ViewClassTeacherTableComponent {
       },
       error: (error) => {
         this.isLoading = false;
+        this.dataSource.data = [];
       },
     });
   }
