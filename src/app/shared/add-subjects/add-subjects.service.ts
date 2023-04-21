@@ -31,6 +31,8 @@ export class AddSubjectsService extends SharedApiConstants {
       errorMessage = `${error.error.message}`;
     }
 
+   
+
     // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
@@ -94,5 +96,32 @@ export class AddSubjectsService extends SharedApiConstants {
     return this.http
       .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // function to assign subjects to their different levels;
+  assignSubjectsToLevels(data: any) {
+    console.log(data);
+
+    for (let i = 0; i < data.length; i++) {
+      let temp = data[i];
+      if (temp.level == 'Secondary') {
+        this.secondarySubjects.push({
+          _id: temp._id,
+          name: temp.name,
+          department_id: temp.department_id._id,
+        });
+      } else {
+        this.highSchoolSubjects.push({
+          _id: temp._id,
+          name: temp.name,
+          department_id: temp.department_id._id,
+        });
+      }
+    }
+
+    console.log('Secondary subjects');
+    console.log(this.secondarySubjects);
+    console.log('High School Subjects');
+    console.log(this.highSchoolSubjects);
   }
 }
