@@ -9,6 +9,15 @@ import { ScoresheetInterface } from './scoresheet.interface';
   providedIn: 'root',
 })
 export class ScoresheetService extends SharedApiConstants {
+  // variables for scoresheet creation
+  isStepOne = true;
+  isStepTwo = false;
+  name = '';
+  year = '';
+  checked: any[] = [];
+  subjects: any[] = [];
+  selectedClasses: any[] = [];
+
   private module = 'scoresheet';
   constructor(private http: HttpClient, snackBar: MatSnackBar) {
     super(snackBar);
@@ -30,7 +39,7 @@ export class ScoresheetService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register scoresheet
-  postScoresheet(scoresheet: string): Observable<ScoresheetInterface> {
+  postScoresheet(scoresheet: object): Observable<ScoresheetInterface> {
     return this.http
       .post<ScoresheetInterface>(
         this.apiUrl + `${this.module}/register`,
