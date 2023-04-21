@@ -79,6 +79,7 @@ export class ViewTeacherTableComponent {
       },
       error: (err) => {
         console.log(err);
+        this.dataSource.data = [];
         this.isLoading = false;
       },
     });
