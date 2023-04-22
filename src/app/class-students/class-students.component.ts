@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
-import * as XLSX from 'xlsx';
 
 export interface StreamDialogData {
   _id: string;
@@ -37,10 +36,12 @@ export class ClassStudentsComponent {
   file?: File;
   arrayBuffer: any;
   filelist: any;
+  routerLink = 'add-by-excel';
 
   // event emitters
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
+  onConfirmAddByExcel = new EventEmitter();
 
   // gender selection method
   selectGender(selection: string) {
@@ -61,6 +62,10 @@ export class ClassStudentsComponent {
   // submit class student to database
   submitClassStudent() {
     this.onSubmit.emit();
+  }
+
+  addStudentsByExcel() {
+    this.onConfirmAddByExcel.emit();
   }
 
   // method to submit class studnet to database via api
@@ -90,27 +95,27 @@ export class ClassStudentsComponent {
   }
 
   // function to add file from local system
-  addFile(event: any) {
-    this.file = event.target.files[0];
-    let fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(this.file!);
-    fileReader.onload = (e) => {
-      this.arrayBuffer = fileReader.result;
-      var data = new Uint8Array(this.arrayBuffer);
-      var arr = new Array();
-
-      for (var i = 0; i != data.length; ++i) {
-        arr[i] = String.fromCharCode(data[i]);
-      }
-
-      var bstr = arr.join('');
-      var workbook = XLSX.read(bstr, { type: 'binary' });
-      var first_sheet_name = workbook.SheetNames[1];
-      var worksheet = workbook.Sheets[first_sheet_name];
-      console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
-      var arraylist = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-      this.filelist = [];
-      console.log(this.filelist);
-    };
-  }
+  // addFile(event: any) {
+  //   this.file = event.target.files[0];
+  //   let fileReader = new FileReader();
+  //   fileReader.readAsArrayBuffer(this.file!);
+  //   fileReader.onload = (e) => {
+  //     this.arrayBuffer = fileReader.result;
+  //     var data = new Uint8Array(this.arrayBuffer);
+  //     var arr = new Array();
+  //
+  //     for (var i = 0; i != data.length; ++i) {
+  //       arr[i] = String.fromCharCode(data[i]);
+  //     }
+  //
+  //     var bstr = arr.join('');
+  //     var workbook = XLSX.read(bstr, { type: 'binary' });
+  //     var first_sheet_name = workbook.SheetNames[1];
+  //     var worksheet = workbook.Sheets[first_sheet_name];
+  //     console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
+  //     var arraylist = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+  //     this.filelist = [];
+  //     console.log(this.filelist);
+  //   };
+  // }
 }
