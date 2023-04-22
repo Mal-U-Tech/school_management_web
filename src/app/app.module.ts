@@ -64,6 +64,8 @@ import { AddMarksComponent } from './scoresheet/create-scoresheet/add-marks/add-
 import { CreateScoresheetComponent } from './scoresheet/create-scoresheet/create-scoresheet/create-scoresheet.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AddByExcelComponent } from './class-students/add-by-excel/add-by-excel.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -115,6 +117,7 @@ const routes: Routes = [
     ],
   },
   { path: 'create-scoresheet-steps', component: CreateScoresheetComponent },
+  { path: 'add-by-excel', component: AddByExcelComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -160,6 +163,7 @@ const routes: Routes = [
     ClassesComponent,
     AddMarksComponent,
     CreateScoresheetComponent,
+    AddByExcelComponent,
   ],
   imports: [
     BrowserModule,
@@ -189,6 +193,7 @@ const routes: Routes = [
     MatMenuModule,
     MatCheckboxModule,
     MatSlideToggleModule,
+    MatTabsModule,
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
