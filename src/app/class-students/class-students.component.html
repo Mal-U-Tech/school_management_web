@@ -4,6 +4,19 @@
       The form below contains input fields for class learner.
     </div>
 
+    <div class="file-selector">
+      <p>You can use also add students by selecting an excel file</p>
+      <div class="col-md-8 form-group">
+        <input
+          type="file"
+          class="form-control"
+          (change)="addFile($event)"
+          placeholder="Upload file"
+          accept=".csv, application/vnd/openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+        />
+      </div>
+    </div>
+
     <div id="form-container" class="form-container">
       <form id="input-container" class="form">
         <div class="form-field menu class-stream">
