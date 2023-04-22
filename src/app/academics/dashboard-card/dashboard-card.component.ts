@@ -160,6 +160,10 @@ export class DashboardCardComponent {
         }
       }, 1000);
     });
+
+    this.instance.onConfirmAddByExcel.subscribe(() => {
+      this.dialogRef.close();
+    });
   }
 
   // function to build add subject teacher dialog

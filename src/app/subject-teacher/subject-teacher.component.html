@@ -20,24 +20,28 @@
         </div>
         <div class="form-field subject">
           <button mat-raised-button [matMenuTriggerFor]="classSubject">
-            {{ subjectSelection.name }}
+            {{ subjectSelection.name }} (<b>{{ subjectSelection.level }}</b
+            >)
           </button>
           <mat-menu #classSubject="matMenu">
             <div *ngFor="let subject of subjects; let i = index">
               <button mat-menu-item (click)="selectSubject(subject)">
-                {{ subject.name }}
+                {{ subject.name }} (<b>{{ subject.level }}</b
+                >)
               </button>
             </div>
           </mat-menu>
         </div>
         <div class="form-field teacher">
           <button mat-raised-button [matMenuTriggerFor]="subjectTeacher">
-            {{ teacherSelection.name }} {{ teacherSelection.surname }}
+            {{ teacherSelection.title }}
+            {{ teacherSelection.name }}
+            {{ teacherSelection.surname }}
           </button>
           <mat-menu #subjectTeacher="matMenu">
             <div *ngFor="let teacher of teachers; let i = index">
               <button mat-menu-item (click)="selectTeacher(teacher)">
-                {{ teacher.name }} {{ teacher.surname }}
+                {{ teacher.title }} {{ teacher.name }} {{ teacher.surname }}
               </button>
             </div>
           </mat-menu>
