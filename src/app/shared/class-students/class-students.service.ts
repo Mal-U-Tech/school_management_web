@@ -41,6 +41,17 @@ export class ClassStudentsService extends SharedApiConstants {
       .pipe(retry(1), catchError(this.handleError));
   }
 
+  // HttpClient API post() => registr class array
+  postStudentArray(students: any): Observable<ClassStudentInterface[]> {
+    return this.http
+      .post<ClassStudentInterface[]>(
+        this.apiUrl + `${this.module}/array`,
+        JSON.stringify(students),
+        this.httpOptions
+      )
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
   // HttpClient API get() => get all students
   getAllLearners(
     pageNo: number,
