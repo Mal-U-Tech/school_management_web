@@ -13,6 +13,7 @@ interface SUBJECT_TEACHER {
   teacher_id: object;
   class_id: object;
   title: string;
+  year: string;
 }
 
 @Component({
@@ -32,6 +33,7 @@ export class ViewSubTeacherTableComponent {
     'teacher',
     'subject',
     'class',
+    'year',
     'actions',
   ];
   dataSource: MatTableDataSource<SUBJECT_TEACHER> = new MatTableDataSource();
@@ -70,6 +72,7 @@ export class ViewSubTeacherTableComponent {
               temp.teacher_id.gender,
               temp.teacher_id.marital_status
             ),
+            year: temp.year,
           });
 
           console.log(arr);
