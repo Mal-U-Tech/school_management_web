@@ -4,7 +4,34 @@
       The form below contains input elements for teachers.
     </div>
 
-    <div id="form-container" class="form-container">
+    <div class="user-selection-wrapper">
+      <button
+        color="primary"
+        mat-stroked-button
+        [matMenuTriggerFor]="userSelectionMenu"
+      >
+        {{ userSelection.name }} {{ userSelection.surname }}
+      </button>
+      <mat-menu #userSelectionMenu="matMenu">
+        <div class="users-list" *ngFor="let user of users; let i = index">
+          <button mat-menu-item (click)="selectUser(user)">
+            {{ user.name }} {{ user.surname }}
+          </button>
+        </div>
+      </mat-menu>
+
+      <div stlye="width: 20px; margin-top: 20px;"></div>
+      <button
+        style="margin-top: 20px"
+        mat-raised-button
+        color="primary"
+        (click)="createNewTeacher()"
+      >
+        Create New User
+      </button>
+    </div>
+
+    <div *ngIf="isUserSelected" id="form-container" class="form-container">
       <form id="input-container" class="form">
         <mat-form-field class="form-field-name">
           <mat-label>Name</mat-label>
@@ -65,6 +92,62 @@
             </button>
           </mat-menu>
         </div>
+      </form>
+
+      <form [formGroup]="passwordForm" class="form-group">
+        <mat-form-field
+          *ngIf="showPasswordContainer"
+          class="form-field password"
+        >
+          <mat-label>Password</mat-label>
+          <input
+            type="password"
+            matInput
+            formControlName="password"
+            [type]="visible ? 'text' : 'password'"
+          />
+          <mat-icon matSuffix style="cursor: pointer" (click)="showPassword()">
+            {{ !visible ? "visibility" : "visibility_off" }}
+          </mat-icon>
+          <mat-hint>Password should be at least 6 character long</mat-hint>
+          <mat-error *ngIf="passwordForm.get('password')!.hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="passwordForm.get('password')!.hasError('pattern')">
+            Password should have a capital letter and a number as part of it
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          *ngIf="showPasswordContainer"
+          class="form-field confirm-password"
+        >
+          <mat-label>Confirm Password</mat-label>
+          <input
+            type="password"
+            matInput
+            formControlName="confirmPassword"
+            [type]="confirmVisible ? 'text' : 'password'"
+          />
+          <mat-icon
+            matSuffix
+            style="cursor: pointer"
+            (click)="showConfirmPassword()"
+          >
+            {{ !visible ? "visibility" : "visibility_off" }}
+          </mat-icon>
+          <mat-hint>Password should be at least 6 character long</mat-hint>
+          <mat-error
+            *ngIf="passwordForm.get('confirmPassword')!.hasError('required')"
+          >
+            Password is <strong>required</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="passwordForm.get('confirmPassword')!.hasError('pattern')"
+          >
+            Password should have a capital letter and a number as part of it
+          </mat-error>
+        </mat-form-field>
       </form>
     </div>
   </div>
