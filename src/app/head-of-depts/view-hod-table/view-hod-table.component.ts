@@ -63,7 +63,11 @@ export class ViewHodTableComponent {
 
           arr.push({
             _id: temp._id,
-            teacher: temp.teacher_id,
+            teacher: {
+              name: temp.teacher_id.user_id.name,
+              surname: temp.teacher_id.user_id.surname,
+              contact: temp.teacher_id.user_id.contact,
+            },
             department: temp.department_id,
             index: `${i + 1}`,
             title: this.computeTeacherTitle(
