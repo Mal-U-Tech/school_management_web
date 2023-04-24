@@ -25,7 +25,7 @@
   background-color: #eee;
   padding: 24px;
   position: relative;
-  top: 30px;
+  top: 15px;
   width: 50%;
   border-radius: 12px;
   margin: 24px auto;
@@ -48,5 +48,10 @@ mat-form-field {
 
 .menu {
   margin: auto;
+  text-align: center;
+}
+
+.user-selection-wrapper {
+  margin: 12px auto;
   text-align: center;
 }
