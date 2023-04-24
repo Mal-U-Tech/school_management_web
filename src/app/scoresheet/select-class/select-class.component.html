@@ -1,0 +1,30 @@
+<div class="add-marks-wrapper mat-typography">
+  <div class="instructions">
+    Select a class and subject to add students marks
+  </div>
+
+  <div class="classes-accordion-wrapper">
+    <mat-accordion class="scoresheets-wrapper">
+      <div *ngFor="let class of classes; let i = index">
+        <mat-expansion-panel
+          [expanded]="selectedClass === i"
+          (open)="setSelectedClass(i)"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ class.name }}</mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="subject-buttons">
+            <div
+              class="subject"
+              *ngFor="let subject of class.subjects; let j = index"
+            >
+              <button mat-raised-button color="primary">
+                {{ subject.name }}
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </mat-accordion>
+  </div>
+</div>
