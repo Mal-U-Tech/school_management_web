@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
+import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
 
 @Component({
   selector: 'app-select-class',
@@ -10,7 +11,8 @@ import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service'
 export class SelectClassComponent {
   constructor(
     public service: ScoresheetService,
-    public subjects: AddSubjectsService
+    public subjects: AddSubjectsService,
+    public subjectTeacher: SubjectTeacherService
   ) {}
 
   ngAfterViewInit(): void {
@@ -27,6 +29,7 @@ export class SelectClassComponent {
 
             if (this.secondaryRegEx.test(temp.name)) {
               this.classes.push({
+                class_id: temp._id,
                 name: temp.name,
                 subjects: this.subjects.secondarySubjects,
               });
@@ -38,7 +41,7 @@ export class SelectClassComponent {
               });
             }
           }
-          // // this.classes = data[0].classes;
+          console.log(this.classes);
           // console.log(this.subjects.secondarySubjects);
           // console.log(this.subjects.highSchoolSubjects);
         },
@@ -60,5 +63,24 @@ export class SelectClassComponent {
 
   prevClass() {
     this.selectedClass--;
+  }
+
+  checkTeacher(subjectId: string, classId: string, year: string) {
+    let teacherId = '6442e23f66c6b3a6650b0f02';
+    this.subjectTeacher
+      .getTeacherForSubject(
+        subjectId,
+        teacherId,
+        classId,
+        this.service.selectedYear
+      )
+      .subscribe({
+        next: (data: any) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
   }
 }
