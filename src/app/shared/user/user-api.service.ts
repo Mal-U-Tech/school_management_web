@@ -17,6 +17,8 @@ export class UserApiService extends SharedApiConstants {
     super(snackBar);
   }
 
+  module = 'user';
+
   // HttpClient API get() method => Fetch users
   getUsers(): Observable<UserInterface> {
     return this.http.get<UserInterface>(this.apiUrl + 'user/view-all');
@@ -26,7 +28,7 @@ export class UserApiService extends SharedApiConstants {
   userLogin(email: any, password: any): Observable<UserInterface> {
     return this.http
       .post<UserInterface>(
-        this.apiUrl + 'user/login',
+        this.apiUrl + `${this.module}/login`,
         JSON.stringify({ email: email, password: password }),
         this.httpOptions
       )
@@ -49,7 +51,7 @@ export class UserApiService extends SharedApiConstants {
     console.log(user);
     return this.http
       .post<UserInterface>(
-        this.apiUrl + 'user/create',
+        this.apiUrl + `${this.module}/create`,
         JSON.stringify(user),
         this.httpOptions
       )
@@ -59,7 +61,7 @@ export class UserApiService extends SharedApiConstants {
   // HttpClient API view-one method => view using id
   viewOne(id: string): Observable<UserInterface> {
     return this.http
-      .get<UserInterface>(this.apiUrl + 'user/view-one/' + id)
+      .get<UserInterface>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -67,7 +69,7 @@ export class UserApiService extends SharedApiConstants {
   updateUser(id: string, user: any): Observable<UserInterface> {
     return this.http
       .put<UserInterface>(
-        this.apiUrl + 'user/update/' + id,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(user),
         this.httpOptions
       )
@@ -76,7 +78,7 @@ export class UserApiService extends SharedApiConstants {
 
   deleteUser(id: string) {
     return this.http
-      .delete(this.apiUrl + 'user/delete/' + id, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 
