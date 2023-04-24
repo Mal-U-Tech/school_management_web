@@ -230,7 +230,7 @@ export class AcademicsComponent {
 
   // function to navigate to add streams component
   navigate = (path: string): void => {
-    this.router.navigate(['add-streams']);
+    this.router.navigate([path]);
   };
 
   // open modal dialog for scoresheets
@@ -242,5 +242,9 @@ export class AcademicsComponent {
     dialogConfig.height = '350px';
     dialogConfig.width = '600px';
     this.dialog.open(ConfirmScoresheetModulesCreatedComponent, dialogConfig);
+  }
+
+  navigateToViewScoresheets() {
+    this.navigate('view-scoresheets');
   }
 }

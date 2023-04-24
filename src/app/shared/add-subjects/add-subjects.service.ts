@@ -31,8 +31,6 @@ export class AddSubjectsService extends SharedApiConstants {
       errorMessage = `${error.error.message}`;
     }
 
-   
-
     // window.alert(errorMessage);
     return throwError(() => {
       return errorMessage;
@@ -100,6 +98,9 @@ export class AddSubjectsService extends SharedApiConstants {
 
   // function to assign subjects to their different levels;
   assignSubjectsToLevels(data: any) {
+    // remove any subjects currently stored
+    this.secondarySubjects = [];
+    this.highSchoolSubjects = [];
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {

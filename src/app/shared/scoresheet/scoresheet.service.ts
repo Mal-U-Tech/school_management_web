@@ -17,6 +17,7 @@ export class ScoresheetService extends SharedApiConstants {
   checked: any[] = [];
   subjects: any[] = [];
   selectedClasses: any[] = [];
+  selectedScoresheetId: string = '';
 
   private module = 'scoresheet';
   constructor(private http: HttpClient, snackBar: MatSnackBar) {
@@ -40,9 +41,10 @@ export class ScoresheetService extends SharedApiConstants {
 
   // HttpClient API post() => register scoresheet
   postScoresheet(scoresheet: object): Observable<ScoresheetInterface> {
+    console.table(scoresheet);
     return this.http
       .post<ScoresheetInterface>(
-        this.apiUrl + `${this.module}/register`,
+        this.apiUrl + `${this.module}`,
         scoresheet,
         this.httpOptions
       )
@@ -53,6 +55,13 @@ export class ScoresheetService extends SharedApiConstants {
   getAllScoresheets(): Observable<ScoresheetInterface[]> {
     return this.http
       .get<ScoresheetInterface[]>(this.apiUrl + `${this.module}`)
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // HttpClient API get() => get classnames information using scoresheet
+  getStreamsFromScoresheet(id: string): Observable<any> {
+    return this.http
+      .get<any>(this.apiUrl + `${this.module}/streams/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 

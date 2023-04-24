@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ClassnameApiService } from 'src/app/shared/classname/classname-api.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { ScoresheetParameters } from './parameters/scoresheet.parameters';
@@ -9,6 +10,7 @@ export class Scoresheet {
   classes?: any[] | null; // to add Class Steams class
   subjects?: any[] | null;
   api: ScoresheetService;
+  router: Router;
 
   constructor({
     _id = '',
@@ -17,6 +19,7 @@ export class Scoresheet {
     classes = [],
     subjects = [],
     api,
+    router,
   }: ScoresheetParameters) {
     this._id = _id;
     this.name = name;
@@ -24,6 +27,7 @@ export class Scoresheet {
     this.classes = classes;
     this.subjects = subjects;
     this.api = api;
+    this.router = router;
   }
 
   // setters
@@ -64,18 +68,35 @@ export class Scoresheet {
     return this.classes;
   }
 
+  set setClassIds(val: any) {
+    let temp: string[] = [];
+
+    this.classes!.forEach((el) => {
+      temp.push(el._id);
+    });
+
+    this.classes = temp;
+  }
+
   get getSubjects() {
     return this.subjects;
   }
 
   // function to stringify scoresheet data for the database
   stringify() {
+    if (this._id == '' || this._id == undefined) {
+      return {
+        name: this.name,
+        year: this.year,
+        classes: this.classes,
+      };
+    }
     return {
       _id: this._id,
       name: this.name,
       year: this.year,
       classes: this.classes,
-      subjects: this.subjects,
+      // subjects: this.subjects,
     };
   }
 
@@ -86,8 +107,8 @@ export class Scoresheet {
       name: serverData.name,
       year: serverData.year,
       classes: serverData.classes,
-      subjects: serverData.subjects,
       api: this.api,
+      router: this.router,
     });
   }
 
@@ -100,11 +121,15 @@ export class Scoresheet {
           this.api?.successToast(
             `Successfully created ${this.name} scoresheet.`
           );
+
+          this.router.navigateByUrl('view-scoresheets');
         },
         error: (error) => {
           this.api?.errorToast(`Error occurred : ${error.toString()}`);
         },
       });
+    } else {
+      console.log('API is not set');
     }
   }
 

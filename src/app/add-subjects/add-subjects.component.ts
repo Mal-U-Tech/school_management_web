@@ -94,6 +94,10 @@ export class AddSubjectsComponent implements OnInit {
   addSubjects() {
     var data: any[] = [];
 
+    // remove any subjects currently stored
+    this.apiService.secondarySubjects = [];
+    this.apiService.highSchoolSubjects = [];
+
     for (let i = 0; i < this.elements.length; i = i + 1) {
       const dept = this.elements[i];
 

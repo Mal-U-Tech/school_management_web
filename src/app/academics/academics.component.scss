@@ -6,3 +6,11 @@ h1 {
   // background-color: green;
   text-align: center;
 }
+
+.scoresheet.buttons-container {
+  // background-color: yellow;
+  width: 30%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}

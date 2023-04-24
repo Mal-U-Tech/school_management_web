@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Scoresheet } from 'src/app/OOP/classes/scoresheet.class';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 
 @Component({
@@ -9,7 +11,10 @@ import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service'
 export class ClassesComponent {
   public classes: any;
 
-  constructor(public scoresheetService: ScoresheetService) {}
+  constructor(
+    public scoresheetService: ScoresheetService,
+    public router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getClasses();
@@ -50,9 +55,20 @@ export class ClassesComponent {
     console.log(this.scoresheetService.name);
     console.log(this.scoresheetService.year);
     console.log(this.scoresheetService.checked);
-    console.log(this.scoresheetService.subjects);
+    // console.log(this.scoresheetService.subjects);
     this.assignCheckedClasses();
     console.log(this.scoresheetService.selectedClasses);
+
+    let scoresheet = new Scoresheet({
+      api: this.scoresheetService,
+      name: this.scoresheetService.name,
+      year: this.scoresheetService.year,
+      classes: this.scoresheetService.selectedClasses,
+      router: this.router,
+    });
+
+    scoresheet.setClassIds;
+    scoresheet.saveScoresheet();
   }
 
   assignCheckedClasses() {

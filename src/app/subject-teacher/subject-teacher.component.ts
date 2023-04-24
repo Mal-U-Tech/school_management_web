@@ -8,10 +8,7 @@ import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher
   styleUrls: ['./subject-teacher.component.scss'],
 })
 export class SubjectTeacherComponent {
-  constructor(
-    private apiService: SubjectTeacherService,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private apiService: SubjectTeacherService) {}
 
   // variables for subject, teacher and streams array
   public streams: any;
