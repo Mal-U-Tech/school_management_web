@@ -1,5 +1,4 @@
 import { Component, EventEmitter } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 
 @Component({
