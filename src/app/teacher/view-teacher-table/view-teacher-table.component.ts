@@ -10,9 +10,12 @@ interface TEACHER {
   _id: string;
   index: string;
   title: string;
-  name: string;
-  surname: string;
-  contact: string;
+  user_id: {
+    _id: string;
+    name: string;
+    surname: string;
+    contact: string;
+  };
   gender: string;
   marital_status: string;
 }
@@ -29,7 +32,13 @@ export class ViewTeacherTableComponent {
   pageSize = 10;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
-  displayedColumns: string[] = ['index', 'name', 'surname', 'actions'];
+  displayedColumns: string[] = [
+    'index',
+    'name',
+    'surname',
+    'contact',
+    'actions',
+  ];
   dataSource: MatTableDataSource<TEACHER> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
@@ -62,9 +71,7 @@ export class ViewTeacherTableComponent {
               data.data[i].marital_status
             ),
             index: `${i + 1}`,
-            name: data.data[i].name,
-            surname: data.data[i].surname,
-            contact: data.data[i].contact,
+            user_id: data.data[i].user_id,
             gender: data.data[i].gender,
             marital_status: data.data[i].marital_status,
           });
@@ -124,7 +131,6 @@ export class ViewTeacherTableComponent {
     dialogConfig.autoFocus = true;
     dialogConfig.closeOnNavigation = true;
     dialogConfig.width = '45%';
-    dialogConfig.height = '80%';
 
     this.dialogRef = this.dialog.open(TeacherComponent, dialogConfig);
     let instance = this.dialogRef.componentInstance;
