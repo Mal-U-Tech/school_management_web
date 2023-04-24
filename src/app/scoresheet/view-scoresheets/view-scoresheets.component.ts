@@ -147,6 +147,7 @@ export class ViewScoresheetsComponent {
   selectScoresheet(selection: any) {
     console.log(selection);
     this.service.selectedScoresheetId = selection._id;
+    this.service.selectedYear = selection.year;
     this.router.navigateByUrl('select-class');
   }
 }
