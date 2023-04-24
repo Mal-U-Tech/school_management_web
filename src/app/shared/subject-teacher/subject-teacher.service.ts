@@ -13,6 +13,8 @@ export class SubjectTeacherService extends SharedApiConstants {
     super(snackBar);
   }
 
+  module = 'subject-teacher';
+
   // Error handling
   handleError(error: any): Observable<never> {
     let errorMessage = '';
@@ -32,7 +34,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   postSubjectTeacher(teacher: any): Observable<SubjectTeacherInterface> {
     return this.http
       .post<SubjectTeacherInterface>(
-        this.apiUrl + `subject-teacher/register`,
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -46,7 +48,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   ): Observable<SubjectTeacherInterface[]> {
     return this.http
       .get<SubjectTeacherInterface[]>(
-        this.apiUrl + `subject-teacher/view-all/${pageNo}/${pageSize}`
+        this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -59,7 +61,22 @@ export class SubjectTeacherService extends SharedApiConstants {
   ): Observable<SubjectTeacherInterface> {
     return this.http
       .get<SubjectTeacherInterface>(
-        this.apiUrl + `subject-teacher/view-on/${id}/${pageNo}/${pageSize}`
+        this.apiUrl + `${this.module}/view-on/${id}/${pageNo}/${pageSize}`
+      )
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // HttpClient API get() => get teacher if they are correct for the subject
+  getTeacherForSubject(
+    subject_id: string,
+    teacher_id: string,
+    class_id: string,
+    year: string
+  ) {
+    return this.http
+      .get(
+        this.apiUrl +
+          `${this.module}/check-teacher/${subject_id}/${teacher_id}/${class_id}/${year}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -71,7 +88,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   ): Observable<SubjectTeacherInterface> {
     return this.http
       .put<SubjectTeacherInterface>(
-        this.apiUrl + `subject-teacher/update/${id}`,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -81,7 +98,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   // HttpClient API delete() => delete subject teacher in db
   deleteSubjectTeachere(id: string) {
     return this.http
-      .delete(this.apiUrl + `subject-teacher/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }
