@@ -18,7 +18,11 @@
               class="subject"
               *ngFor="let subject of class.subjects; let j = index"
             >
-              <button mat-raised-button color="primary">
+              <button
+                mat-raised-button
+                (click)="checkTeacher(subject._id, class.class_id, class.year)"
+                color="primary"
+              >
                 {{ subject.name }}
               </button>
             </div>
