@@ -162,11 +162,11 @@ export class AcademicsComponent {
       arr.push({
         _id: temp._id,
         title: this.computeTeacherTitle(temp.gender, temp.marital_status),
-        name: temp.name,
-        surname: temp.surname,
+        name: temp.user_id.name,
+        surname: temp.user_id.surname,
         gender: temp.gender,
         marital_status: temp.marital_status,
-        contact: temp.contact,
+        contact: temp.user_id.contact,
       });
     }
 
