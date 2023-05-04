@@ -83,6 +83,10 @@
             *matRowDef="let row; columns: displayedColumns"
             class="row-item"
           ></tr>
+
+          <tr *matNoDataRow>
+            <td class="no-data" colspan="4">No scoresheets found!</td>
+          </tr>
         </table>
       </div>
     </mat-tab>

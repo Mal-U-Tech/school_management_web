@@ -97,6 +97,14 @@ export class ViewScoresheetsComponent {
         scoresheets: tempSheets,
       });
     });
+
+    if (!this.scoresheets.length) {
+      // handle when scores when there are no scoresheets
+      this.scoresheets.push({
+        year: new Date().getFullYear().toString(),
+        scoresheets: [],
+      });
+    }
   }
 
   deleteRow(data: any) {
