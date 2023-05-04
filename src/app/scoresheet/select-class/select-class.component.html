@@ -20,13 +20,19 @@
             >
               <button
                 mat-raised-button
-                (click)="checkTeacher(subject._id, class.class_id, class.year)"
+                (click)="checkTeacher(subject._id, class.class_id)"
                 color="primary"
               >
                 {{ subject.name }}
               </button>
             </div>
           </div>
+
+          <mat-action-row>
+            <button mat-button color="primary" (click)="viewScoresheet(class)">
+              View Scoresheet
+            </button>
+          </mat-action-row>
         </mat-expansion-panel>
       </div>
     </mat-accordion>
