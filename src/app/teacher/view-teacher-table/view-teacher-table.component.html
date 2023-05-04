@@ -47,6 +47,10 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr *matNoDataRow>
+      <td class="no-data" colspan="4">No Teachers Found</td>
+    </tr>
   </table>
 
   <mat-paginator

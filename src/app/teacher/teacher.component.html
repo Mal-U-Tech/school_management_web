@@ -95,6 +95,25 @@
       </form>
 
       <form [formGroup]="passwordForm" class="form-group">
+        <mat-form-field *ngIf="showPasswordContainer" class="email form-field">
+          <mat-label>Email</mat-label>
+          <input
+            type="email"
+            matInput
+            [formControl]="email"
+            placeholder="Example: pat@example.com"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error
+            *ngIf="email.hasError('email') && email.hasError('required')"
+          >
+            Please enter a valid email address.
+          </mat-error>
+          <mat-error *ngIf="email.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
         <mat-form-field
           *ngIf="showPasswordContainer"
           class="form-field password"
@@ -134,7 +153,7 @@
             style="cursor: pointer"
             (click)="showConfirmPassword()"
           >
-            {{ !visible ? "visibility" : "visibility_off" }}
+            {{ !confirmVisible ? "visibility" : "visibility_off" }}
           </mat-icon>
           <mat-hint>Password should be at least 6 character long</mat-hint>
           <mat-error

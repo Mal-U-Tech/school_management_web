@@ -14,6 +14,7 @@ interface TEACHER {
     _id: string;
     name: string;
     surname: string;
+    email: string;
     contact: string;
   };
   gender: string;
@@ -42,6 +43,7 @@ export class ViewTeacherTableComponent {
   dataSource: MatTableDataSource<TEACHER> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
+  schoolInfo: any;
 
   constructor(private api: TeacherService, public dialog: MatDialog) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -52,6 +54,7 @@ export class ViewTeacherTableComponent {
 
   ngOnInit(): void {
     this.loadData();
+    this.schoolInfo = JSON.parse(sessionStorage.getItem('school-info')!);
   }
 
   loadData() {
@@ -104,17 +107,20 @@ export class ViewTeacherTableComponent {
 
   deleteRow(data: any) {
     console.log(data);
-    this.api.deleteTeacher(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+
+    this.api
+      .deleteTeacher(data._id, this.schoolInfo._id, data.user_id._id)
+      .subscribe({
+        next: (res: any) => {
+          console.log(res);
+          setTimeout(() => {
+            this.loadData();
+          }, 1000);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   pageChanged(event: PageEvent) {
@@ -153,13 +159,14 @@ export class ViewTeacherTableComponent {
 
   openDeleteTeacherDialog(teacher: any) {
     console.log(teacher);
+    console.log(this.schoolInfo);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       title: 'Confirm teacher deletion',
-      name: teacher.name,
-      surname: teacher.surname,
+      name: teacher.user_id.name,
+      surname: teacher.user_id.surname,
       teacher_title: teacher.title,
     };
 

@@ -1,6 +1,7 @@
 import { Component, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MyErrorStateMatcher } from '../login/login.component';
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { matchValidator } from '../shared/user/form.validators';
 import { UserApiService } from '../shared/user/user-api.service';
@@ -54,6 +55,8 @@ export class TeacherComponent {
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
 
+  public matcher = new MyErrorStateMatcher();
+  public email = new FormControl('', [Validators.required, Validators.email]);
   public passwordForm = new FormGroup({
     password: new FormControl('', [
       Validators.required,
@@ -131,6 +134,10 @@ export class TeacherComponent {
   saveTeacher() {
     let teacher: any;
 
+    // get school info data from session storage
+    let schoolInfo = JSON.parse(sessionStorage.getItem('school-info')!);
+    console.log(schoolInfo);
+
     if (this.showPasswordContainer) {
       if (
         this.passwordForm.get('password')!.value !=
@@ -145,13 +152,15 @@ export class TeacherComponent {
             name: this.name,
             surname: this.surname,
             contact: this.contact,
+            email: this.email.value,
             user_role: '',
+            password: this.passwordForm.get('password')!.value,
           },
           gender: this.genderSelection,
           marital_status: this.maritalStatusSelection,
         };
 
-        this.apiService.postTeacher(teacher).subscribe({
+        this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
           next: (data: any) => {
             console.log(data);
             this.closeTeacherDialog();
@@ -172,7 +181,7 @@ export class TeacherComponent {
         marital_status: this.maritalStatusSelection,
       };
 
-      this.apiService.postTeacher(teacher).subscribe({
+      this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
         next: (data: any) => {
           console.log(data);
           this.closeTeacherDialog();
