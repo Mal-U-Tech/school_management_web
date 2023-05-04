@@ -4,7 +4,10 @@
       <button (click)="carjon.toggle()" mat-icon-button>
         <mat-icon>menu</mat-icon>
       </button>
-      <span> {{ salutations }}&nbsp;Mr Malaza </span>
+      <span>
+        {{ salutations }}&nbsp; {{ userName }}
+        {{ userSurname }}
+      </span>
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="container">
