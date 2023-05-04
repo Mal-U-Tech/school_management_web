@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
@@ -29,10 +29,13 @@ export class TeacherService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register a teacher
-  postTeacher(teacher: any): Observable<TeacherInterface> {
+  postTeacher(
+    teacher: any,
+    schoolInfoId: string
+  ): Observable<TeacherInterface> {
     return this.http
       .post<TeacherInterface>(
-        this.apiUrl + 'teacher/register',
+        this.apiUrl + `teacher/register/${schoolInfoId}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -63,9 +66,12 @@ export class TeacherService extends SharedApiConstants {
   }
 
   // HttpClient API delete() => delete teacher
-  deleteTeacher(id: string) {
+  deleteTeacher(id: string, schoolInfoId: string, userId: string) {
     return this.http
-      .delete(this.apiUrl + `teacher/delete/${id}`, this.httpOptions)
+      .delete(
+        this.apiUrl + `teacher/delete/${id}/${schoolInfoId}/${userId}`,
+        this.httpOptions
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 }
