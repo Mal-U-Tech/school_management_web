@@ -34,8 +34,8 @@ export class DashboardCardComponent {
   numberOfItems = [
     '0',
     this.streamsCount,
-    this.subjectCount,
     this.deptCount,
+    this.subjectCount,
     this.teacherCount,
     this.classStudentsCount,
     this.subjectTeachersCount,
@@ -160,6 +160,10 @@ export class DashboardCardComponent {
         }
       }, 1000);
     });
+
+    this.instance.onConfirmAddByExcel.subscribe(() => {
+      this.dialogRef.close();
+    });
   }
 
   // function to build add subject teacher dialog
@@ -228,8 +232,8 @@ export class DashboardCardComponent {
   navLinks = [
     { add: '', view: '' },
     { add: 'ClassnameComponent', view: '../view-streams' },
-    { add: 'AddSubjectsComponent', view: '../view-subjects' },
     { add: 'AddDepartmentsComponent', view: '../view-depts' },
+    { add: 'AddSubjectsComponent', view: '../view-subjects' },
     { add: 'AddTeacherComponent', view: '../view-teachers' },
     { add: 'AddClassStudentComponent', view: '../view-class-students' },
     { add: 'AddSubjectTeacherComponent', view: '../view-subject-teachers' },
@@ -254,19 +258,19 @@ export class DashboardCardComponent {
     }
 
     try {
-      if (changes['subjectCount'].currentValue != '0') {
-        this.numberOfItems[2] = changes['subjectCount'].currentValue;
-      }
-    } catch (error: any) {
-      // console.log(`Error while getting subjects count: ${error.toString()}`);
-    }
-
-    try {
       if (changes['deptCount'].currentValue != '0') {
-        this.numberOfItems[3] = changes['deptCount'].currentValue;
+        this.numberOfItems[2] = changes['deptCount'].currentValue;
       }
     } catch (error: any) {
       // console.log(`Error while getting departments count ${error.toString()}`);
+    }
+
+    try {
+      if (changes['subjectCount'].currentValue != '0') {
+        this.numberOfItems[3] = changes['subjectCount'].currentValue;
+      }
+    } catch (error: any) {
+      // console.log(`Error while getting subjects count: ${error.toString()}`);
     }
 
     try {
@@ -282,7 +286,7 @@ export class DashboardCardComponent {
         this.numberOfItems[5] = changes['classStudentsCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting class students ${error.toString()}`);
+      // console.log(`Error while getting class students ${error.toString()}`);
     }
 
     try {
@@ -290,7 +294,7 @@ export class DashboardCardComponent {
         this.numberOfItems[6] = changes['subjectTeachersCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting subject teachers ${error.toString()}`);
+      // console.log(`Error while getting subject teachers ${error.toString()}`);
     }
 
     try {
@@ -298,7 +302,7 @@ export class DashboardCardComponent {
         this.numberOfItems[7] = changes['classTeachersCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting class teachers: ${error.toString()}`);
+      // console.log(`Error while getting class teachers: ${error.toString()}`);
     }
 
     try {
@@ -306,7 +310,7 @@ export class DashboardCardComponent {
         this.numberOfItems[8] = changes['hodCount'].currentValue;
       }
     } catch (error: any) {
-      console.log(`Error while getting HODs: ${error.toString()}`);
+      // console.log(`Error while getting HODs: ${error.toString()}`);
     }
   }
 }

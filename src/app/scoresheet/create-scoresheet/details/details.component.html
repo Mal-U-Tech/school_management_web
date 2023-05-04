@@ -1,0 +1,36 @@
+<div id="step1" class="mat-typography details-wrapper">
+  <div class="instructions">
+    <p>Enter the details for the scoresheet being created.</p>
+  </div>
+
+  <div class="form-container details-container">
+    <form class="form">
+      <mat-form-field class="form-field name">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          id="name"
+          placeholder="e.g. March / Test 1"
+          name="name"
+          [(ngModel)]="scoresheetService.name"
+        />
+      </mat-form-field>
+
+      <mat-form-field class="form-field year">
+        <mat-label>Year</mat-label>
+        <input
+          matInput
+          id="year"
+          name="year"
+          placeholder="e.g. 2012"
+          [(ngModel)]="scoresheetService.year"
+        />
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="button">
+    <button mat-raised-button color="primary" (click)="goToNextStep()">
+      Next
+    </button>
+  </div>
+</div>

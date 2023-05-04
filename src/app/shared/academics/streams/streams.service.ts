@@ -1,17 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../../shared.constants';
 import { StreamsInterface } from './streams.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class StreamsService {
-  apiUrl: string = 'http://localhost:2000/classname';
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
-  constructor(private http: HttpClient) {}
+export class StreamsService extends SharedApiConstants {
+  module = 'classname';
+  constructor(private http: HttpClient, snackbar: MatSnackBar) {
+    super(snackbar);
+  }
 
   // error handling
   handleError(error: any): Observable<never> {
@@ -34,7 +35,7 @@ export class StreamsService {
   postStream(stream: any): Observable<StreamsInterface> {
     return this.http
       .post<StreamsInterface>(
-        this.apiUrl + '/register',
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(stream),
         this.httpOptions
       )
@@ -42,5 +43,5 @@ export class StreamsService {
   }
 
   // HttpClient API post() => creates new class names
-  postStreams();
+  // postStreams();
 }

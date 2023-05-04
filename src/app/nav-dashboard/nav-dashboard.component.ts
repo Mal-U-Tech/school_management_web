@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class NavDashboardComponent {
   public date: any;
   public salutations: any;
+  public userName: string = '';
+  public userSurname: string = '';
   constructor(private router: Router, private route: ActivatedRoute) {
     setInterval(() => {
       this.date = new Date();
@@ -25,11 +27,20 @@ export class NavDashboardComponent {
         this.salutations = 'Good Evening';
       }
     }, 1000);
+
+    this.loadUserData();
   }
 
   navigate(path: any) {
     this.router.navigate([{ outlets: { primary: path, sidemenu: path } }], {
       relativeTo: this.route,
     });
+  }
+
+  loadUserData() {
+    let user = JSON.parse(sessionStorage.getItem('user')!);
+    console.log(user);
+    this.userName = user.name;
+    this.userSurname = user.surname;
   }
 }

@@ -108,6 +108,7 @@ export class ViewStreamsTableComponent implements AfterViewInit {
       error: (err) => {
         console.log(err);
         this.isLoading = false;
+        this.dataSource.data = [];
       },
     });
   }

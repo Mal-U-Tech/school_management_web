@@ -84,6 +84,8 @@ export class RegistrationComponent implements OnInit {
           this.router.navigate([
             `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
           ]);
+          // save user data in sessionStorage
+          sessionStorage.setItem('userData', JSON.stringify(data));
         });
     }
   }

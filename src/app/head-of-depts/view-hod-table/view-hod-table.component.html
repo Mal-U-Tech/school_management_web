@@ -48,6 +48,9 @@
 
     <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+    <tr *matNoDataRow>
+      <td class="no-data" colspan="4">No head of departments found!</td>
+    </tr>
   </table>
 
   <mat-paginator

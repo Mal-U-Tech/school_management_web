@@ -1,5 +1,4 @@
 import { Component, EventEmitter } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 
 @Component({
@@ -8,10 +7,7 @@ import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher
   styleUrls: ['./subject-teacher.component.scss'],
 })
 export class SubjectTeacherComponent {
-  constructor(
-    private apiService: SubjectTeacherService,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private apiService: SubjectTeacherService) {}
 
   // variables for subject, teacher and streams array
   public streams: any;
@@ -34,8 +30,13 @@ export class SubjectTeacherComponent {
 
   // subject teacher schema properties
   public streamSelection = { _id: '', name: 'Select Grade & and Stream' };
-  public subjectSelection = { _id: '', name: 'Select Subject' };
-  public teacherSelection = { _id: '', name: 'Select Teacher', surname: '' };
+  public subjectSelection = { _id: '', name: 'Select Subject', level: '' };
+  public teacherSelection = {
+    _id: '',
+    name: 'Select Teacher',
+    surname: '',
+    title: '',
+  };
   public year: string = '';
 
   // event emitters
@@ -84,22 +85,16 @@ export class SubjectTeacherComponent {
       next: (data: any) => {
         console.log(data);
         this.closeSubjectTeacherDialog();
-        this.openSnackBar(
-          `Successfully add subject teacher in ${this.streamSelection.name}`,
-          'Close'
+        this.apiService.successToast(
+          `Successfully add subject teacher in ${this.streamSelection.name}`
         );
         this.res = 1;
       },
       error: (error) => {
         this.closeSubjectTeacherDialog();
-        this.openSnackBar(error.toString(), 'Close');
+        this.apiService.errorToast(error.toString());
         this.res = 0;
       },
     });
-  }
-
-  // show snackbar
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
   }
 }

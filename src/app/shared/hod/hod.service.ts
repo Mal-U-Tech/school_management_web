@@ -1,19 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import { HODInterface } from './hod.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class HodService {
-  apiUrl = 'http://localhost:2000/head-of-department';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
-  constructor(private http: HttpClient) {}
+export class HodService extends SharedApiConstants {
+  module = 'head-of-department';
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -34,7 +33,7 @@ export class HodService {
   postHOD(teacher: any): Observable<HODInterface> {
     return this.http
       .post<HODInterface>(
-        this.apiUrl + `/register`,
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -44,14 +43,16 @@ export class HodService {
   // HttpClient API get() => get all HOD's
   getAllHODs(pageNo: number, pageSize: number): Observable<HODInterface[]> {
     return this.http
-      .get<HODInterface[]>(this.apiUrl + `/view-all/${pageNo}/${pageSize}`)
+      .get<HODInterface[]>(
+        this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
+      )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get one HOD
   getOneHOD(id: string): Observable<HODInterface> {
     return this.http
-      .get<HODInterface>(this.apiUrl + `/view-one/${id}`)
+      .get<HODInterface>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -59,7 +60,7 @@ export class HodService {
   updateHOD(id: string, teacher: any): Observable<HODInterface> {
     return this.http
       .put<HODInterface>(
-        this.apiUrl + `/update/${id}`,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(teacher),
         this.httpOptions
       )
@@ -69,7 +70,7 @@ export class HodService {
   // HttpClient API delete() => delete HOD
   deleteHOD(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

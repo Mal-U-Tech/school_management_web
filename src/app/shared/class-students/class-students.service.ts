@@ -1,20 +1,19 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { SharedApiConstants } from '../shared.constants';
 import { ClassStudentInterface } from './class-students.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ClassStudentsService {
-  apiUrl = 'http://localhost:2000/class-student';
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-  };
+export class ClassStudentsService extends SharedApiConstants {
+  module = 'class-student';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, snackBar: MatSnackBar) {
+    super(snackBar);
+  }
 
   // Error handling
   handleError(error: any): Observable<never> {
@@ -35,8 +34,19 @@ export class ClassStudentsService {
   postStudent(student: any): Observable<ClassStudentInterface> {
     return this.http
       .post<ClassStudentInterface>(
-        this.apiUrl + '/register',
+        this.apiUrl + `${this.module}/register`,
         JSON.stringify(student),
+        this.httpOptions
+      )
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // HttpClient API post() => registr class array
+  postStudentArray(students: any): Observable<ClassStudentInterface[]> {
+    return this.http
+      .post<ClassStudentInterface[]>(
+        this.apiUrl + `${this.module}/array`,
+        JSON.stringify(students),
         this.httpOptions
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -49,7 +59,7 @@ export class ClassStudentsService {
   ): Observable<ClassStudentInterface[]> {
     return this.http
       .get<ClassStudentInterface[]>(
-        this.apiUrl + `/view-all/${pageNo}/${pageSize}`
+        this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -62,7 +72,7 @@ export class ClassStudentsService {
   ): Observable<ClassStudentInterface[]> {
     return this.http
       .get<ClassStudentInterface[]>(
-        this.apiUrl + `/view-year/${year}/${pageNo}/${pageSize}`
+        this.apiUrl + `${this.module}/view-year/${year}/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -77,7 +87,7 @@ export class ClassStudentsService {
     return this.http
       .get<ClassStudentInterface[]>(
         this.apiUrl +
-          `/view-class-year/${classId}/${year}/${pageNo}/${pageSize}`
+          `${this.module}/view-class-year/${classId}/${year}/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -86,7 +96,7 @@ export class ClassStudentsService {
   updateStudent(id: string, student: any): Observable<ClassStudentInterface> {
     return this.http
       .put<ClassStudentInterface>(
-        this.apiUrl + `/update/${id}`,
+        this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(student),
         this.httpOptions
       )
@@ -96,7 +106,7 @@ export class ClassStudentsService {
   // HttpClient API delete => delete student
   deleteStudent(id: string) {
     return this.http
-      .delete(this.apiUrl + `/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

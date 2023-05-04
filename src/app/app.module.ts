@@ -57,6 +57,20 @@ import { HeadOfDeptsComponent } from './head-of-depts/head-of-depts.component';
 import { ViewHodTableComponent } from './head-of-depts/view-hod-table/view-hod-table.component';
 import { DialogConfirmHODDeleteComponent } from './head-of-depts/dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 import { CommitteesComponent } from './committees/committees.component';
+import { ConfirmScoresheetModulesCreatedComponent } from './scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
+import { DetailsComponent } from './scoresheet/create-scoresheet/details/details.component';
+import { ClassesComponent } from './scoresheet/create-scoresheet/classes/classes.component';
+import { AddMarksComponent } from './scoresheet/create-scoresheet/add-marks/add-marks.component';
+import { CreateScoresheetComponent } from './scoresheet/create-scoresheet/create-scoresheet/create-scoresheet.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AddByExcelComponent } from './class-students/add-by-excel/add-by-excel.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { ViewScoresheetsComponent } from './scoresheet/view-scoresheets/view-scoresheets.component';
+import { DialogConfirmScoresheetDeleteComponent } from './scoresheet/view-scoresheets/dialog-confirm-scoresheet-delete/dialog-confirm-scoresheet-delete.component';
+import { SelectClassComponent } from './scoresheet/select-class/select-class.component';
+import { ClassScoresheetComponent } from './scoresheet/class-scoresheet/class-scoresheet.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -107,6 +121,12 @@ const routes: Routes = [
       { path: 'view-hods', component: ViewHodTableComponent },
     ],
   },
+  { path: 'create-scoresheet-steps', component: CreateScoresheetComponent },
+  { path: 'add-by-excel', component: AddByExcelComponent },
+  { path: 'view-scoresheets', component: ViewScoresheetsComponent },
+  { path: 'select-class', component: SelectClassComponent },
+  { path: 'add-marks', component: AddMarksComponent },
+  { path: 'class-scoresheet', component: ClassScoresheetComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -147,6 +167,16 @@ const routes: Routes = [
     ViewHodTableComponent,
     DialogConfirmHODDeleteComponent,
     CommitteesComponent,
+    ConfirmScoresheetModulesCreatedComponent,
+    DetailsComponent,
+    ClassesComponent,
+    AddMarksComponent,
+    CreateScoresheetComponent,
+    AddByExcelComponent,
+    ViewScoresheetsComponent,
+    DialogConfirmScoresheetDeleteComponent,
+    SelectClassComponent,
+    ClassScoresheetComponent,
   ],
   imports: [
     BrowserModule,
@@ -174,6 +204,10 @@ const routes: Routes = [
     MatSortModule,
     MatDialogModule,
     MatMenuModule,
+    MatCheckboxModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    MatExpansionModule,
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],

@@ -13,6 +13,7 @@ interface SUBJECT {
   level: string;
   _id: string;
   index: string;
+  pass_mark: number;
 }
 
 @Component({
@@ -33,6 +34,7 @@ export class ViewSubjectsTableComponent {
     'department',
     'subject',
     'level',
+    'pass_mark',
     'actions',
   ];
   dataSource: MatTableDataSource<SUBJECT> = new MatTableDataSource();
@@ -66,6 +68,7 @@ export class ViewSubjectsTableComponent {
             _id: data.data[i]._id,
             subject: data.data[i].name,
             level: data.data[i].level,
+            pass_mark: data.data[i].pass_mark,
             department_id: data.data[i].department_id._id,
             department_name: data.data[i].department_id.name,
           });
@@ -80,6 +83,7 @@ export class ViewSubjectsTableComponent {
       },
       error: (err) => {
         console.log(err);
+        this.dataSource.data = [];
         this.isLoading = false;
       },
     });

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
@@ -11,6 +10,8 @@ import { ClassStudentsService } from '../shared/class-students/class-students.se
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
 import { HodService } from '../shared/hod/hod.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConfirmScoresheetModulesCreatedComponent } from '../scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
 
 interface TEACHER {
   _id: string;
@@ -35,8 +36,8 @@ export class AcademicsComponent {
         return [
           { title: 'Overview', cols: 1, rows: 1 },
           { title: 'Streams', cols: 1, rows: 1 },
-          { title: 'Subjects', cols: 1, rows: 1 },
           { title: 'Departments', cols: 1, rows: 1 },
+          { title: 'Subjects', cols: 1, rows: 1 },
           { title: 'Teachers', cols: 1, rows: 1 },
           { title: 'Class Students', cols: 1, rows: 1 },
           { title: 'Subject Teachers', cols: 1, rows: 1 },
@@ -49,8 +50,8 @@ export class AcademicsComponent {
       return [
         { title: 'Overview', cols: 2, rows: 1 },
         { title: 'Streams', cols: 1, rows: 1 },
-        { title: 'Subjects', cols: 1, rows: 1 },
         { title: 'Departments', cols: 1, rows: 1 },
+        { title: 'Subjects', cols: 1, rows: 1 },
         { title: 'Teachers', cols: 1, rows: 1 },
         { title: 'Class Students', cols: 1, rows: 1 },
         { title: 'Subject Teachers', cols: 1, rows: 1 },
@@ -71,8 +72,8 @@ export class AcademicsComponent {
     private subjectTeacherApi: SubjectTeacherService,
     private classTeacherApi: ClassTeacherService,
     private hodApi: HodService,
-    private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -106,7 +107,7 @@ export class AcademicsComponent {
         this.streamsCount = data.length.toString();
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.api.errorToast(err.toString());
       },
     });
   }
@@ -116,9 +117,10 @@ export class AcademicsComponent {
       next: (data: any) => {
         this.subjectCount = data.length.toString();
         sessionStorage.setItem('subjects', JSON.stringify(data));
+        this.subjectsApi.assignSubjectsToLevels(data);
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.subjectsApi.errorToast(err.toString());
       },
     });
   }
@@ -130,7 +132,7 @@ export class AcademicsComponent {
         sessionStorage.setItem('departments', JSON.stringify(data));
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.deptApi.errorToast(err.toString());
       },
     });
   }
@@ -140,14 +142,36 @@ export class AcademicsComponent {
       next: (data: any) => {
         this.teacherCount = data.length.toString();
 
+        // get current user
+        let user = JSON.parse(sessionStorage.getItem('user')!);
+
         // compute teacher title and store in session storage
         sessionStorage.setItem(
           'teachers',
           JSON.stringify(this.assignTeacherTitles(data))
         );
+
+        // find out if current user is a teacher
+        // console.log(data);
+        data.forEach((element: any) => {
+          if (element.user_id._id == user._id) {
+            // console.log('I am a teacher');
+            sessionStorage.setItem(
+              'user',
+              JSON.stringify({
+                _id: user._id,
+                name: user.name,
+                surname: user.surname,
+                contact: user.contact,
+                email: user.email,
+                teacher_id: element._id,
+              })
+            );
+          }
+        });
       },
       error: (err) => {
-        this.showSnackBar(err.toString(), 'Close');
+        this.teacherApi.errorToast(err.toString());
       },
     });
   }
@@ -160,11 +184,11 @@ export class AcademicsComponent {
       arr.push({
         _id: temp._id,
         title: this.computeTeacherTitle(temp.gender, temp.marital_status),
-        name: temp.name,
-        surname: temp.surname,
+        name: temp.user_id.name,
+        surname: temp.user_id.surname,
         gender: temp.gender,
         marital_status: temp.marital_status,
-        contact: temp.contact,
+        contact: temp.user_id.contact,
       });
     }
 
@@ -188,7 +212,7 @@ export class AcademicsComponent {
         this.classStudentsCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.clasStudentsApi.errorToast(error.toString());
       },
     });
   }
@@ -199,7 +223,7 @@ export class AcademicsComponent {
         this.subjectTeachersCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.subjectTeacherApi.errorToast(error.toString());
       },
     });
   }
@@ -210,7 +234,7 @@ export class AcademicsComponent {
         this.classTeachersCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.classTeacherApi.errorToast(error.toString());
       },
     });
   }
@@ -221,18 +245,28 @@ export class AcademicsComponent {
         this.hodCount = data.length.toString();
       },
       error: (error) => {
-        this.showSnackBar(error.toString(), 'Close');
+        this.hodApi.errorToast(error.toString());
       },
     });
   }
 
   // function to navigate to add streams component
   navigate = (path: string): void => {
-    this.router.navigate(['add-streams']);
+    this.router.navigate([path]);
   };
 
-  // function to display snackbar
-  showSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+  // open modal dialog for scoresheets
+  openScoresheetModalDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.id = 'scoresheet-confirmation-modal';
+    dialogConfig.height = '350px';
+    dialogConfig.width = '600px';
+    this.dialog.open(ConfirmScoresheetModulesCreatedComponent, dialogConfig);
+  }
+
+  navigateToViewScoresheets() {
+    this.navigate('view-scoresheets');
   }
 }

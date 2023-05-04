@@ -55,38 +55,33 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   public submitForm() {
+    console.log(this.email.value);
+    console.log(this.password.value);
     this.userApi.userLogin(this.email.value, this.password.value).subscribe({
       next: (data: any) => {
-        console.log(`This is data: ${data}`);
-
         // TODO: route to home, once system is done
+        console.log(data);
 
         this.spinner = {
           opacity: '1',
           display: 'block',
         };
         // save user data for
-        this.storageService.set('id', data._id);
-        this.storageService.set('name', data.name);
-        this.storageService.set('contact', data.contact);
-        this.storageService.set('surname', data.surname);
-        this.storageService.set('email', data.email);
-
+        sessionStorage.setItem('user', JSON.stringify(data));
         this.checkModules(data);
       },
       error: (error: any) => {
         console.log(`This is error: ${error}`);
-        this.openSnackBar(error, 'Close');
+        this.userApi.errorToast(error);
       },
     });
   }
 
   public checkModules(data: any) {
-    console.log(data);
     this.userApi.checkModules(data._id).subscribe({
       next: (res: any) => {
+        sessionStorage.setItem('school-info', JSON.stringify(res.data));
         console.log(res);
-
         if (res.missing.length) {
           const missing = res.missing[0].name;
 

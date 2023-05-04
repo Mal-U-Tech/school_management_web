@@ -57,7 +57,11 @@ export class ViewClassTeacherTableComponent {
           arr.push({
             _id: temp._id,
             index: `${i + 1}`,
-            teacher: temp.teacher_id,
+            teacher: {
+              name: temp.teacher_id.user_id.name,
+              contact: temp.teacher_id.user_id.contact,
+              surname: temp.teacher_id.user_id.name,
+            },
             class: temp.class_id,
             year: temp.year,
             title: this.computeTeacherTitle(
@@ -77,6 +81,7 @@ export class ViewClassTeacherTableComponent {
       },
       error: (error) => {
         this.isLoading = false;
+        this.dataSource.data = [];
       },
     });
   }
