@@ -64,6 +64,7 @@ export class SchoolRegistrationComponent implements OnInit {
             'Successfully registered school information!',
             'Close'
           );
+          sessionStorage.setItem('school-info', JSON.stringify(data));
           this.router.navigate([`/reg-classnames`]);
         },
         error: (error) => {
