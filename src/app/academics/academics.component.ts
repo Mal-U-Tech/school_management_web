@@ -142,11 +142,33 @@ export class AcademicsComponent {
       next: (data: any) => {
         this.teacherCount = data.length.toString();
 
+        // get current user
+        let user = JSON.parse(sessionStorage.getItem('user')!);
+
         // compute teacher title and store in session storage
         sessionStorage.setItem(
           'teachers',
           JSON.stringify(this.assignTeacherTitles(data))
         );
+
+        // find out if current user is a teacher
+        // console.log(data);
+        data.forEach((element: any) => {
+          if (element.user_id._id == user._id) {
+            // console.log('I am a teacher');
+            sessionStorage.setItem(
+              'user',
+              JSON.stringify({
+                _id: user._id,
+                name: user.name,
+                surname: user.surname,
+                contact: user.contact,
+                email: user.email,
+                teacher_id: element._id,
+              })
+            );
+          }
+        });
       },
       error: (err) => {
         this.teacherApi.errorToast(err.toString());
