@@ -1,0 +1,60 @@
+<div class="pass-controls-wrapper">
+  <div class="instructions">
+    <p>Enter conditions that learner students pass</p>
+  </div>
+
+  <div class="pass-control-form">
+    <form class="form">
+      <!--Passing subject-->
+      <div class="passing-subject menu-trigger">
+        <button
+          mat-raised-button
+          [matMenuTriggerFor]="passingSubjectMenu"
+          color="primary"
+        >
+          {{ passingSubject.name }}
+        </button>
+        <mat-menu #passingSubject="matMenu">
+          <div *ngFor="let subject of subjects; let i = index">
+            <button mat-menu-item (click)="passingSubjectSelected(subject)">
+              {{ subject }}
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+
+      <!--Passing subject mark-->
+      <mat-form-field class="passingSubjectMark">
+        <mat-label>Passing Subject Mark (%)</mat-label>
+        <input
+          type="number"
+          [(ngModel)]="passingSubject.mark"
+          name="passing-subject-mark"
+          matInput
+        />
+      </mat-form-field>
+
+      <!--Passing aggregate-->
+      <mat-form-field class="passing-aggregate">
+        <mat-label>Passing Aggregate</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="passingAggregate"
+          name="passing-aggregate"
+        />
+      </mat-form-field>
+
+      <!-- number of passed subjects-->
+      <mat-form-field class="num-passed-subjects">
+        <mat-label>Number of passed subjects</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="numPassedSubjects"
+          name="num-passed-subjects"
+        />
+      </mat-form-field>
+    </form>
+  </div>
+</div>
