@@ -71,6 +71,7 @@ import { ViewScoresheetsComponent } from './scoresheet/view-scoresheets/view-sco
 import { DialogConfirmScoresheetDeleteComponent } from './scoresheet/view-scoresheets/dialog-confirm-scoresheet-delete/dialog-confirm-scoresheet-delete.component';
 import { SelectClassComponent } from './scoresheet/select-class/select-class.component';
 import { ClassScoresheetComponent } from './scoresheet/class-scoresheet/class-scoresheet.component';
+import { PassControlsComponent } from './pass-controls/pass-controls.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -177,6 +178,7 @@ const routes: Routes = [
     DialogConfirmScoresheetDeleteComponent,
     SelectClassComponent,
     ClassScoresheetComponent,
+    PassControlsComponent,
   ],
   imports: [
     BrowserModule,
