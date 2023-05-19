@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ interface SCORESHEET {
   templateUrl: './view-scoresheets.component.html',
   styleUrls: ['./view-scoresheets.component.scss'],
 })
-export class ViewScoresheetsComponent {
+export class ViewScoresheetsComponent implements OnInit {
   constructor(
     public service: ScoresheetService,
     public dialog: MatDialog,
@@ -78,7 +78,7 @@ export class ViewScoresheetsComponent {
 
     years = years.sort((n1, n2) => Number.parseInt(n2) - Number.parseInt(n1));
     years.forEach((year) => {
-      let tempSheets: SCORESHEET[] = [];
+      const tempSheets: SCORESHEET[] = [];
       let j = 1;
       this.serviceResult.forEach((res) => {
         if (res.year == year.toString()) {
@@ -156,6 +156,7 @@ export class ViewScoresheetsComponent {
     console.log(selection);
     this.service.selectedScoresheetId = selection._id;
     this.service.selectedYear = selection.year;
+    this.service.name = selection.name;
     this.router.navigateByUrl('select-class');
   }
 }

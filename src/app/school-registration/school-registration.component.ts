@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchoolRegApiService } from '../shared/school-registration/school-reg-api.service';
@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './school-registration.component.html',
   styleUrls: ['./school-registration.component.sass'],
 })
-export class SchoolRegistrationComponent implements OnInit {
+export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   public schoolName = new FormControl('');
   public schoolRegion = new FormControl('');
   public schoolEmail = new FormControl('');

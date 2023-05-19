@@ -6,12 +6,24 @@
   </section>
 
   <section class="marks-metadata">
-    <mat-grid-list cols="2" rowHeight="120px">
-      <mat-grid-tile>Pass Mark (English %)</mat-grid-tile>
-      <mat-grid-tile>{{ englishPassMark }}</mat-grid-tile>
-      <mat-grid-tile>Pass Mark (Other Subjects %)</mat-grid-tile>
-      <mat-grid-tile>{{ otherSubjectPassMark }}</mat-grid-tile>
-    </mat-grid-list>
+    <!-- <mat-grid-list cols="2" rowHeight="120px"> -->
+    <!--   <mat-grid-tile>Pass Mark (English %)</mat-grid-tile> -->
+    <!--   <mat-grid-tile>{{ englishPassMark }}</mat-grid-tile> -->
+    <!--   <mat-grid-tile>Pass Mark (Other Subjects %)</mat-grid-tile> -->
+    <!--   <mat-grid-tile>{{ otherSubjectPassMark }}</mat-grid-tile> -->
+    <!-- </mat-grid-list> -->
+
+    <div class="pass-controls-added">
+      <div *ngFor="let controls of passControls; let i = index">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="openPassControls(controls)"
+        >
+          {{ controls.level }}
+        </button>
+      </div>
+    </div>
   </section>
 
   <section class="mat-elevation-z8 scoresheet-table">

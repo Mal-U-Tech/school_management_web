@@ -18,12 +18,12 @@ export class DashboardCardComponent {
   constructor(public dialog: MatDialog) {}
   @Input() title = '';
   @Input() section = '';
-  @Input() index: number = 0;
-  @Input() streamsCount: string = '0';
-  @Input() subjectCount: string = '0';
-  @Input() deptCount: string = '0';
-  @Input() teacherCount: string = '0';
-  @Input() classStudentsCount: string = '0';
+  @Input() index = 0;
+  @Input() streamsCount = '0';
+  @Input() subjectCount = '0';
+  @Input() deptCount = '0';
+  @Input() teacherCount = '0';
+  @Input() classStudentsCount = '0';
   @Input() classStreams: any[] = [];
   @Input() subjectTeachersCount = '0';
   @Input() classTeachersCount = '0';

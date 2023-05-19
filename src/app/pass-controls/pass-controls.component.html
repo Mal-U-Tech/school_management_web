@@ -1,0 +1,96 @@
+<app-add-dialog [dialogTitle]="title">
+  <div class="dialogContent">
+    <div class="instructions">
+      <p>Enter conditions that learner students pass</p>
+    </div>
+
+    <div class="form-wrapper">
+      <form class="form">
+        <div class="passing-subject form-field">
+          <button
+            mat-raised-button
+            color="primary"
+            [matMenuTriggerFor]="subject"
+            colgroup
+          >
+            {{ name }}
+          </button>
+          <mat-menu #subject="matMenu">
+            <div *ngFor="let subject of subjects">
+              <button mat-menu-item (click)="passingSubjectSelected(subject)">
+                {{ subject.name }} (<b>{{ subject.level }}</b
+                >)
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+
+        <mat-form-field class="passingSubjectMark form-field">
+          <mat-label>Passing Subject Mark (%)</mat-label>
+          <input
+            title="mark"
+            type="number"
+            [(ngModel)]="mark"
+            name="passing-subject-mark"
+            matInput
+          />
+        </mat-form-field>
+
+        <mat-form-field class="passing-aggregate form-field">
+          <mat-label>Passing Aggregate (%)</mat-label>
+          <input
+            title="Aggregate"
+            matInput
+            type="number"
+            [(ngModel)]="aggregate"
+            name="passing-aggregate"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="num-passed-subjects form-field">
+          <mat-label
+            >Number of passed subjects (including passing subject)</mat-label
+          >
+          <input
+            title="numPassSubjects"
+            matInput
+            type="number"
+            [(ngModel)]="numPassedSubjects"
+            name="num-passed-subjects"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="other-sub-mark form-field">
+          <mat-label>Other Subjects Pass Mark</mat-label>
+          <input
+            title="otherSubjectsPassMark"
+            matInput
+            type="number"
+            [(ngModel)]="otherSubjectsPassMark"
+            name="otherSubjectsPassmark"
+          />
+        </mat-form-field>
+
+        <mat-form-field class="level form-field">
+          <mat-label>Level</mat-label>
+          <input
+            title="level"
+            matInput
+            type="text"
+            [(ngModel)]="level"
+            name="level"
+          />
+        </mat-form-field>
+      </form>
+    </div>
+
+    <mat-dialog-actions class="dialogButtons buttons-container">
+      <button mat-raised-button color="warn" (click)="closeDialog(dummy)">
+        Close
+      </button>
+      <button mat-raised-button color="primary" (click)="confirmControls()">
+        Save
+      </button>
+    </mat-dialog-actions>
+  </div>
+</app-add-dialog>
