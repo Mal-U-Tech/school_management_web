@@ -1,6 +1,29 @@
 <div class="add-marks-wrapper mat-typography">
   <div class="instructions">
     Select a class and subject to add students marks
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openPassControls(undefined)"
+    >
+      Add Pass Controls
+    </button>
+  </div>
+
+  <div class="pass-controls-added">
+    <mat-spinner
+      *ngIf="isLoadingPassControls"
+      mode="indeterminate"
+    ></mat-spinner>
+    <div *ngFor="let controls of passControls; let i = index">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="openPassControls(controls)"
+      >
+        {{ controls.level }}
+      </button>
+    </div>
   </div>
 
   <div class="classes-accordion-wrapper">

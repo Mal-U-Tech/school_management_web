@@ -17,8 +17,9 @@ export class ScoresheetService extends SharedApiConstants {
   checked: any[] = [];
   subjects: any[] = [];
   selectedClasses: any[] = [];
-  selectedScoresheetId: string = '';
-  selectedYear: string = '';
+  selectedScoresheetId = '';
+  selectedYear = '';
+  className = '';
 
   private module = 'scoresheet';
   constructor(private http: HttpClient, snackBar: MatSnackBar) {
