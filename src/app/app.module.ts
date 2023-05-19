@@ -72,6 +72,7 @@ import { DialogConfirmScoresheetDeleteComponent } from './scoresheet/view-scores
 import { SelectClassComponent } from './scoresheet/select-class/select-class.component';
 import { ClassScoresheetComponent } from './scoresheet/class-scoresheet/class-scoresheet.component';
 import { PassControlsComponent } from './pass-controls/pass-controls.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -128,6 +129,7 @@ const routes: Routes = [
   { path: 'select-class', component: SelectClassComponent },
   { path: 'add-marks', component: AddMarksComponent },
   { path: 'class-scoresheet', component: ClassScoresheetComponent },
+  { path: 'pass-controls', component: PassControlsComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -210,6 +212,7 @@ const routes: Routes = [
     MatSlideToggleModule,
     MatTabsModule,
     MatExpansionModule,
+    MatFormFieldModule,
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
