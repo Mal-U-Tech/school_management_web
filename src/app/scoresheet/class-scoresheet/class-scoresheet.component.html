@@ -1,4 +1,4 @@
-<div class="class-scoresheet-wrapper mat-typoraphy">
+<div id="htmlData" class="class-scoresheet-wrapper mat-typoraphy">
   <section class="scoresheet-info">
     <span>{{ classname }}</span>
     <span>{{ schoolName }}</span>
@@ -23,6 +23,12 @@
           {{ controls.level }}
         </button>
       </div>
+    </div>
+
+    <div class="download-pdf-button">
+      <button mat-raised-button color="primary" (click)="openPdf()">
+        Download Scoresheet
+      </button>
     </div>
   </section>
 
