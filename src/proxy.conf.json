@@ -1,0 +1,8 @@
+{
+  "/dev/*": {
+    "target": "https://mhfp6x3a7e.execute-api.us-east-1.amazonaws.com",
+    "changeOrigin": true,
+    "secure": true,
+    "logLevel": "debug"
+  }
+}

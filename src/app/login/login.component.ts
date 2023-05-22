@@ -89,14 +89,11 @@ export class LoginComponent implements OnInit {
             this.router.navigate([
               `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
             ]);
-          } else if (missing === 'classnames') {
-            this.router.navigate(['/reg-classnames']);
           }
         }
 
-        if (res.success === 400) {
+        if (res.success === 100) {
           this.router.navigate(['/dashboard']);
-        } else if (res.success === 300) {
         }
       },
       error: (error: any) => {
