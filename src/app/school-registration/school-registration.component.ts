@@ -65,7 +65,7 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
             'Close'
           );
           sessionStorage.setItem('school-info', JSON.stringify(data));
-          this.router.navigate([`/reg-classnames`]);
+          this.router.navigate([`/dashboard`]);
         },
         error: (error) => {
           console.log(`This is error ${error}`);
