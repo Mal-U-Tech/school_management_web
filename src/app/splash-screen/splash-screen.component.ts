@@ -6,7 +6,7 @@ import { SessionStorageService } from '../shared/session-state/session-storage.s
 @Component({
   selector: 'app-splash-screen',
   templateUrl: './splash-screen.component.html',
-  styleUrls: ['./splash-screen.component.sass'],
+  styleUrls: ['./splash-screen.component.scss'],
 })
 export class SplashScreenComponent implements OnInit {
   constructor(
