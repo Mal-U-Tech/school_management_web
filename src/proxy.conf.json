@@ -1,8 +1,11 @@
 {
-  "/dev/*": {
-    "target": "https://alh2fmir3d.execute-api.us-east-1.amazonaws.com",
+  "/dev": {
+    "target": "http://localhost:3000",
     "changeOrigin": true,
-    "secure": true,
-    "logLevel": "debug"
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/dev": "https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com/dev/"
+    }
   }
 }

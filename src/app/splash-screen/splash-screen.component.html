@@ -1,16 +1,14 @@
 <div class="mat-typography splash-container">
-  <div class="items-container" [ngStyle]="itemsContainerStyles">
-    <div [ngStyle]="splashTitleStyles" class="splash-text">
-      School Management System
-    </div>
+  <div class="items-container">
+    <div class="splash-text"><span>School Management System</span></div>
     <!--<div [ngStyle]="buttonContainerStyles" class="buttons-container"></div>-->
     <a routerLink="/login" routerLinkActive="active"
-      ><div class="mat-typography button login" [ngStyle]="loginButtonStyles">
+      ><div class="mat-typography button login">
         <span>Login</span>
       </div></a
     >
     <a routerLink="/registration" routerLinkActive="active"
-      ><div class="button register" [ngStyle]="registerButtonStyles">
+      ><div class="button register">
         <span>Register</span>
       </div></a
     >
