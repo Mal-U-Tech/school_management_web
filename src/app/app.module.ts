@@ -219,3 +219,40 @@ const routes: Routes = [
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
+/*
+function logProvider() {
+  return winston.createLogger({
+    level: "debug",
+    format: winston.format.combine(
+      winston.format.splay(),
+      winston.format.simple()
+    ),
+    transports: [new winston.transports.Console()],
+  });
+}
+
+var PROXY_CONF = {
+  "/dev": {
+    target: "https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com",
+    secure: true,
+    changeOrigin: true,
+    logLevel: "debug",
+    logProvider: logProvider,
+    cookiePathRewrite: "/dev/",
+    pathRewrite: {
+      "/dev": "",
+    },
+  },
+};
+
+module.exports = PROXY_CONF;
+
+var defaultTarget = "https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com";
+module.export = [
+  {
+    context: ["/dev/**"],
+    target: defaultTarget,
+    changeOrigin: true,
+  },
+];*/

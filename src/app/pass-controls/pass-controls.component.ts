@@ -65,8 +65,8 @@ export class PassControlsComponent {
     if (this.dialogData !== undefined) {
       if (this.dialogData !== null) {
         console.log(this.dialogData);
-        this.name = this.dialogData.passing_subject.name;
-        this.mark = this.dialogData.passing_subject.mark;
+        this.name = this.dialogData.name;
+        this.mark = this.dialogData.mark;
         this.aggregate = this.dialogData.aggregate;
         this.level = this.dialogData.level;
         this.otherSubjectsPassMark = this.dialogData.other_subjects_mark;
@@ -78,10 +78,8 @@ export class PassControlsComponent {
   submitPassControls() {
     const controls: IPassControls = {
       scoresheet_id: this.scoresheetId,
-      passing_subject: {
-        name: this.name,
-        mark: this.mark,
-      },
+      name: this.name,
+      mark: this.mark,
       aggregate: this.aggregate,
       num_passed_subject: this.numPassedSubjects,
       other_subjects_mark: this.otherSubjectsPassMark,

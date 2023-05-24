@@ -1,0 +1,41 @@
+@font-face {
+  font-family: "FiraCodeBold";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-Bold.ttf");
+}
+
+@font-face {
+  font-family: "FiraCodeLight";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-Light.ttf");
+}
+
+@font-face {
+  font-family: "FiraCodeMedium";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-Medium.ttf");
+}
+
+@font-face {
+  font-family: "FiraCodeRegular";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-Regular.ttf");
+}
+
+@font-face {
+  font-family: "FiraCodeRetina";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-Retina.ttf");
+}
+
+@font-face {
+  font-family: "FiraCodeSemiBold";
+  src: url("./assets/fira-code/FiraCodeNerdFontMono-SemiBold.ttf");
+}
+
+$primary: "#3d7c98";
+$secondary: "#73b0cd";
+$tenary: "#a8dff1";
+$light: "#f5f5f5";
+
+$bold: "FiraCodeBold";
+$regular: "FiraCodeRegular";
+$light: "FiraCodeLight";
+$medium: "FiraCodeMedium";
+$retina: "FiraCodeRetina";
+$semi-bold: "FiraCodeSemiBold";

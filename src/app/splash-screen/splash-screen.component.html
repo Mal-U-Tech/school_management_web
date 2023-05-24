@@ -1,12 +1,20 @@
-<div  class="splash-container">
-  <div class="items-container" [ngStyle]="itemsContainerStyles">
-    <div [ngStyle]="splashTitleStyles" class="splash-text">School Management System</div>
+<div class="mat-typography splash-container">
+  <div class="items-container">
+    <div class="splash-text"><span>School Management System</span></div>
     <!--<div [ngStyle]="buttonContainerStyles" class="buttons-container"></div>-->
-    <a routerLink="/login" routerLinkActive="active"><div class="button login" [ngStyle]="loginButtonStyles"><span>Login</span></div></a>
-    <a routerLink="/registration" routerLinkActive="active"><div class="button register" [ngStyle]="registerButtonStyles" ><span>Register</span></div></a>
+    <a routerLink="/login" routerLinkActive="active"
+      ><div class="mat-typography button login">
+        <span>Login</span>
+      </div></a
+    >
+    <a routerLink="/registration" routerLinkActive="active"
+      ><div class="button register">
+        <span>Register</span>
+      </div></a
+    >
   </div>
 
- <!-- <div id="form-container" >
+  <!-- <div id="form-container" >
 
     <div id="email-form-input">
       <label for="login-email" class="login label">Email:</label><br />
@@ -29,4 +37,3 @@
     </div>
   </div>-->
 </div>
-

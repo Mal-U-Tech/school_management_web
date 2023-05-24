@@ -294,8 +294,8 @@ export class ClassScoresheetComponent implements OnInit {
 
     this.passControls.forEach((control) => {
       if (control.level === level) {
-        passingSubject = control.passing_subject.name;
-        passingMark = control.passing_subject.mark;
+        passingSubject = control.name;
+        passingMark = control.mark;
         aggregate = control.aggregate;
         numPassed = control.num_passed_subject;
         othersPassMark = control.other_subjects_mark;
