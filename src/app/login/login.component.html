@@ -43,11 +43,11 @@
         </mat-form-field>
 
         <div class="buttons-container">
-          <button class="register-button" (click)="navToRegister()" mat-button>
+          <button class="register button" (click)="navToRegister()" mat-button>
             Register instead
           </button>
           <button
-            class="login-button"
+            class="login button"
             (click)="submitForm()"
             mat-raised-button
             color="primary"
@@ -61,7 +61,7 @@
   </div>
 </div>
 <div [ngStyle]="spinner" class="spinner check-modules">
-  <div class="mat-typography spinner-container">
+  <div class="spinner-container">
     <mat-spinner></mat-spinner>
     <span>Checking modules</span>
   </div>
