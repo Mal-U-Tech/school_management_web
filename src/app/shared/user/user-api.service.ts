@@ -28,7 +28,7 @@ export class UserApiService extends SharedApiConstants {
   userLogin(email: any, password: any): Observable<UserInterface> {
     return this.http
       .post<UserInterface>(
-        `${this.module}/login`,
+        this.apiUrl + `${this.module}/login`,
         JSON.stringify({ email: email, password: password }),
         this.httpOptions
       )
