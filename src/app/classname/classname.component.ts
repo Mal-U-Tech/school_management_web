@@ -11,13 +11,14 @@ import {
 import { Router } from '@angular/router';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IClassnameArray } from '../shared/classname/classname.interface';
 
 @Component({
   selector: 'app-classname',
   templateUrl: './classname.component.html',
   styleUrls: ['./classname.component.sass'],
 })
-export class ClassnameComponent implements OnInit {
+export class ClassnameComponent  {
   @ViewChild('streamDialogContent') streamDialog = {} as TemplateRef<string>;
   @Input() closeDialog: any;
   @ViewChildren('inputField') inputs!: QueryList<any>;
@@ -30,9 +31,7 @@ export class ClassnameComponent implements OnInit {
     public router: Router
   ) {}
 
-  ngOnInit(): void {
-    // this.openDialog();
-  }
+
 
   public classNames = [{ id: this.listLength, name: '' }];
   public title = 'Add Streams';
@@ -47,8 +46,13 @@ export class ClassnameComponent implements OnInit {
   }
 
   Geeks() {
+    // assign classnames to classname array
+    const namesArray: IClassnameArray = {
+      names: this.classNames,
+    }
+
     // make api call via service
-    this.apiService.postClassnamesArray({ names: this.classNames }).subscribe({
+    this.apiService.postClassnamesArray(namesArray).subscribe({
       next: (data: any) => {
         console.log(data);
         this.openSnackBar('Successfully added streams', 'Close');

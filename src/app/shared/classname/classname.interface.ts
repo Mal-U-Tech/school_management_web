@@ -1,7 +1,8 @@
-export interface ClassnameInterface {
+export interface IClassname {
+  _id?: string;
   name: string;
 }
 
-export interface ClassnameArrayInterface {
-  names: Array<ClassnameInterface>;
+export interface IClassnameArray {
+  names: Array<IClassname>;
 }

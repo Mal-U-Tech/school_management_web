@@ -19,7 +19,7 @@
   </div>
   <mat-grid-list cols="2" rowHeight="250px">
     <mat-grid-tile
-      *ngFor="let card of cards | async; let i = index"
+      *ngFor="let card of cards; let i = index"
       [colspan]="card.cols"
       [rowspan]="card.rows"
     >

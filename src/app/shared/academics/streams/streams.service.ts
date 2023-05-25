@@ -9,7 +9,7 @@ import { StreamsInterface } from './streams.interface';
   providedIn: 'root',
 })
 export class StreamsService extends SharedApiConstants {
-  module = 'classname';
+  module = 'api/classname';
   constructor(private http: HttpClient, snackbar: MatSnackBar) {
     super(snackbar);
   }
@@ -34,11 +34,7 @@ export class StreamsService extends SharedApiConstants {
   // HttpClient API post() => creates new class name
   postStream(stream: any): Observable<StreamsInterface> {
     return this.http
-      .post<StreamsInterface>(
-        this.apiUrl + `${this.module}/register`,
-        JSON.stringify(stream),
-        this.httpOptions
-      )
+      .post<StreamsInterface>(this.apiUrl + `${this.module}/register`, stream)
       .pipe(retry(1), catchError(this.handleError));
   }
 

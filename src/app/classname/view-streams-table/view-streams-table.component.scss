@@ -1,3 +1,4 @@
+@use "../../../my-styles.scss" as var;
 .full-width-table {
   width: 60%;
 }
@@ -23,9 +24,12 @@ div.buttons-container > button {
   display: block;
 }
 
-// .rowData {
-//   &:hover {
-//     cursor: pointer;
-//     background-color: grey;
-//   }
-// }
+button.add {
+  background-color: var.$primary;
+  color: white;
+}
+
+button.reload {
+  background-color: var.$light;
+  color: black;
+}

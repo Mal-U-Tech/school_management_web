@@ -1,7 +1,8 @@
-export interface AddDepartments {
+export interface IDepartments {
+  _id?: string;
   name: string;
 }
 
-export interface AddDepartmentsArray {
-  names: Array<AddDepartments>;
+export interface IDepartmentsArray {
+  names: Array<IDepartments>;
 }

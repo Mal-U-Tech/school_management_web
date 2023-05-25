@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -22,42 +23,7 @@ interface STREAM {
   templateUrl: './view-streams-table.component.html',
   styleUrls: ['./view-streams-table.component.scss'],
 })
-export class ViewStreamsTableComponent implements AfterViewInit {
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
-  // @ViewChild(MatSort) sort!: MatSort;
-  // @ViewChild(MatTable) table!: MatTable<ViewStreamsTableItem>;
-  // dataSource: ViewStreamsTableDataSource;
-  //
-  // /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  // displayedColumns = ['id', 'name'];
-  //
-  // constructor(public service: ClassnameApiService) {
-  //   this.dataSource = new ViewStreamsTableDataSource();
-  //   this.dataSource.data = new MatTableDataSource(this.getData());
-  // }
-  //
-  // ngAfterViewInit(): void {
-  //   this.dataSource.sort = this.sort;
-  //   this.dataSource.paginator = this.paginator;
-  //   this.table.dataSource = this.dataSource.data;
-  // }
-  //
-  // async getData() {
-  //   let response: Array<ViewStreamsTableItem>;
-  //   this.service.viewAllClasses().subscribe({
-  //     next: (data: any) => {
-  //       console.log(data);
-  //       response = data;
-  //     },
-  //     error: (err) => {
-  //       console.log(err.toString());
-  //     },
-  //   });
-  //
-  //   return await response;
-  // }
-  //
-
+export class ViewStreamsTableComponent implements OnInit ,AfterViewInit {
   ELEMENT_DATA: STREAM[] = [];
   isLoading = false;
   totalRows = 0;
@@ -89,7 +55,7 @@ export class ViewStreamsTableComponent implements AfterViewInit {
     this.api.viewAllClasses(this.currentPage, this.pageSize).subscribe({
       next: (data: any) => {
         console.log(data);
-        let arr: STREAM[] = [];
+        const arr: STREAM[] = [];
 
         for (let i = 0; i < data.data.length; i++) {
           arr.push({
@@ -146,7 +112,7 @@ export class ViewStreamsTableComponent implements AfterViewInit {
 
     if (component == 'ClassnameComponent') {
       this.dialogRef = this.dialog.open(ClassnameComponent, dialogConfig);
-      let instance = this.dialogRef.componentInstance;
+      const instance = this.dialogRef.componentInstance;
 
       instance.onClose.subscribe(() => {
         this.dialogRef.close();
@@ -156,7 +122,7 @@ export class ViewStreamsTableComponent implements AfterViewInit {
         instance.Geeks();
         setTimeout(() => {
           this.loadData();
-        }, 1000);
+        }, 100);
       });
 
       this.dialogRef.afterClosed().subscribe(() => {

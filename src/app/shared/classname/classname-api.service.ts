@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import {
-  ClassnameArrayInterface,
-  ClassnameInterface,
-} from './classname.interface';
+import { IClassname, IClassnameArray } from './classname.interface';
+
 
 @Injectable({
   providedIn: 'root',
@@ -36,23 +34,21 @@ export class ClassnameApiService extends SharedApiConstants {
   }
 
   // HttpClient API post() => registers new classnames array
-  postClassnamesArray(classnames: any): Observable<ClassnameArrayInterface> {
+  postClassnamesArray(classnames: IClassnameArray): Observable<IClassnameArray> {
     return this.http
-      .post<ClassnameArrayInterface>(
+      .post<IClassnameArray>(
         this.apiUrl + `${this.module}/register-array`,
-        JSON.stringify(classnames),
-        this.httpOptions
+        classnames,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() => registers new classname
-  postClassname(classname: any): Observable<ClassnameInterface> {
+  postClassname(classname: IClassname): Observable<IClassname> {
     return this.http
-      .post<ClassnameInterface>(
+      .post<IClassname>(
         this.apiUrl + `${this.module}/register`,
-        JSON.stringify(classname),
-        this.httpOptions
+        classname
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -61,21 +57,20 @@ export class ClassnameApiService extends SharedApiConstants {
   viewAllClasses(
     currentPage: number,
     pageSize: number
-  ): Observable<ClassnameInterface> {
+  ): Observable<IClassname> {
     return this.http
-      .get<ClassnameInterface>(
+      .get<IClassname>(
         this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API put() => update classname by id
-  updateClassname(id: string, classname: any): Observable<ClassnameInterface> {
+  updateClassname(id: string, classname: IClassname): Observable<IClassname> {
     return this.http
-      .put<ClassnameInterface>(
+      .put<IClassname>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(classname),
-        this.httpOptions
+        classname,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -83,7 +78,7 @@ export class ClassnameApiService extends SharedApiConstants {
   // HttpClient API delete() => delete classname by id
   deleteClassname(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

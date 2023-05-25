@@ -1,12 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import {
-  AddDepartments,
-  AddDepartmentsArray,
-} from './add-departments.interface';
+import { IDepartments, IDepartmentsArray } from './add-departments.interface';
+
 
 @Injectable({
   providedIn: 'root',
@@ -36,20 +34,19 @@ export class AddDepartmentsService extends SharedApiConstants {
   }
 
   // HttpClient API post() => registers new department names array
-  postDepartmentsArray(departments: any): Observable<AddDepartmentsArray> {
+  postDepartmentsArray(departments: IDepartmentsArray): Observable<IDepartmentsArray> {
     return this.http
-      .post<AddDepartmentsArray>(
+      .post<IDepartmentsArray>(
         this.apiUrl + `${this.module}/register-array`,
-        JSON.stringify(departments),
-        this.httpOptions
+        departments
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() => register new department name
-  postDepartment(department: any): Observable<AddDepartments> {
+  postDepartment(department: IDepartments): Observable<IDepartments> {
     return this.http
-      .post<AddDepartments>(
+      .post<IDepartments>(
         this.apiUrl + `${this.module}/create`,
         JSON.stringify(department),
         this.httpOptions
@@ -61,21 +58,20 @@ export class AddDepartmentsService extends SharedApiConstants {
   viewAllDepartments(
     currentPage: number,
     pageSize: number
-  ): Observable<AddDepartments> {
+  ): Observable<IDepartments> {
     return this.http
-      .get<AddDepartments>(
+      .get<IDepartments>(
         this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API update() => update department
-  updateDepartment(id: string, department: any): Observable<AddDepartments> {
+  updateDepartment(id: string, department: IDepartments): Observable<IDepartments> {
     return this.http
-      .put<AddDepartments>(
+      .put<IDepartments>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(department),
-        this.httpOptions
+        department
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -83,7 +79,7 @@ export class AddDepartmentsService extends SharedApiConstants {
   // HttpClient API delete() => delete department by id
   deleteDepartment(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

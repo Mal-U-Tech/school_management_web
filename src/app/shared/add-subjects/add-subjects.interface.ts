@@ -1,9 +1,10 @@
-export interface SubjectsInterface {
+export interface ISubjects {
+  _id?: string;
   name: string;
   department_id: string;
   level: string;
 }
 
-export interface SubjectsArrayInterface {
-  subjects: Array<SubjectsInterface>;
+export interface ISubjectsArray {
+  subjects: Array<ISubjects>;
 }

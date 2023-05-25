@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
-import { UserInterface } from './user.interface';
 import { SharedApiConstants } from '../shared.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IUser } from './user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,14 +20,14 @@ export class UserApiService extends SharedApiConstants {
   module = 'api/user';
 
   // HttpClient API get() method => Fetch users
-  getUsers(): Observable<UserInterface> {
-    return this.http.get<UserInterface>(`${this.module}/view-all`);
+  getUsers(): Observable<IUser> {
+    return this.http.get<IUser>(this.apiUrl + `${this.module}/view-all`);
   }
 
   // HttpClient API post() method => login
-  userLogin(email: string, password: string): Observable<UserInterface> {
+  userLogin(email: string, password: string): Observable<IUser> {
     return this.http
-      .post<UserInterface>(this.apiUrl + `${this.module}/login`, {
+      .post<IUser>(this.apiUrl + `${this.module}/login`, {
         email,
         password,
       })
@@ -37,7 +37,7 @@ export class UserApiService extends SharedApiConstants {
   // HttpClient API post() method => check modules
   checkModules(adminId: string): Observable<any> {
     return this.http
-      .post<any>(`/dev/check-modules/${adminId}`, {})
+      .post<any>(this.apiUrl + `/check-modules/${adminId}`, {})
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -45,28 +45,28 @@ export class UserApiService extends SharedApiConstants {
   userRegister(user: {
     name: string;
     surname: string;
-    contact: string; // Get client side error
+    contact: string;
     email: string;
     password: string;
-  }): Observable<UserInterface> {
+  }): Observable<IUser> {
     console.log(user);
     return this.http
-      .post<UserInterface>(`${this.module}/create`, user)
+      .post<IUser>(this.apiUrl + `${this.module}/create`, user)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API view-one method => view using id
-  viewOne(id: string): Observable<UserInterface> {
+  viewOne(id: string): Observable<IUser> {
     return this.http
-      .get<UserInterface>(`${this.module}/view-one/${id}`)
+      .get<IUser>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API update => update user profile
-  updateUser(id: string, user: any): Observable<UserInterface> {
+  updateUser(id: string, user: IUser): Observable<IUser> {
     return this.http
-      .put<UserInterface>(
-        `${this.module}/update/${id}`,
+      .put<IUser>(
+        this.apiUrl + `${this.module}/update/${id}`,
         user,
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -74,7 +74,7 @@ export class UserApiService extends SharedApiConstants {
 
   deleteUser(id: string) {
     return this.http
-      .delete(`${this.module}/delete/${id}`)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 

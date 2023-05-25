@@ -1,6 +1,5 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MyErrorStateMatcher } from '../login/login.component';
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { matchValidator } from '../shared/user/form.validators';
@@ -11,7 +10,7 @@ import { UserApiService } from '../shared/user/user-api.service';
   templateUrl: './teacher.component.html',
   styleUrls: ['./teacher.component.scss'],
 })
-export class TeacherComponent {
+export class TeacherComponent implements OnInit{
   constructor(
     private apiService: TeacherService,
     public userService: UserApiService
@@ -20,11 +19,10 @@ export class TeacherComponent {
   ngOnInit(): void {
     this.userService.getUsers().subscribe({
       next: (data: any) => {
-        console.log(data);
         this.users = data;
       },
       error: (error) => {
-        console.log();
+        this.userService.errorToast(error);
       },
     });
   }
@@ -45,9 +43,9 @@ export class TeacherComponent {
   showPasswordContainer = false;
 
   // teacher schema properties
-  public name: string = '';
-  public surname: string = '';
-  public contact: string = '';
+  public name = '';
+  public surname = '';
+  public contact = '';
   public genderSelection = 'Select gender';
   public maritalStatusSelection = 'Select marital status';
 
@@ -135,7 +133,7 @@ export class TeacherComponent {
     let teacher: any;
 
     // get school info data from session storage
-    let schoolInfo = JSON.parse(sessionStorage.getItem('school-info')!);
+    const schoolInfo = JSON.parse(sessionStorage.getItem('school-info') || '');
     console.log(schoolInfo);
 
     if (this.showPasswordContainer) {
@@ -183,7 +181,6 @@ export class TeacherComponent {
 
       this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
         next: (data: any) => {
-          console.log(data);
           this.closeTeacherDialog();
           this.apiService.successToast('Successfully saved teacher');
           this.res = 1;

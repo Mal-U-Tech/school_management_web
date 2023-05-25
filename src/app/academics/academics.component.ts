@@ -30,24 +30,39 @@ interface TEACHER {
 })
 export class AcademicsComponent {
   /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Overview', cols: 1, rows: 1 },
-          { title: 'Streams', cols: 1, rows: 1 },
-          { title: 'Departments', cols: 1, rows: 1 },
-          { title: 'Subjects', cols: 1, rows: 1 },
-          { title: 'Teachers', cols: 1, rows: 1 },
-          { title: 'Class Students', cols: 1, rows: 1 },
-          { title: 'Subject Teachers', cols: 1, rows: 1 },
-          { title: 'Teachers', cols: 1, rows: 1 },
-          { title: 'Head of Departments', cols: 1, rows: 1 },
-          { title: 'Committees', cols: 1, rows: 1 },
-        ];
-      }
+  // cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+  //   map(({ matches }) => {
+  //     if (matches) {
+  //       return [
+  //         { title: 'Overview', cols: 1, rows: 1 },
+  //         { title: 'Streams', cols: 1, rows: 1 },
+  //         { title: 'Departments', cols: 1, rows: 1 },
+  //         { title: 'Subjects', cols: 1, rows: 1 },
+  //         { title: 'Teachers', cols: 1, rows: 1 },
+  //         { title: 'Class Students', cols: 1, rows: 1 },
+  //         { title: 'Subject Teachers', cols: 1, rows: 1 },
+  //         { title: 'Teachers', cols: 1, rows: 1 },
+  //         { title: 'Head of Departments', cols: 1, rows: 1 },
+  //         { title: 'Committees', cols: 1, rows: 1 },
+  //       ];
+  //     }
+  //
+  //     return [
+  //       { title: 'Overview', cols: 2, rows: 1 },
+  //       { title: 'Streams', cols: 1, rows: 1 },
+  //       { title: 'Departments', cols: 1, rows: 1 },
+  //       { title: 'Subjects', cols: 1, rows: 1 },
+  //       { title: 'Teachers', cols: 1, rows: 1 },
+  //       { title: 'Class Students', cols: 1, rows: 1 },
+  //       { title: 'Subject Teachers', cols: 1, rows: 1 },
+  //       { title: 'Class Teachers', cols: 1, rows: 1 },
+  //       { title: 'Head of Departments', cols: 1, rows: 1 },
+  //       { title: 'Committees', cols: 1, rows: 1 },
+  //     ];
+  //   })
+  // );
 
-      return [
+  cards = [
         { title: 'Overview', cols: 2, rows: 1 },
         { title: 'Streams', cols: 1, rows: 1 },
         { title: 'Departments', cols: 1, rows: 1 },
@@ -59,8 +74,6 @@ export class AcademicsComponent {
         { title: 'Head of Departments', cols: 1, rows: 1 },
         { title: 'Committees', cols: 1, rows: 1 },
       ];
-    })
-  );
 
   constructor(
     private breakpointObserver: BreakpointObserver,
@@ -143,7 +156,7 @@ export class AcademicsComponent {
         this.teacherCount = data.length.toString();
 
         // get current user
-        let user = JSON.parse(sessionStorage.getItem('user')!);
+        const user = JSON.parse(sessionStorage.getItem('user') || '');
 
         // compute teacher title and store in session storage
         sessionStorage.setItem(

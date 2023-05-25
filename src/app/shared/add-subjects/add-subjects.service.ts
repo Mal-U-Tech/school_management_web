@@ -3,10 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import {
-  SubjectsArrayInterface,
-  SubjectsInterface,
-} from './add-subjects.interface';
+import { ISubjects, ISubjectsArray } from './add-subjects.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +11,8 @@ import {
 export class AddSubjectsService extends SharedApiConstants {
   module = 'dept-subject';
 
-  secondarySubjects: any[] = [];
-  highSchoolSubjects: any[] = [];
+  secondarySubjects: ISubjects[] = [];
+  highSchoolSubjects: ISubjects[] = [];
 
   constructor(private http: HttpClient, snackbar: MatSnackBar) {
     super(snackbar);
@@ -38,20 +35,19 @@ export class AddSubjectsService extends SharedApiConstants {
   }
 
   // HttpClient API post() => registers subjects for departments in array.
-  postSubjects(subjects: any): Observable<SubjectsArrayInterface> {
+  postSubjects(subjects: ISubjectsArray): Observable<ISubjectsArray> {
     return this.http
-      .post<SubjectsArrayInterface>(
+      .post<ISubjectsArray>(
         this.apiUrl + `${this.module}/register-array`,
-        JSON.stringify(subjects),
-        this.httpOptions
+        subjects
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() => register one subject for department
-  postSubject(subject: any): Observable<SubjectsInterface> {
+  postSubject(subject: ISubjects): Observable<ISubjects> {
     return this.http
-      .post<SubjectsInterface>(
+      .post<ISubjects>(
         this.apiUrl + `${this.module}/register`,
         JSON.stringify(subject),
         this.httpOptions
@@ -63,25 +59,25 @@ export class AddSubjectsService extends SharedApiConstants {
   getAllSubjects(
     pageNo: number,
     pageSize: number
-  ): Observable<SubjectsArrayInterface> {
+  ): Observable<ISubjectsArray> {
     return this.http
-      .get<SubjectsArrayInterface>(
+      .get<ISubjectsArray>(
         this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get one subject
-  getSubject(id: string): Observable<SubjectsInterface> {
+  getSubject(id: string): Observable<ISubjects> {
     return this.http
-      .get<SubjectsInterface>(this.apiUrl + `${this.module}/view-one/${id}`)
+      .get<ISubjects>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API update() => update subject
-  updateSubject(id: string, subject: any): Observable<SubjectsInterface> {
+  updateSubject(id: string, subject: ISubjects): Observable<ISubjects> {
     return this.http
-      .put<SubjectsInterface>(
+      .put<ISubjects>(
         this.apiUrl + `${this.module}/update/${id}`,
         JSON.stringify(subject),
         this.httpOptions
@@ -97,32 +93,30 @@ export class AddSubjectsService extends SharedApiConstants {
   }
 
   // function to assign subjects to their different levels;
-  assignSubjectsToLevels(data: any) {
+  assignSubjectsToLevels(data: Array<any>) {
     // remove any subjects currently stored
     this.secondarySubjects = [];
     this.highSchoolSubjects = [];
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {
-      let temp = data[i];
+      const temp = data[i];
       if (temp.level == 'Secondary') {
         this.secondarySubjects.push({
           _id: temp._id,
           name: temp.name,
+          level: temp.level,
           department_id: temp.department_id._id,
         });
       } else {
         this.highSchoolSubjects.push({
           _id: temp._id,
           name: temp.name,
+          level: temp.level,
           department_id: temp.department_id._id,
         });
       }
     }
 
-    console.log('Secondary subjects');
-    console.log(this.secondarySubjects);
-    console.log('High School Subjects');
-    console.log(this.highSchoolSubjects);
   }
 }
