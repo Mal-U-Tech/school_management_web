@@ -1,4 +1,3 @@
-import { HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export abstract class SharedApiConstants {
@@ -6,11 +5,11 @@ export abstract class SharedApiConstants {
   // apiUrl = 'http://localhost:3000/dev/';
   apiUrl = 'https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com';
   httpOptions = {
-    headers: new HttpHeaders({
+    headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       Accept: '*/*',
-    }),
+    },
   };
 
   successToast(message: string) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { UserInterface } from './user.interface';
 import { SharedApiConstants } from '../shared.constants';
@@ -25,36 +25,33 @@ export class UserApiService extends SharedApiConstants {
   }
 
   // HttpClient API post() method => login
-  userLogin(email: any, password: any): Observable<UserInterface> {
+  userLogin(email: string, password: string): Observable<UserInterface> {
     return this.http
-      .post<UserInterface>(
-        this.apiUrl + `${this.module}/login`,
-        JSON.stringify({ email: email, password: password }),
-        this.httpOptions
-      )
+      .post<UserInterface>(this.apiUrl + `${this.module}/login`, {
+        email,
+        password,
+      })
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() method => check modules
   checkModules(adminId: string): Observable<any> {
     return this.http
-      .post<any>(
-        `/dev/check-modules/${adminId}`,
-        JSON.stringify({}),
-        this.httpOptions
-      )
+      .post<any>(`/dev/check-modules/${adminId}`, {})
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() method => register
-  userRegister(user: any): Observable<UserInterface> {
+  userRegister(user: {
+    name: string;
+    surname: string;
+    contact: string; // Get client side error
+    email: string;
+    password: string;
+  }): Observable<UserInterface> {
     console.log(user);
     return this.http
-      .post<UserInterface>(
-        `${this.module}/create`,
-        JSON.stringify(user),
-        this.httpOptions
-      )
+      .post<UserInterface>(`${this.module}/create`, user)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -70,20 +67,19 @@ export class UserApiService extends SharedApiConstants {
     return this.http
       .put<UserInterface>(
         `${this.module}/update/${id}`,
-        JSON.stringify(user),
-        this.httpOptions
+        user,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   deleteUser(id: string) {
     return this.http
-      .delete(`${this.module}/delete/${id}`, this.httpOptions)
+      .delete(`${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // Error handling
-  handleError(error: any) {
+  handleError(error: { error: Error }) {
     let errorMessage = '';
 
     if (error.error instanceof ErrorEvent) {

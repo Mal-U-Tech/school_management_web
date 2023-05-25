@@ -35,8 +35,8 @@ export class LoginComponent implements OnInit {
   /*
    *  Form control variable : Reactive Forms
    * */
-  public email = new FormControl('', [Validators.required, Validators.email]);
-  public password = new FormControl('', [Validators.required]);
+  public email = new FormControl<string>('', [Validators.required, Validators.email]);
+  public password = new FormControl<string>('', [Validators.required]);
   public visible = false;
   public matcher = new MyErrorStateMatcher();
 
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
   public submitForm() {
     console.log(this.email.value);
     console.log(this.password.value);
-    this.userApi.userLogin(this.email.value, this.password.value).subscribe({
+    this.userApi.userLogin(this.email.value as string, this.password.value as string).subscribe({
       next: (data: any) => {
         // TODO: route to home, once system is done
         console.log(data);
