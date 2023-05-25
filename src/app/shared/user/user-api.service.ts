@@ -17,7 +17,7 @@ export class UserApiService extends SharedApiConstants {
     super(snackBar);
   }
 
-  module = '/dev/api/user';
+  module = 'api/user';
 
   // HttpClient API get() method => Fetch users
   getUsers(): Observable<UserInterface> {
