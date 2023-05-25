@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { UserInterface } from './user.interface';
 import { SharedApiConstants } from '../shared.constants';
@@ -17,7 +17,7 @@ export class UserApiService extends SharedApiConstants {
     super(snackBar);
   }
 
-  module = '/dev/api/user';
+  module = 'api/user';
 
   // HttpClient API get() method => Fetch users
   getUsers(): Observable<UserInterface> {
