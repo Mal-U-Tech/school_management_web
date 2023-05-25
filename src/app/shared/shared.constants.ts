@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export abstract class SharedApiConstants {
   constructor(private snackBar: MatSnackBar) {}
   // apiUrl = 'http://localhost:3000/dev/';
-  apiUrl = 'https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com';
+  apiUrl = 'https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com/dev/';
   httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
