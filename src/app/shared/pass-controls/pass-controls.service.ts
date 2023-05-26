@@ -55,8 +55,7 @@ export class PassControlsService extends SharedApiConstants {
     return this.http
       .post<IPassControls>(
         this.apiUrl + `${this.module}`,
-        JSON.stringify(controls),
-        this.httpOptions
+        controls
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -90,8 +89,7 @@ export class PassControlsService extends SharedApiConstants {
     return this.http
       .patch<IPassControls>(
         this.apiUrl + `${this.module}/${id}`,
-        JSON.stringify(control),
-        this.httpOptions
+        control
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -99,7 +97,7 @@ export class PassControlsService extends SharedApiConstants {
   // HttpClient API delete() => delete a pass control document
   deletePassControl(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

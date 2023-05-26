@@ -1,8 +1,8 @@
 export interface ISchoolInfo {
-  _id: string;
+  _id?: string;
   name: string;
-  region: string;
-  administrators: string[];
+  region?: string;
+  administrators: {user: string}[];
   teachers: string[];
-  email: string;
+  email?: string;
 }

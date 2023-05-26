@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 
 @Component({
-  selector: 'scoresheet-details',
+  selector: 'app-scoresheet-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
 })

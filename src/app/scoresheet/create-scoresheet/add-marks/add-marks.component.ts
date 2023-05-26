@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -23,14 +23,14 @@ interface STUDENT {
   templateUrl: './add-marks.component.html',
   styleUrls: ['./add-marks.component.scss'],
 })
-export class AddMarksComponent {
+export class AddMarksComponent implements OnInit {
   color: ThemePalette = 'primary';
   mode: ProgressBarMode = 'determinate';
   value = 0;
   bufferValue = 0;
 
-  numStudents: string = '';
-  maxScore: string = '';
+  numStudents = '';
+  maxScore = '';
   dataSource: MatTableDataSource<STUDENT> = new MatTableDataSource();
   displayedColumns: string[] = ['index', 'name_surname', 'score', 'percentage'];
   isLoading = false;
@@ -39,7 +39,7 @@ export class AddMarksComponent {
   pass_mark = '';
   addedMarks: number[] = [];
   data: any;
-  className: string = '';
+  className = '';
   maxScoreExceeded = false;
 
   constructor(
@@ -51,7 +51,7 @@ export class AddMarksComponent {
 
   ngOnInit(): void {
     this.data = JSON.parse(
-      sessionStorage.getItem('selected-class-scoresheet')!
+      sessionStorage.getItem('selected-class-scoresheet') || ''
     );
 
     this.loadData();
@@ -203,24 +203,28 @@ export class AddMarksComponent {
   // the function will call the get controller from the controller
   checkClassSubjectMarks() {
     // assign subject teacher id
-    let teacher = this.data.subject_teacher_id;
+    const teacher = this.data.subject_teacher_id;
 
     // assign subject id
-    let subjectId = this.data.subject._id;
+    const subjectId = this.data.subject._id;
 
     // assign scoresheet id
-    let scoresheetId = this.scoresheetService.selectedScoresheetId;
+    const scoresheetId = this.scoresheetService.selectedScoresheetId;
 
     // assing year
-    let year = this.data.year;
+    const year = this.data.year;
 
     // assign class_student_id
     this.marksService
       .getClassScoresheetMarks({
-        teacherId: teacher,
-        subjectId: subjectId,
+        subject_teacher_id: teacher,
+        subject_id: subjectId,
         year: year,
-        scoresheetId: scoresheetId,
+        scoresheet_id: scoresheetId,
+        mark: '',
+        max_score:0,
+        num_students: 0,
+        class_student_id: ''
       })
       .subscribe({
         next: (data: any) => {

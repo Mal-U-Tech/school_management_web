@@ -1,15 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Scoresheet } from 'src/app/OOP/classes/scoresheet.class';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 
 @Component({
-  selector: 'scoresheet-classes',
+  selector: 'app-scoresheet-classes',
   templateUrl: './classes.component.html',
   styleUrls: ['./classes.component.scss'],
 })
-export class ClassesComponent {
+export class ClassesComponent implements OnInit {
   public classes: any;
 
   constructor(
@@ -25,19 +25,19 @@ export class ClassesComponent {
 
   // function to retrieve classes from sessionStorage
   getClasses() {
-    this.classes = JSON.parse(sessionStorage.getItem('streams')!);
+    this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
   }
 
   // function to retrieve subjects from sessionStorage
   getSubjects() {
     this.scoresheetService.subjects = JSON.parse(
-      sessionStorage.getItem('subjects')!
+      sessionStorage.getItem('subjects') || ''
     );
   }
 
   // function to create checked variable for the number of classes available
   computeCheckedClassesArray() {
-    let temp: boolean[] = [];
+    const temp: boolean[] = [];
 
     for (let i = 0; i < this.classes.length; i++) {
       temp.push(false);
@@ -60,7 +60,7 @@ export class ClassesComponent {
     this.assignCheckedClasses();
     console.log(this.scoresheetService.selectedClasses);
 
-    let scoresheet = new Scoresheet({
+    const scoresheet = new Scoresheet({
       api: this.scoresheetService,
       name: this.scoresheetService.name,
       year: this.scoresheetService.year,
@@ -73,9 +73,9 @@ export class ClassesComponent {
   }
 
   assignCheckedClasses() {
-    let temp: object[] = [];
+    const temp: object[] = [];
     for (let i = 0; i < this.scoresheetService.checked.length; i++) {
-      let val = this.scoresheetService.checked[i];
+      const val = this.scoresheetService.checked[i];
 
       if (val) {
         // this class has been selected

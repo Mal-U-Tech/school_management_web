@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { ScoresheetInterface } from './scoresheet.interface';
+import { IScoresheet } from './scoresheet.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -42,21 +42,20 @@ export class ScoresheetService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register scoresheet
-  postScoresheet(scoresheet: object): Observable<ScoresheetInterface> {
+  postScoresheet(scoresheet: IScoresheet): Observable<IScoresheet> {
     console.table(scoresheet);
     return this.http
-      .post<ScoresheetInterface>(
+      .post<IScoresheet>(
         this.apiUrl + `${this.module}`,
-        scoresheet,
-        this.httpOptions
+        scoresheet
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get scoresheets
-  getAllScoresheets(): Observable<ScoresheetInterface[]> {
+  getAllScoresheets(): Observable<Array<IScoresheet>> {
     return this.http
-      .get<ScoresheetInterface[]>(this.apiUrl + `${this.module}`)
+      .get<Array<IScoresheet>>(this.apiUrl + `${this.module}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -68,22 +67,21 @@ export class ScoresheetService extends SharedApiConstants {
   }
 
   // HttpClient API get() => get one scoresheet
-  getOneScoresheet(id: string): Observable<ScoresheetInterface> {
+  getOneScoresheet(id: string): Observable<IScoresheet> {
     return this.http
-      .get<ScoresheetInterface>(this.apiUrl + `${this.module}/${id}`)
+      .get<IScoresheet>(this.apiUrl + `${this.module}/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API patch => update on scoresheet
   updateScoresheet(
     id: string,
-    scoresheet: string
-  ): Observable<ScoresheetInterface> {
+    scoresheet: IScoresheet,
+  ): Observable<IScoresheet> {
     return this.http
-      .patch<ScoresheetInterface>(
+      .patch<IScoresheet>(
         this.apiUrl + `${this.module}/${id}`,
         scoresheet,
-        this.httpOptions
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -91,7 +89,7 @@ export class ScoresheetService extends SharedApiConstants {
   // HttpClient API delete => delete scoresheet
   deleteScoresheet(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IHOD } from '../shared/hod/hod.interface';
 import { HodService } from '../shared/hod/hod.service';
 
 @Component({
@@ -62,7 +63,7 @@ export class HeadOfDeptsComponent {
 
   // api method to save head of department to database
   saveHOD() {
-    let teacher = {
+    const teacher: IHOD = {
       teacher_id: this.teacherSelection._id,
       department_id: this.departmentSelection._id,
       year: this.year,

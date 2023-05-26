@@ -53,10 +53,11 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
 
     this.schoolRegApi
       .postSchoolInfo({
-        name: this.schoolName.value,
-        region: this.schoolRegion.value,
-        administrators: { user: this.id },
-        email: this.schoolEmail.value,
+        name: this.schoolName.value || '',
+        region: this.schoolRegion.value || '',
+        administrators: [{ user: this.id }],
+        email: this.schoolEmail.value || '',
+        teachers: []
       })
       .subscribe({
         next: (data: any) => {

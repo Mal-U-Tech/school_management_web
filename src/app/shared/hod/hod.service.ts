@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { HODInterface } from './hod.interface';
+import { IHOD } from './hod.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,39 +30,37 @@ export class HodService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register HOD
-  postHOD(teacher: any): Observable<HODInterface> {
+  postHOD(teacher: IHOD): Observable<IHOD> {
     return this.http
-      .post<HODInterface>(
+      .post<IHOD>(
         this.apiUrl + `${this.module}/register`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get all HOD's
-  getAllHODs(pageNo: number, pageSize: number): Observable<HODInterface[]> {
+  getAllHODs(pageNo: number, pageSize: number): Observable<IHOD[]> {
     return this.http
-      .get<HODInterface[]>(
+      .get<IHOD[]>(
         this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get one HOD
-  getOneHOD(id: string): Observable<HODInterface> {
+  getOneHOD(id: string): Observable<IHOD> {
     return this.http
-      .get<HODInterface>(this.apiUrl + `${this.module}/view-one/${id}`)
+      .get<IHOD>(this.apiUrl + `${this.module}/view-one/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API put() => update HOD
-  updateHOD(id: string, teacher: any): Observable<HODInterface> {
+  updateHOD(id: string, teacher: IHOD): Observable<IHOD> {
     return this.http
-      .put<HODInterface>(
+      .put<IHOD>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -70,7 +68,7 @@ export class HodService extends SharedApiConstants {
   // HttpClient API delete() => delete HOD
   deleteHOD(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

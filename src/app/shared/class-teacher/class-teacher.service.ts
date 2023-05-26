@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { ClassTeacherInterface } from './class-teacher.interface';
+import { IClassTeacher } from './class-teacher.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,12 +31,11 @@ export class ClassTeacherService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register new class teacher
-  postClassTeacher(teacher: any): Observable<ClassTeacherInterface> {
+  postClassTeacher(teacher: IClassTeacher): Observable<IClassTeacher> {
     return this.http
-      .post<ClassTeacherInterface>(
+      .post<IClassTeacher>(
         this.apiUrl + `${this.module}/register`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -45,9 +44,9 @@ export class ClassTeacherService extends SharedApiConstants {
   getAllClassTeachers(
     pageNo: number,
     pageSize: number
-  ): Observable<ClassTeacherInterface[]> {
+  ): Observable<IClassTeacher[]> {
     return this.http
-      .get<ClassTeacherInterface[]>(
+      .get<IClassTeacher[]>(
         this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -58,9 +57,9 @@ export class ClassTeacherService extends SharedApiConstants {
     year: string,
     pageNo: number,
     pageSize: number
-  ): Observable<ClassTeacherInterface[]> {
+  ): Observable<IClassTeacher[]> {
     return this.http
-      .get<ClassTeacherInterface[]>(
+      .get<IClassTeacher[]>(
         this.apiUrl + `${this.module}/view-year/${year}/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -71,9 +70,9 @@ export class ClassTeacherService extends SharedApiConstants {
     class_id: string,
     pageNo: number,
     pageSize: number
-  ): Observable<ClassTeacherInterface[]> {
+  ): Observable<IClassTeacher[]> {
     return this.http
-      .get<ClassTeacherInterface[]>(
+      .get<IClassTeacher[]>(
         this.apiUrl +
           `${this.module}/view-class/${class_id}/${pageNo}/${pageSize}`
       )
@@ -83,13 +82,12 @@ export class ClassTeacherService extends SharedApiConstants {
   // HttpClient API put() => update class teacher
   updateClassTeacher(
     id: string,
-    teacher: any
-  ): Observable<ClassTeacherInterface> {
+    teacher: IClassTeacher
+  ): Observable<IClassTeacher> {
     return this.http
-      .put<ClassTeacherInterface>(
+      .put<IClassTeacher>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -97,7 +95,7 @@ export class ClassTeacherService extends SharedApiConstants {
   // HttpClient API delete() => delete class teacher
   deleteClassTeacher(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

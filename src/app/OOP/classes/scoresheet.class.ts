@@ -1,5 +1,7 @@
 import { Router } from '@angular/router';
-import { ClassnameApiService } from 'src/app/shared/classname/classname-api.service';
+import { ISubject } from 'src/app/add-subjects/models/subject.model';
+import { IClassname } from 'src/app/shared/classname/classname.interface';
+import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { ScoresheetParameters } from './parameters/scoresheet.parameters';
 
@@ -7,8 +9,8 @@ export class Scoresheet {
   public _id?: string | null;
   private name?: string | null;
   private year?: string | null;
-  classes?: any[] | null; // to add Class Steams class
-  subjects?: any[] | null;
+  classes: any[];
+  subjects?: ISubject[] | string[];
   api: ScoresheetService;
   router: Router;
 
@@ -69,11 +71,10 @@ export class Scoresheet {
   }
 
   set setClassIds(val: any) {
-    let temp: string[] = [];
+    const temp: any[] = [];
 
-    this.classes!.forEach((el) => {
-      temp.push(el._id);
-    });
+    this.classes.forEach((el) => temp.push(el._id)
+    );
 
     this.classes = temp;
   }
@@ -83,19 +84,19 @@ export class Scoresheet {
   }
 
   // function to stringify scoresheet data for the database
-  stringify() {
+  stringify(): IScoresheet {
     if (this._id == '' || this._id == undefined) {
       return {
-        name: this.name,
-        year: this.year,
-        classes: this.classes,
+        name: this.name || '',
+        year: this.year || '',
+        classes: this.classes || [],
       };
     }
     return {
       _id: this._id,
-      name: this.name,
-      year: this.year,
-      classes: this.classes,
+      name: this.name || '',
+      year: this.year || '',
+      classes: this.classes || [],
       // subjects: this.subjects,
     };
   }
@@ -144,7 +145,7 @@ export class Scoresheet {
 
   // function to get scoresheet by id
   getScoresheet() {
-    this.api?.getOneScoresheet(this._id!).subscribe({
+    this.api?.getOneScoresheet(this._id || '').subscribe({
       next: (data: any) => {
         console.log(data);
         this._id = data._id;

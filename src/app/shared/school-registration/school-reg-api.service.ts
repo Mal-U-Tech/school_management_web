@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
 import { SharedApiConstants } from '../shared.constants';
-import { SchoolRegInterface } from './school-reg.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,32 +18,30 @@ export class SchoolRegApiService extends SharedApiConstants {
   }
 
   // HTTPClient API post() method => create School Info record
-  postSchoolInfo(school: any): Observable<SchoolRegInterface> {
+  postSchoolInfo(school: ISchoolInfo): Observable<ISchoolInfo> {
     return this.http
-      .post<SchoolRegInterface>(
+      .post<ISchoolInfo>(
         this.apiUrl + `${this.module}/create`,
-        JSON.stringify(school),
-        this.httpOptions
+        school,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HTTPClient API get() method => get school info
-  getSchoolInfo(id: any): Observable<SchoolRegInterface> {
+  getSchoolInfo(id: string): Observable<ISchoolInfo> {
     return this.http
-      .get<SchoolRegInterface>(
+      .get<ISchoolInfo>(
         this.apiUrl + `${this.module}/view-profile/${id}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HTTPClient API update() method => update school info
-  updateSchoolInfo(id: string, school: any): Observable<SchoolRegInterface> {
+  updateSchoolInfo(id: string, school: ISchoolInfo): Observable<ISchoolInfo> {
     return this.http
-      .put<SchoolRegInterface>(
+      .put<ISchoolInfo>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(school),
-        this.httpOptions
+        school
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -51,7 +49,7 @@ export class SchoolRegApiService extends SharedApiConstants {
   // HTTPClient API delete() method => Delete School info
   deleteSchoolInfo(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 

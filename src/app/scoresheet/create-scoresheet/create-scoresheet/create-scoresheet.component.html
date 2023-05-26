@@ -1,5 +1,9 @@
 <div id="scoresheet-wrapper">
-  <scoresheet-details *ngIf="scoresheetService.isStepOne"></scoresheet-details>
+  <app-scoresheet-details
+    *ngIf="scoresheetService.isStepOne"
+  ></app-scoresheet-details>
 
-  <scoresheet-classes *ngIf="scoresheetService.isStepTwo"></scoresheet-classes>
+  <app-scoresheet-classes
+    *ngIf="scoresheetService.isStepTwo"
+  ></app-scoresheet-classes>
 </div>

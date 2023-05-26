@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { MarksInterface } from './marks.interface';
+import { IMarks } from './marks.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -32,44 +32,41 @@ export class MarksService extends SharedApiConstants {
   }
 
   // HttpClient API post() => add mark to database
-  postClassMark(mark: any): Observable<MarksInterface> {
+  postClassMark(mark: IMarks): Observable<IMarks> {
     return this.http
-      .post<MarksInterface>(
+      .post<IMarks>(
         this.apiUrl + `${this.module}/add`,
-        JSON.stringify(mark),
-        this.httpOptions
+        mark
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API post() => add marks array to database
-  postClassMarksArray(marks: any): Observable<MarksInterface[]> {
+  postClassMarksArray(marks: Array<IMarks>): Observable<Array<IMarks>> {
     return this.http
-      .post<MarksInterface[]>(
+      .post<Array<IMarks>>(
         this.apiUrl + `${this.module}/add-array`,
-        JSON.stringify(marks),
-        this.httpOptions
+        marks
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get marks for specific class, year, subject and scoresheet
-  getClassScoresheetMarks(mark: any): Observable<MarksInterface[]> {
+  getClassScoresheetMarks(mark: IMarks): Observable<Array<IMarks>> {
     return this.http
-      .get<MarksInterface[]>(
+      .get<Array<IMarks>>(
         this.apiUrl +
-          `${this.module}/view/${mark.year}/${mark.teacherId}/${mark.subjectId}/${mark.scoresheetId}`
+          `${this.module}/view/${mark.year}/${mark.subject_teacher_id}/${mark.subject_id}/${mark.scoresheet_id}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API put() => update mark in database
-  updateMark(id: string, body: any): Observable<MarksInterface> {
+  updateMark(id: string, mark: IMarks): Observable<IMarks> {
     return this.http
-      .put<MarksInterface>(
+      .put<IMarks>(
         this.apiUrl + `${this.module}/${id}`,
-        JSON.stringify(body),
-        this.httpOptions
+        mark
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -77,7 +74,7 @@ export class MarksService extends SharedApiConstants {
   // HttpClienet API delete() => delete mark from db
   deleteMark(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
 import * as XLSX from 'xlsx';
 
@@ -43,18 +44,18 @@ export class AddByExcelComponent {
     this.sheets = [];
     this.isFileSelected = true;
     this.file = event.target.files[0];
-    let fileReader = new FileReader();
+    const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(this.file!);
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
-      var data = new Uint8Array(this.arrayBuffer);
-      var arr = new Array();
+      const data = new Uint8Array(this.arrayBuffer);
+      const arr = [];
 
-      for (var i = 0; i != data.length; ++i) {
+      for (let i = 0; i != data.length; ++i) {
         arr[i] = String.fromCharCode(data[i]);
       }
 
-      var bstr = arr.join('');
+      const bstr = arr.join('');
       this.workbook = XLSX.read(bstr, { type: 'binary' });
       this.workbook.SheetNames.forEach(() => {
         this.isCheckedList.push(false);
@@ -94,10 +95,10 @@ export class AddByExcelComponent {
     // console.log(this.selectedSheets);
   }
 
-  restructureSelectedClasses(): any[] {
-    let classList = [];
-    let streamsArr = JSON.parse(sessionStorage.getItem('streams')!);
-    let serverList: {
+  restructureSelectedClasses(): IClassStudent[] {
+    // const classList = [];
+    const streamsArr = JSON.parse(sessionStorage.getItem('streams') || '');
+    const serverList: {
       class_id: string;
       name: string;
       surname: string;
@@ -105,12 +106,6 @@ export class AddByExcelComponent {
       gender: string;
       student_contact: string;
     }[] = [];
-
-    // streamsArr.forEach((el: { _id: string; name: string }) => {
-    //   if (el.name == 'Form 1A') {
-    //     console.table(el);
-    //   }
-    // });
 
     this.selectedSheets.forEach((item) => {
       let classId = '';
@@ -149,7 +144,7 @@ export class AddByExcelComponent {
   }
 
   saveStudentsInDB() {
-    let studentsList = this.restructureSelectedClasses();
+    const studentsList = this.restructureSelectedClasses();
     this.service.postStudentArray(studentsList).subscribe({
       next: (data: any) => {
         console.log(data);
