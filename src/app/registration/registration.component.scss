@@ -6,7 +6,7 @@
 }
 
 #registration-form-container {
-  width: 40%;
+  width: 35%;
   height: auto;
   background-color: #eee;
   margin: auto;
@@ -24,7 +24,18 @@
 }
 .container {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  max-width: 80%;
   margin: 7px auto;
+  font-family: var.$bold;
+
+  ::ng-deep {
+    mat-label {
+      font-family: var.$regular;
+      color: var.$primary;
+    }
+  }
 }
 
 .form-group {
@@ -34,27 +45,37 @@
   margin: -3% auto;
 }
 .buttons-container {
-  text-align: right;
+  text-align: center;
   max-width: 500px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.register-button-material {
+button.button {
+  font-family: var.$regular;
+}
+
+button.register-button-material {
   min-width: 90px;
   max-width: 170px;
   width: 100%;
   margin: 12px;
+  background-color: var.$primary;
+  color: white;
 }
 
 .splash-text {
-  font-family: Calibri;
-  font-size: 6rem;
-  margin: auto;
-  background-color: cornflowerblue;
+  font-family: var.$regular;
+  font-size: 3.4rem;
+  // margin:  auto;
+  background-color: var.$primary;
   text-align: center;
   position: relative;
-  top: 12%;
-  height: 36px;
+  top: 8%;
+  height: 18px;
 }
 
 .add-space {
@@ -63,4 +84,40 @@
   background-color: transparent;
   position: relative;
   z-index: -2;
+}
+
+div.register-spinner-container {
+  width: 50px;
+  // background-color: yellow;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+:host ::ng-deep .reg-spinner circle {
+  stroke: var.$secondary;
+}
+
+@media screen and (max-width: 768px) {
+  #registration-container {
+    overflow-x: hidden;
+  }
+
+  .splash-text {
+    font-size: 1.4rem;
+    height: 12px;
+    position: relative;
+    top: 8%;
+  }
+
+  #registration-form-container {
+    background-color: var.$light;
+    width: auto;
+    margin: 12px;
+  }
+
+  .container {
+    max-width: 100%;
+    width: 95%;
+  }
 }

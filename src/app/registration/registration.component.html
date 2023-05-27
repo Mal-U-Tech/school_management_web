@@ -1,7 +1,5 @@
 <div id="registration-container">
-  <h1 color="primary" class="mat-typography splash-text">
-    School Management System
-  </h1>
+  <h1 class="splash-text">School Management System</h1>
 
   <div id="registration-form-container">
     <form class="form-container">
@@ -117,19 +115,26 @@
     <!-- Buttons container -->
     <div class="buttons-container">
       <!-- login button -->
-      <button class="login-button-material" (click)="navToLogin()" mat-button>
-        Login instead
+      <button
+        class="button login-button-material"
+        (click)="navToLogin()"
+        mat-button
+      >
+        Login Instead
       </button>
 
       <!-- Register button -->
       <button
-        class="register-button-material"
+        *ngIf="!isLoading"
+        class="button register-button-material"
         (click)="submitForm()"
         mat-raised-button
-        color="primary"
       >
         Register
       </button>
+    </div>
+    <div *ngIf="isLoading" class="register-spinner-container">
+      <mat-spinner class="reg-spinner" mode="indeterminate"></mat-spinner>
     </div>
   </div>
   <div class="add-space"></div>

@@ -7,15 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./nav-dashboard.component.scss'],
 })
 export class NavDashboardComponent {
-  public date: any;
-  public salutations: any;
-  public userName: string = '';
-  public userSurname: string = '';
+  date: Date = new Date();
+  salutations = '';
+  userName = '';
+  userSurname = '';
   constructor(private router: Router, private route: ActivatedRoute) {
     setInterval(() => {
       this.date = new Date();
-      // console.log(`This is the date: ${this.date.getHours()}`);
-      let hours = this.date.getHours();
+
+      const hours = this.date.getHours();
 
       if (hours >= 0 && hours <= 11) {
         this.salutations = 'Good Morning';
@@ -31,14 +31,14 @@ export class NavDashboardComponent {
     this.loadUserData();
   }
 
-  navigate(path: any) {
+  navigate(path: string) {
     this.router.navigate([{ outlets: { primary: path, sidemenu: path } }], {
       relativeTo: this.route,
     });
   }
 
   loadUserData() {
-    let user = JSON.parse(sessionStorage.getItem('user')!);
+    const user = JSON.parse(sessionStorage.getItem('userData') || '');
     console.log(user);
     this.userName = user.name;
     this.userSurname = user.surname;

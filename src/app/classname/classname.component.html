@@ -1,6 +1,6 @@
 <app-add-dialog [dialogTitle]="title">
   <div class="dialogContent">
-    <div class="mat-typography instructions">
+    <div class="instructions">
       The form below contains input elements for streams (classnames). Click on
       the
       <strong>Add Stream +</strong> button to add a new input field.
@@ -34,7 +34,6 @@
     <button
       class="add button mat-typography"
       mat-button
-      color="primary"
       (click)="appendInput()"
     >
       Add Class +
@@ -42,7 +41,6 @@
     <button
       class="submit button"
       mat-raised-button
-      color="primary"
       (click)="submitStreamsRequest()"
     >
       Submit

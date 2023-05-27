@@ -2,7 +2,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   QueryList,
   TemplateRef,
   ViewChild,
@@ -10,13 +9,12 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { IClassnameArray } from '../shared/classname/classname.interface';
 
 @Component({
   selector: 'app-classname',
   templateUrl: './classname.component.html',
-  styleUrls: ['./classname.component.sass'],
+  styleUrls: ['./classname.component.scss'],
 })
 export class ClassnameComponent  {
   @ViewChild('streamDialogContent') streamDialog = {} as TemplateRef<string>;
@@ -26,7 +24,6 @@ export class ClassnameComponent  {
   onSubmit = new EventEmitter();
   listLength = 0;
   constructor(
-    private _snackBar: MatSnackBar,
     public apiService: ClassnameApiService,
     public router: Router
   ) {}
@@ -55,17 +52,16 @@ export class ClassnameComponent  {
     this.apiService.postClassnamesArray(namesArray).subscribe({
       next: (data: any) => {
         console.log(data);
-        this.openSnackBar('Successfully added streams', 'Close');
+        this.apiService.successToast('Successfully added streams');
         this.closeStreamDialog();
         this.res = 1;
       },
       error: (error) => {
-        this.openSnackBar(error, 'Close');
+        this.apiService.errorToast(error);
         this.closeStreamDialog();
         this.res = 0;
       },
     });
-    console.log(this.classNames);
   }
 
   jumpToDashboard() {
@@ -76,10 +72,6 @@ export class ClassnameComponent  {
 
     // this.classNames = [...this.classNames, newElement];
     this.classNames.push({ id: this.listLength, name: '' });
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
   }
 
   trackByFn(index: any, el: any) {

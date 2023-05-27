@@ -1,6 +1,6 @@
 <mat-card class="dashboard-card">
   <mat-card-header>
-    <mat-card-title>
+    <mat-card-title class="card-title">
       {{ title }}
       <button
         mat-icon-button
@@ -11,8 +11,8 @@
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before">
-        <button mat-menu-item>Expand</button>
-        <button mat-menu-item>Remove</button>
+        <button mat-menu-item (click)="comingSoon()">Expand</button>
+        <button mat-menu-item (click)="comingSoon()">Remove</button>
       </mat-menu>
     </mat-card-title>
   </mat-card-header>
@@ -20,21 +20,21 @@
     <div *ngIf="title != 'Overview'">
       <mat-grid-list cols="3" rowHeight="80px">
         <mat-grid-tile
+          class="grid-tile"
           [style.backgroundColor]="
             numberOfItems[index] == '0' ? warnColor : greyColor
           "
-          [style.color]="numberOfItems[index] != '0' ? blackColor : whiteColor"
-          ><div class="mat-h1" style="line-height: 20px">
-            Number of {{ section | lowercase }}:&nbsp;{{ numberOfItems[index] }}
+          ><div class="grid-number" style="line-height: 20px">
+            # of items:&nbsp;{{ numberOfItems[index] }}
           </div>
         </mat-grid-tile>
         <mat-grid-tile
           ><button
             mat-raised-button
+            class="add-button"
             (click)="openDialog(navLinks[index].add)"
-            color="primary"
           >
-            <mat-icon>add</mat-icon> Add
+            Add
           </button></mat-grid-tile
         ><mat-grid-tile
           ><button
@@ -42,7 +42,7 @@
             class="view-button"
             [routerLink]="navLinks[index].view"
           >
-            <mat-icon>visibility</mat-icon> View
+            View
           </button></mat-grid-tile
         >
       </mat-grid-list>

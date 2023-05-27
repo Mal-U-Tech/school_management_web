@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
@@ -12,6 +12,7 @@ import { ClassTeacherService } from '../shared/class-teacher/class-teacher.servi
 import { HodService } from '../shared/hod/hod.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmScoresheetModulesCreatedComponent } from '../scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
+import { ITeacher } from '../shared/teacher/teacher.interface';
 
 interface TEACHER {
   _id: string;
@@ -28,7 +29,7 @@ interface TEACHER {
   templateUrl: './academics.component.html',
   styleUrls: ['./academics.component.scss'],
 })
-export class AcademicsComponent {
+export class AcademicsComponent implements OnInit {
   /** Based on the screen size, switch from standard to one column per row */
   // cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
   //   map(({ matches }) => {
@@ -62,8 +63,9 @@ export class AcademicsComponent {
   //   })
   // );
 
+  numCols = 2;
   cards = [
-        { title: 'Overview', cols: 2, rows: 1 },
+        { title: 'Overview', cols: this.numCols, rows: 1 },
         { title: 'Streams', cols: 1, rows: 1 },
         { title: 'Departments', cols: 1, rows: 1 },
         { title: 'Subjects', cols: 1, rows: 1 },
@@ -90,6 +92,9 @@ export class AcademicsComponent {
   ) {}
 
   ngOnInit(): void {
+
+    this.numCols = (window.innerWidth <= 768) ? 2: 1;
+
     this.getStreams();
     this.getSubjects();
     this.getDepartments();
@@ -98,6 +103,11 @@ export class AcademicsComponent {
     this.getSubjectTeachers();
     this.getClassTeachers();
     this.getHOD();
+  }
+
+  onResize(event: any){
+    console.log('Resizing ' + event.target.innerWidth)
+    this.numCols = (event.target.innerWidth <=768) ? 2: 1;
   }
 
   public larger = '350px';
@@ -152,11 +162,11 @@ export class AcademicsComponent {
 
   getTeachers() {
     this.teacherApi.getAllTeachers(0, 0).subscribe({
-      next: (data: any) => {
+      next: (data: ITeacher[]) => {
         this.teacherCount = data.length.toString();
 
         // get current user
-        const user = JSON.parse(sessionStorage.getItem('user') || '');
+        const user = JSON.parse(sessionStorage.getItem('userData') || '');
 
         // compute teacher title and store in session storage
         sessionStorage.setItem(

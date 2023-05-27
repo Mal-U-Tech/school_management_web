@@ -1,9 +1,9 @@
 <div class="grid-container">
-  <h1 class="mat-h1">Academics</h1>
+  <h1 class="title">Academics</h1>
   <div class="scoresheet buttons-container">
     <button
       mat-raised-button
-      color="accent"
+      class="create-sheet"
       (click)="openScoresheetModalDialog()"
     >
       Create Scoresheet
@@ -11,7 +11,7 @@
 
     <button
       mat-raised-button
-      color="primary"
+      class="view-sheet"
       (click)="navigateToViewScoresheets()"
     >
       View Scoresheets
@@ -20,8 +20,9 @@
   <mat-grid-list cols="2" rowHeight="250px">
     <mat-grid-tile
       *ngFor="let card of cards; let i = index"
-      [colspan]="card.cols"
+      [colspan]="numCols"
       [rowspan]="card.rows"
+      (window:resize)="onResize($event)"
     >
       <app-dashboard-card
         [title]="card.title"

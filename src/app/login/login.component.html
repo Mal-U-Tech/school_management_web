@@ -2,7 +2,7 @@
   <div class="items-container">
     <h1 color="primary" class="splash-text">School Management System</h1>
 
-    <div id="form-container-login">
+    <div id="form-container-login" *ngIf="!isCheckModulesLoading">
       <!-- <!--For showing password-->
       <!-- <p><input (click)="showPassword()" type="checkbox"> Show Password</p> -->
 
@@ -47,22 +47,28 @@
             Register instead
           </button>
           <button
+            *ngIf="!isLoading"
             class="login button"
             (click)="submitForm()"
             mat-raised-button
-            color="primary"
             type="button"
           >
             Login
           </button>
+          <div *ngIf="isLoading" class="login-spinner-container">
+            <mat-progress-spinner
+              class="login-spinner"
+              mode="indeterminate"
+            ></mat-progress-spinner>
+          </div>
         </div>
       </form>
     </div>
   </div>
 </div>
-<div [ngStyle]="spinner" class="spinner check-modules">
+<div class="spinner check-modules" *ngIf="isCheckModulesLoading">
   <div class="spinner-container">
-    <mat-spinner></mat-spinner>
+    <mat-spinner class="modules-spinner"></mat-spinner>
     <span>Checking modules</span>
   </div>
 </div>
