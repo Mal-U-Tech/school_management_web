@@ -1,3 +1,4 @@
+@use ".../../../../../my-styles.scss" as var;
 .grid-container {
   margin: 20px;
 }
@@ -38,4 +39,50 @@ button.view-button {
 button {
   width: 70%;
   padding: 24px;
+}
+
+button.add-button {
+  background-color: var.$secondary;
+  color: white;
+  font-family: var.$regular;
+}
+
+button.view-button {
+  background-color: var.$tenary;
+  color: black;
+  font-family: var.$regular;
+}
+
+::ng-deep {
+  .mat-raised-button {
+    font-family: var.$regular;
+  }
+}
+
+.grid-tile {
+  font-family: var.$bold;
+  color: black;
+}
+
+.card-title {
+  font-family: var.$semi-bold;
+}
+
+@media screen and (max-width: 768px) {
+  div.grid-number {
+    font-size: 0.7rem;
+    padding: 12px;
+  }
+
+  button.view-button,
+  button.add-button {
+    font-size: 0.65rem;
+  }
+}
+
+@media screen and (max-width: 1120px) {
+  button.view-button,
+  button.add-button {
+    font-size: 0.8rem;
+  }
 }

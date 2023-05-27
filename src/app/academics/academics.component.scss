@@ -1,6 +1,9 @@
+@use "../../my-styles.scss" as var;
+
 h1 {
   text-align: center;
   font-size: 2rem;
+  font-family: var.$bold;
 }
 .scoresheet {
   // background-color: green;
@@ -8,9 +11,42 @@ h1 {
 }
 
 .scoresheet.buttons-container {
-  // background-color: yellow;
-  width: 30%;
+  width: auto;
   margin: auto;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+button.create-sheet {
+  background-color: var.$secondary;
+  color: white;
+}
+
+button.view-sheet {
+  background-color: var.$tenary;
+  color: black;
+}
+
+button {
+  font-family: var.$regular;
+}
+::ng-deep {
+  mat-grid-list {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 200px;
+  }
+
+  mat-grid-tile {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  h1.title {
+    font-size: 1.8rem;
+  }
 }

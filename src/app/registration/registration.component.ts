@@ -28,9 +28,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.sass'],
+  styleUrls: ['./registration.component.scss'],
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
   public username = new FormControl('', [Validators.required]);
   public userSurname = new FormControl('', [Validators.required]);
   public userContact = new FormControl('', [Validators.required]);
@@ -56,20 +56,20 @@ export class RegistrationComponent implements OnInit {
   public visible = false;
   public confirmVisible = false;
   public matcher = new MyErrorStateMatcher();
+  isLoading = false;
 
   constructor(public userApi: UserApiService, public router: Router) {}
-
-  ngOnInit(): void {}
 
   public submitForm() {
     if (
       this.passwordForm.get('password')!.value !=
       this.passwordForm.get('confirmPassword')!.value
     ) {
-      window.alert('Passwords do not match.');
+      this.userApi.errorToast('Passwords do not match.');
     } else if (this.passwordForm.get('password')!.value == '') {
-      window.alert('Passwords are empty.');
+      this.userApi.errorToast('Passwords are empty.');
     } else {
+      this.isLoading = true;
       this.userApi
         .userRegister({
           name: this.username.value!.toString(),
@@ -78,14 +78,18 @@ export class RegistrationComponent implements OnInit {
           email: this.userEmail.value!.toString(),
           password: this.passwordForm.get('password')!.value!.toString(),
         })
-        .subscribe((data: any) => {
-          console.log('Return from backend:');
-          console.log(data);
-          this.router.navigate([
-            `/school-registration/${data._id}/${data.email}/${data.name}/${data.surname}/${data.contact}`,
-          ]);
-          // save user data in sessionStorage
-          sessionStorage.setItem('userData', JSON.stringify(data));
+        .subscribe({
+          next: (data: any) => {
+            this.isLoading = false;
+            // sessionStorage.setItem('user', data);
+            this.router.navigate([`/school-registration`]);
+            // save user data in sessionStorage
+            sessionStorage.setItem('userData', JSON.stringify(data));
+          },
+          error: (error) => {
+            this.isLoading = false;
+            this.userApi.errorToast(error);
+          },
         });
     }
   }

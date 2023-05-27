@@ -1,3 +1,5 @@
+@use "../../../my-styles.scss" as var;
+
 .full-width-table {
   width: 60%;
 }
@@ -23,6 +25,36 @@ tr.row-item:hover {
 
 .no-data {
   font-size: 1.4rem;
+  font-family: var.$regular;
   font-weight: bold;
   padding: 24px;
+}
+
+h1 {
+  font-family: var.$regular;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  color: red !important;
+  background-color: yellow;
+  font-family: var.$regular;
+}
+
+::ng-deep {
+  mat-table {
+    background-color: red;
+    font-family: var.$regular;
+  }
+
+  th,
+  td,
+  mat-cell {
+    font-family: var.$regular;
+    text-align: center;
+  }
+
+  mat-tab {
+    color: yellow;
+    background-color: green;
+  }
 }

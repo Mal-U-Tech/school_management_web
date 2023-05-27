@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SchoolRegApiService } from '../shared/school-registration/school-reg-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-school-registration',
   templateUrl: './school-registration.component.html',
-  styleUrls: ['./school-registration.component.sass'],
+  styleUrls: ['./school-registration.component.scss'],
 })
 export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   public schoolName = new FormControl('');
@@ -16,7 +16,6 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   public schoolAdministrator = new FormControl('');
 
   constructor(
-    private _Activatedroute: ActivatedRoute,
     public schoolRegApi: SchoolRegApiService,
     public router: Router,
     private _snackBar: MatSnackBar
@@ -28,18 +27,27 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   public surname: any;
   public contact: any;
   public email: any;
+  isLoading = false;
 
   ngOnInit(): void {
-    this.sub = this._Activatedroute.paramMap.subscribe((params) => {
-      console.log(params);
-      this.id = params.get('id');
-      this.name = params.get('name');
-      this.surname = params.get('surname');
-      this.contact = params.get('contact');
-      this.email = params.get('email');
+    const temp = JSON.parse(sessionStorage.getItem('userData') || '');
+    this.id = temp._id;
+    this.name = temp.name;
+    this.surname = temp.surname;
+    this.email = temp.email;
+    this.contact = temp.contact;
 
-      this.schoolAdministrator.setValue(`${this.name} ${this.surname}`);
-    });
+    this.schoolAdministrator.setValue(`${this.name} ${this.surname}`);
+    // this.sub = this._Activatedroute.paramMap.subscribe((params) => {
+    //   console.log(params);
+    //   this.id = params.get('id');
+    //   this.name = params.get('name');
+    //   this.surname = params.get('surname');
+    //   this.contact = params.get('contact');
+    //   this.email = params.get('email');
+    //
+    //   this.schoolAdministrator.setValue(`${this.name} ${this.surname}`);
+    // });
   }
 
   ngOnDestroy() {
@@ -47,9 +55,8 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   }
 
   confirmSchoolRegistration() {
-    console.log(
-      `${this.schoolName.value} ${this.schoolRegion.value} ${this.schoolEmail.value} ${this.schoolAdministrator.value}`
-    );
+
+    this.isLoading = true;
 
     this.schoolRegApi
       .postSchoolInfo({
@@ -57,10 +64,11 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
         region: this.schoolRegion.value || '',
         administrators: [{ user: this.id }],
         email: this.schoolEmail.value || '',
-        teachers: []
+        teachers: [],
       })
       .subscribe({
         next: (data: any) => {
+          this.isLoading = false;
           this.openSnackBar(
             'Successfully registered school information!',
             'Close'
@@ -69,6 +77,7 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
           this.router.navigate([`/dashboard`]);
         },
         error: (error) => {
+          this.isLoading = false;
           console.log(`This is error ${error}`);
           this.openSnackBar(error, 'Close');
         },

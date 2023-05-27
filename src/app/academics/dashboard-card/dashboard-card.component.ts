@@ -6,6 +6,7 @@ import { ClassStudentsComponent } from 'src/app/class-students/class-students.co
 import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
+import { UserApiService } from 'src/app/shared/user/user-api.service';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
@@ -15,7 +16,7 @@ import { TeacherComponent } from 'src/app/teacher/teacher.component';
   styleUrls: ['./dashboard-card.component.scss'],
 })
 export class DashboardCardComponent {
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog,private api: UserApiService) {}
   @Input() title = '';
   @Input() section = '';
   @Input() index = 0;
@@ -49,7 +50,7 @@ export class DashboardCardComponent {
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.closeOnNavigation = true;
-    dialogConfig.width = '45%';
+    dialogConfig.width = '85%';
     // dialogConfig.height = '80%';
     // dialogConfig.data = { name: 'Form 4A' };
 
@@ -312,5 +313,9 @@ export class DashboardCardComponent {
     } catch (error: any) {
       // console.log(`Error while getting HODs: ${error.toString()}`);
     }
+  }
+
+  comingSoon() {
+    this.api.successToast('Comming Soon')
   }
 }

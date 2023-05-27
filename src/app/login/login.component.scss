@@ -2,7 +2,6 @@
 
 .form-container {
   min-width: 20%;
-  max-width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,10 +9,15 @@
 }
 
 .form-field {
-  width: 100%;
-  min-width: 30%;
-  max-width: 100%;
-  font-family: inherit;
+  width: 80%;
+  font-family: var.$bold;
+
+  ::ng-deep {
+    mat-label {
+      font-family: var.$regular;
+      color: var.$primary;
+    }
+  }
 }
 
 .login-container {
@@ -40,7 +44,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 34px;
   position: relative;
   top: 20%;
 }
@@ -49,10 +52,16 @@
 }
 
 .button {
-  min-width: 90px;
-  max-width: 170px;
+  min-width: 60px;
+  max-width: 210px;
   width: 100%;
   margin: 12px;
+  font-family: var.$regular;
+}
+
+button.login.button {
+  color: white;
+  background-color: var.$primary;
 }
 
 .splash-text {
@@ -60,7 +69,7 @@
   font-size: 3.4rem;
   margin: auto;
   background-color: var.$primary;
-  height: 36px;
+  height: 18px;
   text-align: center;
   position: relative;
   top: 15%;
@@ -75,24 +84,64 @@
   margin: auto;
   top: 0;
   z-index: 20;
-  opacity: 0;
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spinner-container {
-  background-color: whitesmoke;
-  display: inline-block;
-  position: absolute;
-  bottom: 20px;
-  font-size: 2rem;
-  padding: 48px;
-  margin: auto;
-  left: 0;
-  right: 0;
-  width: 25%;
+  // background-color: #eee;
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 35%;
+
+  span {
+    padding: 12px;
+    font-size: 1.5rem;
+  }
 }
 
-mat-spinner {
-  margin: 12px auto;
+.login-spinner-container {
+  // background-color: yellow;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  align-items: center;
+  margin: auto;
+  width: 50px;
+  height: 50px;
+}
+
+:host ::ng-deep .login-spinner circle {
+  stroke: var.$secondary;
+}
+
+:host ::ng-deep .modules-spinner circle {
+  stroke: var.$secondary;
+}
+
+@media screen and (max-width: 768px) {
+  .splash-text {
+    font-size: 1.4rem;
+  }
+
+  #form-container-login {
+    background-color: var.$light;
+    width: auto;
+    margin: 7px;
+  }
+
+  .form-container {
+    width: 100%;
+    margin: 14px;
+    background-color: var.$light;
+  }
+
+  .form-field {
+    width: 100%;
+  }
 }

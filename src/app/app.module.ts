@@ -80,7 +80,7 @@ const routes: Routes = [
   { path: 'registration', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   {
-    path: 'school-registration/:id/:email/:name/:surname/:contact',
+    path: 'school-registration',
     component: SchoolRegistrationComponent,
   },
   { path: 'reg-classnames', component: ClassnameComponent },
