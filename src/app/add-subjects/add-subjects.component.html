@@ -26,18 +26,18 @@
                 matInput
               />
             </mat-form-field>
-            <!-- <mat-form-field> -->
-            <!--   <mat-label>Level: Secondary/High School</mat-label> -->
-            <!--   <input -->
-            <!--     type="text" -->
-            <!--     #inputFieldLevel -->
-            <!--     [(ngModel)]="sub.level" -->
-            <!--     name="level{{ i }}" -->
-            <!--     matInput -->
-            <!--   /> -->
-            <!--   -->
-            <!-- </mat-form-field> -->
-            <!---->
+            <mat-form-field>
+              <mat-label>Passing Mark</mat-label>
+              <input
+                type="number"
+                id="{{ i }}"
+                #inputFieldPassMark
+                [(ngModel)]="sub.pass_mark"
+                name="subject{{ i }}"
+                matInput
+              />
+            </mat-form-field>
+
             <mat-checkbox [(ngModel)]="sub.secondary" color="primary"
               >Secondary</mat-checkbox
             >

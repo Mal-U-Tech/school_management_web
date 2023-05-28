@@ -37,7 +37,7 @@ export class UserApiService extends SharedApiConstants {
   // HttpClient API post() method => check modules
   checkModules(adminId: string): Observable<any> {
     return this.http
-      .post<any>(this.apiUrl + `/check-modules/${adminId}`, {})
+      .post<any>(this.apiUrl + `check-modules/${adminId}`, {})
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -65,10 +65,7 @@ export class UserApiService extends SharedApiConstants {
   // HttpClient API update => update user profile
   updateUser(id: string, user: IUser): Observable<IUser> {
     return this.http
-      .put<IUser>(
-        this.apiUrl + `${this.module}/update/${id}`,
-        user,
-      )
+      .put<IUser>(this.apiUrl + `${this.module}/update/${id}`, user)
       .pipe(retry(1), catchError(this.handleError));
   }
 

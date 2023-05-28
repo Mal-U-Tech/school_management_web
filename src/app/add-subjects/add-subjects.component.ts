@@ -34,6 +34,7 @@ export class AddSubjectsComponent implements OnInit {
 
   @ViewChildren('inputFieldLevel') levels!: QueryList<any>;
   @ViewChildren('inputFieldSubject') subjects!: QueryList<any>;
+  @ViewChildren('inputFieldPassMark') passMarks!: QueryList<any>;
 
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
@@ -74,6 +75,7 @@ export class AddSubjectsComponent implements OnInit {
             dept_id: el._id,
             dept_name: el.name,
             subjects: [{ name: '', secondary: false, high_school: false }],
+            pass_mark: 0,
           });
         });
       },
@@ -87,12 +89,12 @@ export class AddSubjectsComponent implements OnInit {
     if (this.sub) this.sub.unsubscribe();
   }
 
-  addIn(num: any) {
-    this.elements[num].subjects.push({ name: '', level: '' });
+  addIn(num: number) {
+    this.elements[num].subjects.push({ name: '', level: '', pass_mark: 0 });
   }
 
   addSubjects() {
-    var data: any[] = [];
+    const data: any[] = [];
 
     // remove any subjects currently stored
     this.apiService.secondarySubjects = [];
@@ -110,12 +112,14 @@ export class AddSubjectsComponent implements OnInit {
             department_id: dept.dept_id,
             name: sub.name,
             level: 'Secondary',
+            pass_mark: sub.pass_mark,
           });
 
           this.apiService.secondarySubjects.push({
             department_id: dept.dept_id,
             name: sub.name,
             level: 'Secondary',
+            pass_mark: sub.pass_mark,
           });
         }
 
@@ -124,11 +128,13 @@ export class AddSubjectsComponent implements OnInit {
             department_id: dept.dept_id,
             name: sub.name,
             level: 'High School',
+            pass_mark: sub.pass_mark,
           });
           this.apiService.highSchoolSubjects.push({
             department_id: dept.dept_id,
             name: sub.name,
             level: 'High School',
+            pass_mark: sub.pass_mark,
           });
         }
       }

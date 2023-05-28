@@ -48,8 +48,7 @@ export class AddDepartmentsService extends SharedApiConstants {
     return this.http
       .post<IDepartments>(
         this.apiUrl + `${this.module}/create`,
-        JSON.stringify(department),
-        this.httpOptions
+       department
       )
       .pipe(retry(1), catchError(this.handleError));
   }
