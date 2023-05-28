@@ -3,6 +3,7 @@ export interface ISubjects {
   name: string;
   department_id: string;
   level: string;
+  pass_mark: number;
 }
 
 export interface ISubjectsArray {

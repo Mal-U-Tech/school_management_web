@@ -1,3 +1,4 @@
+@use "../../../my-styles.scss" as var;
 .pass-controls-added {
   margin: 24px auto;
   display: flex;
@@ -8,10 +9,33 @@
 .scoresheet-info {
   height: auto;
   padding: 12px;
-  background-color: cornflowerblue;
+  background-color: var.$primary;
+  font-family: var.$regular;
   text-align: center;
   font-size: 2.3rem;
   font-weight: bold;
   display: flex;
   justify-content: space-evenly;
+}
+
+.download-pdf-button {
+  margin: 24px auto;
+  display: flex;
+  justify-content: center;
+}
+
+button.download-button {
+  background-color: var.$primary;
+  color: white;
+  margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .scoresheet-info {
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 24px;
+  }
 }

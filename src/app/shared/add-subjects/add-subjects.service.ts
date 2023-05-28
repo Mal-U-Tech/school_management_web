@@ -49,8 +49,7 @@ export class AddSubjectsService extends SharedApiConstants {
     return this.http
       .post<ISubjects>(
         this.apiUrl + `${this.module}/register`,
-        JSON.stringify(subject),
-        this.httpOptions
+        subject
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -79,8 +78,7 @@ export class AddSubjectsService extends SharedApiConstants {
     return this.http
       .put<ISubjects>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(subject),
-        this.httpOptions
+        subject
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -88,7 +86,7 @@ export class AddSubjectsService extends SharedApiConstants {
   // HttpClient API delete() => delete subject
   deleteSubject(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -107,6 +105,7 @@ export class AddSubjectsService extends SharedApiConstants {
           name: temp.name,
           level: temp.level,
           department_id: temp.department_id._id,
+          pass_mark: temp.pass_mark,
         });
       } else {
         this.highSchoolSubjects.push({
@@ -114,6 +113,7 @@ export class AddSubjectsService extends SharedApiConstants {
           name: temp.name,
           level: temp.level,
           department_id: temp.department_id._id,
+          pass_mark: temp.pass_mark,
         });
       }
     }

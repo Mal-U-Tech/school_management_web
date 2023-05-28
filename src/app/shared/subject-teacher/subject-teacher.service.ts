@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { SubjectTeacherInterface } from './subject-teacher.interface';
+import { ISubjectTeacher } from './subject-teacher.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,12 +31,11 @@ export class SubjectTeacherService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register subject teacher
-  postSubjectTeacher(teacher: any): Observable<SubjectTeacherInterface> {
+  postSubjectTeacher(teacher: ISubjectTeacher): Observable<ISubjectTeacher> {
     return this.http
-      .post<SubjectTeacherInterface>(
+      .post<ISubjectTeacher>(
         this.apiUrl + `${this.module}/register`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -45,9 +44,9 @@ export class SubjectTeacherService extends SharedApiConstants {
   getAllSubjectTeachers(
     pageNo: number,
     pageSize: number
-  ): Observable<SubjectTeacherInterface[]> {
+  ): Observable<ISubjectTeacher[]> {
     return this.http
-      .get<SubjectTeacherInterface[]>(
+      .get<ISubjectTeacher[]>(
         this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -58,9 +57,9 @@ export class SubjectTeacherService extends SharedApiConstants {
     id: string,
     pageNo: string,
     pageSize: string
-  ): Observable<SubjectTeacherInterface> {
+  ): Observable<ISubjectTeacher> {
     return this.http
-      .get<SubjectTeacherInterface>(
+      .get<ISubjectTeacher>(
         this.apiUrl + `${this.module}/view-on/${id}/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -84,13 +83,12 @@ export class SubjectTeacherService extends SharedApiConstants {
   // HttpClient API put() => update subject teacher in db
   updateSubjectTeacher(
     id: string,
-    teacher: any
-  ): Observable<SubjectTeacherInterface> {
+    teacher: ISubjectTeacher
+  ): Observable<ISubjectTeacher> {
     return this.http
-      .put<SubjectTeacherInterface>(
+      .put<ISubjectTeacher>(
         this.apiUrl + `${this.module}/update/${id}`,
-        JSON.stringify(teacher),
-        this.httpOptions
+        teacher
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -98,7 +96,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   // HttpClient API delete() => delete subject teacher in db
   deleteSubjectTeachere(id: string) {
     return this.http
-      .delete(this.apiUrl + `${this.module}/delete/${id}`, this.httpOptions)
+      .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 }

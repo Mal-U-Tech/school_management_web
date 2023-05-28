@@ -1,9 +1,13 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
+import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
+import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
+import { IMarks } from 'src/app/shared/marks/marks.interface';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { PassControlsService } from 'src/app/shared/pass-controls/pass-controls.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
@@ -22,7 +26,8 @@ export class SelectClassComponent implements AfterViewInit {
     public router: Router,
     public marksService: MarksService,
     private dialog: MatDialog,
-    private passControlsService: PassControlsService
+    private passControlsService: PassControlsService,
+    private classStudentsService: ClassStudentsService
   ) {}
 
   ngAfterViewInit(): void {
@@ -42,6 +47,7 @@ export class SelectClassComponent implements AfterViewInit {
             }
             if (this.highSchoolRegEx.test(temp.name)) {
               this.classes.push({
+                class_id: temp._id,
                 name: temp.name,
                 subjects: this.subjects.highSchoolSubjects,
               });
@@ -62,6 +68,7 @@ export class SelectClassComponent implements AfterViewInit {
   selectedClass = 0;
   passControls: IPassControls[] = [];
   isLoadingPassControls = true;
+  isScoresheetLoading = false;
 
   setSelectedClass(index: number) {
     this.selectedClass = index;
@@ -111,26 +118,130 @@ export class SelectClassComponent implements AfterViewInit {
     console.log(stream);
     console.log(this.service.selectedScoresheetId);
     console.log(this.classes[this.selectedClass]);
+    const selectedStream = this.classes[this.selectedClass];
 
-    this.marksService
-      .getFullScoresheet(stream.class_id, this.service.selectedScoresheetId)
+    this.isScoresheetLoading = true;
+    // first get the class students
+    this.classStudentsService
+      .getAllLearnersByClassYear(stream.class_id, '2023', 0, 0)
       .subscribe({
-        next: (data: any) => {
+        next: (data: IClassStudent[]) => {
           console.log(data);
+          sessionStorage.setItem('scoresheet-students', JSON.stringify(data));
+        },
+        error: (error) => {
+          console.log(error);
+          this.classStudentsService.errorToast(error);
+        },
+      });
+
+    const finalSubjectsArray: any[] = [];
+    // get subjects marks
+    this.marksService
+      .getSubjectMarksWithArray(
+        this.service.selectedYear,
+        this.service.selectedScoresheetId,
+        selectedStream.subjects
+      )
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+          this.isScoresheetLoading = false;
+
+          for (let i = 0; i < data.length; i++) {
+            const temp = data[i];
+            const subjects: any = [];
+            if (temp.length != 0) {
+              temp.forEach((mark: any) => {
+                if (mark.class_student_id.class_id == stream.class_id) {
+                  subjects.push(mark);
+                }
+              });
+            }
+
+            const subObj: any = {};
+            subObj[selectedStream.subjects[i].name] = subjects;
+            finalSubjectsArray.push(subObj);
+          }
+
+          console.log(finalSubjectsArray);
+          sessionStorage.setItem(
+            'scoresheet-subjects',
+            JSON.stringify(finalSubjectsArray)
+          );
           this.service.className = stream.name;
           this.marksService.selectedClass = {
             class_id: stream.class_id,
             name: stream.name,
           };
-
-          sessionStorage.setItem('scoresheet-data', JSON.stringify(data));
-          // navigate to class scoresheet component
           this.router.navigateByUrl('class-scoresheet');
         },
         error: (error) => {
+          this.isScoresheetLoading = false;
           console.log(error);
         },
       });
+
+    // const finalSubjectsArray: any = [];
+    // const observables = [];
+    // const responses = [];
+    // for (let i = 0; i < selectedStream.subjects.length; i++) {
+    //   responses.push([]);
+    //   observables.push(
+    //     this.marksService
+    //       .getSubjectMarks(
+    //         this.service.selectedYear,
+    //         this.service.selectedScoresheetId,
+    //         selectedStream.subjects
+    //       )
+    //       .subscribe({
+    //         next: (data: IMarks[]) => {
+    //           // console.log(selectedStream.subjects[i].name);
+    //
+    //           const subjects: IMarks[] = [];
+    //           // console.log(data);
+    //           if (data.length != 0) {
+    //             data.forEach((mark: any) => {
+    //               if (mark.class_student_id.class_id == stream.class_id) {
+    //                 subjects.push(mark);
+    //               }
+    //             });
+    //           }
+    //           finalSubjectsArray.push(subjects);
+    //         },
+    //         error: (error) => {
+    //           console.log(error);
+    //         },
+    //       })
+    //   );
+    // }
+    //
+    // forkJoin(observables).subscribe({
+    //   next: (data) => {
+    //     console.log(data);
+    //   },
+    //   complete: () => console.log('This is the end.'),
+    // });
+
+    // this.marksService
+    //   .getFullScoresheet(stream.class_id, this.service.selectedScoresheetId)
+    //   .subscribe({
+    //     next: (data: any) => {
+    //       // console.log(data[0]);
+    //       this.service.className = stream.name;
+    //       this.marksService.selectedClass = {
+    //         class_id: stream.class_id,
+    //         name: stream.name,
+    //       };
+    //
+    //       sessionStorage.setItem('scoresheet-data', JSON.stringify(data));
+    //       // navigate to class scoresheet component
+    //       this.router.navigateByUrl('class-scoresheet');
+    //     },
+    //     error: (error) => {
+    //       console.log(error);
+    //     },
+    //   });
   }
 
   // function navigate to pass controls

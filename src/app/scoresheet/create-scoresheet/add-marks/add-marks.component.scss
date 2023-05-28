@@ -12,6 +12,7 @@ td {
 
 .students-table-wrapper {
   width: 100%;
+  background-color: yellow;
   // text-align: center;
 }
 
@@ -38,4 +39,42 @@ td {
   margin: 24px auto;
   // background-color: yellow;
   text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .add-marks-wrapper {
+    width: 100%;
+  }
+
+  .form-field {
+    width: 80%;
+  }
+  .input-fields-container {
+    width: 85%;
+    margin: auto;
+  }
+
+  .students-table-wrapper {
+    background-color: green;
+  }
+
+  ::ng-deep {
+    mat-table {
+      background-color: red;
+    }
+
+    ng-container.index {
+      margin-top: 24px;
+    }
+  }
+
+  td {
+    display: flex;
+    flex-direction: column;
+  }
+
+  th {
+    display: flex;
+    flex-direction: column;
+  }
 }

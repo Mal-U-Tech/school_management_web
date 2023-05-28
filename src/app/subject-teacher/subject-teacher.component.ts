@@ -70,7 +70,7 @@ export class SubjectTeacherComponent {
 
   // submit subject teacher to database via api
   saveSubjectTeacher() {
-    let teacher = {
+    const teacher = {
       subject_id: this.subjectSelection._id,
       class_id: this.streamSelection._id,
       teacher_id: this.teacherSelection._id,
