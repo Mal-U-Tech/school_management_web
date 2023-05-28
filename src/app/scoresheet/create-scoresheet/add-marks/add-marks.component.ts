@@ -61,18 +61,18 @@ export class AddMarksComponent implements OnInit {
   // function to send scoresheet marks to db
   saveScoresheetMarks() {
     // assign subject teacher id
-    let teacher = this.data.subject_teacher_id;
+    const teacher = this.data.subject_teacher_id;
 
     // assign subject id
-    let subjectId = this.data.subject._id;
+    const subjectId = this.data.subject._id;
 
     // assign scoresheet id
-    let scoresheetId = this.scoresheetService.selectedScoresheetId;
+    const scoresheetId = this.scoresheetService.selectedScoresheetId;
 
     // assing year
-    let year = this.data.year;
+    const year = this.data.year;
 
-    let serverArray: any[] = [];
+    const serverArray: any[] = [];
 
     // checking if conditions for creating scoresheet are met
     if (this.addedMarks.length < Number.parseInt(this.numStudents)) {
@@ -86,7 +86,7 @@ export class AddMarksComponent implements OnInit {
       this.marksService.errorToast('Some marks have exceeded max score!');
     } else {
       for (let i = 0; i < this.dataSource.data.length; i++) {
-        let temp = this.dataSource.data[i];
+        const temp = this.dataSource.data[i];
         console.log(temp.score);
         serverArray.push({
           year: year,
@@ -149,11 +149,11 @@ export class AddMarksComponent implements OnInit {
   // function to lead class subject scoresheet data
   loadData() {
     this.isLoading = true;
-    // console.log(this.data);
+    console.log(this.data);
 
     this.subject_name = this.data.subject.name;
     this.pass_mark = this.data.subject.pass_mark;
-    let tempTeacher = this.data.teacher;
+    const tempTeacher = this.data.teacher;
     this.teacher = `${this.computeTeacherTitle(
       tempTeacher.gender,
       tempTeacher.marital_status
@@ -169,10 +169,10 @@ export class AddMarksComponent implements OnInit {
     this.className = this.data.class_id.name;
 
     // assigning students
-    let arr: STUDENT[] = [];
+    const arr: STUDENT[] = [];
 
     for (let i = 0; i < this.data.students.length; i++) {
-      let tempStudent = this.data.students[i];
+      const tempStudent = this.data.students[i];
       arr.push({
         _id: tempStudent._id,
         name: tempStudent.name,

@@ -1,3 +1,4 @@
+@use "../../../my-styles.scss" as var;
 .subject-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -10,9 +11,13 @@
 .instructions {
   text-align: center;
   margin: auto;
+  margin-top: 24px;
   padding: 12px;
   font-size: 1.5rem;
   font-weight: bold;
+  font-family: var.$regular;
+  display: flex;
+  flex-direction: column;
 }
 
 .pass-controls-added {
@@ -21,4 +26,51 @@
   height: auto;
   justify-content: space-evenly;
   margin: 24px auto;
+}
+
+button.add-pass-controls {
+  background-color: var.$primary;
+  margin: 24px auto;
+  color: white;
+  min-width: 60px;
+  max-width: 250px;
+  width: 100%;
+}
+
+button.class-name {
+  background-color: var.$tenary;
+}
+
+button.pass-controls-button {
+  border: 1px solid var.$primary;
+}
+
+:host ::ng-deep .controls-spinner circle {
+  stroke: var.$primary;
+}
+
+:host ::ng-deep .scoresheet-spinner circle {
+  stroke: var.$primary;
+}
+
+button.view-scoresheet {
+  border: 1px solid var.$primary;
+}
+
+mat-progress-spinner {
+  width: 20px;
+  height: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .instructions {
+    font-size: 1.2rem;
+    line-height: 25px;
+  }
+
+  div.spinner-container > mat-spinner {
+    width: 10px;
+    height: 10px;
+    padding: -40px;
+  }
 }

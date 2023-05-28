@@ -1,9 +1,9 @@
-<div class="add-marks-wrapper mat-typography">
+<div class="add-marks-wrapper">
   <div class="instructions">
     Select a class and subject to add students marks
     <button
       mat-raised-button
-      color="primary"
+      class="add-pass-controls"
       (click)="openPassControls(undefined)"
     >
       Add Pass Controls
@@ -11,14 +11,17 @@
   </div>
 
   <div class="pass-controls-added">
-    <mat-spinner
-      *ngIf="isLoadingPassControls"
-      mode="indeterminate"
-    ></mat-spinner>
+    <div class="spinner-container">
+      <mat-spinner
+        *ngIf="isLoadingPassControls"
+        mode="indeterminate"
+        class="controls-spinner"
+      ></mat-spinner>
+    </div>
     <div *ngFor="let controls of passControls; let i = index">
       <button
         mat-stroked-button
-        color="primary"
+        class="pass-controls-button"
         (click)="openPassControls(controls)"
       >
         {{ controls.level }}
@@ -44,7 +47,7 @@
               <button
                 mat-raised-button
                 (click)="checkTeacher(subject._id, class.class_id)"
-                color="primary"
+                class="class-name"
               >
                 {{ subject.name }}
               </button>
@@ -52,9 +55,20 @@
           </div>
 
           <mat-action-row>
-            <button mat-button color="primary" (click)="viewScoresheet(class)">
+            <button
+              *ngIf="!isScoresheetLoading"
+              mat-button
+              class="view-scoresheet"
+              (click)="viewScoresheet(class)"
+            >
               View Scoresheet
             </button>
+            <div *ngIf="isScoresheetLoading">
+              <mat-progress-spinner
+                class="scoresheet-spinner"
+                mode="indeterminate"
+              ></mat-progress-spinner>
+            </div>
           </mat-action-row>
         </mat-expansion-panel>
       </div>

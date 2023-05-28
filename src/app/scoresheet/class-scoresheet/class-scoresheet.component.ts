@@ -15,6 +15,7 @@ import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service'
 import { IScoresheetDatasource } from '../models/scoresheet-datasource.model';
 import { IScoresheetSubject } from '../models/scoresheet-subject.model';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
 
 @Component({
   selector: 'app-class-scoresheet',
@@ -40,7 +41,8 @@ export class ClassScoresheetComponent implements OnInit {
     private marksService: MarksService,
     private passControlService: PassControlsService,
     private scoresheetService: ScoresheetService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private classStudentService: ClassStudentsService
   ) {}
 
   ngOnInit(): void {
@@ -50,61 +52,93 @@ export class ClassScoresheetComponent implements OnInit {
 
   // function to load data from sessionStorage
   loadData() {
-    const data = JSON.parse(sessionStorage.getItem('scoresheet-data') || '');
+    const studentData = JSON.parse(
+      sessionStorage.getItem('scoresheet-students') || ''
+    );
+    const subjectData = JSON.parse(
+      sessionStorage.getItem('scoresheet-subjects') || ''
+    );
 
     // assign values to scoresheet interface
     const arr: IScoresheetDatasource[] = [];
 
-    for (let i = 0; i < data.length; i++) {
-      // for each subject in the student
-      const tempStudent = data[i];
+    // assign students to arr
+    for (let i = 0; i < studentData.length; i++) {
+      const stud = studentData[i];
 
       arr.push({
         index: i + 1,
-        _id: tempStudent[0].class_student_id._id,
-        name: tempStudent[0].class_student_id.name,
-        surname: tempStudent[0].class_student_id.surname,
+        _id: stud._id,
+        name: stud.name,
+        surname: stud.surname,
         marks: [],
         aggregate: 0,
         position: 0,
-        pass_fail: 'something',
+        pass_fail: 'Pass',
       });
+    }
 
-      for (let j = 0; j < tempStudent.length; j++) {
-        const tempSubject = tempStudent[j];
-        const subjectFound = this.displayedColumns.find(
-          (el) => el == tempSubject.subject_teacher_id.subject_id.name
-        );
+    // assign subject data
+    for (let j = 0; j < subjectData.length; j++) {
+      const tempSubject = subjectData[j];
 
-        if (!subjectFound) {
-          this.displayedColumns.push(
-            tempSubject.subject_teacher_id.subject_id.name
-          );
+      const name = Object.keys(tempSubject)[0].toString();
+      const subjectFound = this.displayedColumns.find(
+        (el) => el == Object.keys(tempSubject)[0].toString()
+      );
 
-          // assing subjects and subject teacher to subjects array
-          this.subjects.push({
-            subjectName: tempSubject.subject_teacher_id.subject_id.name,
-            teacherTitle: this.computeTeacherTitle(
-              tempSubject.subject_teacher_id.teacher_id.gender,
-              tempSubject.subject_teacher_id.teacher_id.marital_status
-            ),
-            teacherName: tempSubject.subject_teacher_id.teacher_id.user_id.name,
-            teacherSurname:
-              tempSubject.subject_teacher_id.teacher_id.user_id.surname,
-          });
-        }
+      if (
+        !subjectFound &&
+        tempSubject[Object.keys(tempSubject)[0]].length > 0
+      ) {
+        const tempStud = tempSubject[name][0];
+        this.displayedColumns.push(Object.keys(tempSubject)[0]);
+
+        // assing subjects and subject teacher to subjects array
+        this.subjects.push({
+          subjectName: Object.keys(tempSubject)[0],
+          teacherTitle: this.computeTeacherTitle(
+            tempStud.subject_teacher_id.teacher_id.gender,
+            tempStud.subject_teacher_id.teacher_id.marital_status
+          ),
+          teacherName: tempStud.subject_teacher_id.teacher_id.user_id.name,
+          teacherSurname:
+            tempStud.subject_teacher_id.teacher_id.user_id.surname,
+        });
       }
     }
 
+    //
+    //   const subjectFound = this.displayedColumns.find(
+    //     (el) => el == tempStudent.subject_teacher_id.subject_id.name
+    //   );
+    //
+    //   if (!subjectFound) {
+    //     this.displayedColumns.push(
+    //       tempStudent.subject_teacher_id.subject_id.name
+    //     );
+    //
+    //     // assing subjects and subject teacher to subjects array
+    //     this.subjects.push({
+    //       subjectName: tempStudent.subject_teacher_id.subject_id.name,
+    //       teacherTitle: this.computeTeacherTitle(
+    //         tempStudent.subject_teacher_id.teacher_id.gender,
+    //         tempStudent.subject_teacher_id.teacher_id.marital_status
+    //       ),
+    //       teacherName: tempStudent.subject_teacher_id.teacher_id.user_id.name,
+    //       teacherSurname:
+    //         tempStudent.subject_teacher_id.teacher_id.user_id.surname,
+    //     });
+    //   }
+
     // assign to dataSource
     this.dataSource.data = arr;
-    this.getStudentSubjectMark(data);
-    // this.calculateAggregateforEachStudent();
+    this.getStudentSubjectMark(subjectData);
     this.rankStudent(this.calculateAggregateforEachStudent());
 
-    // add pass pass-controls
+    // // add pass pass-controls
     this.passControls = this.passControlService.passControls;
-
+    //
     // load school info
     const schoolInfo: ISchoolInfo = JSON.parse(
       sessionStorage.getItem('school-info') || ''
@@ -120,22 +154,25 @@ export class ClassScoresheetComponent implements OnInit {
   }
 
   // function to get a students mark for a subject
-  getStudentSubjectMark(data: any[]) {
-    let index = 0;
-    data.forEach((student: any[]) => {
-      const tempStudent = this.dataSource.data[index];
-      student.forEach((subject: any) => {
-        if (subject.class_student_id._id == tempStudent._id) {
-          const percentage = this.calculateMarkPectage(
-            subject.mark,
-            subject.max_score
-          );
+  getStudentSubjectMark(subjectData: []) {
+    for (let i = 0; i < subjectData.length; i++) {
+      const sub: any = subjectData[i];
+      const name = Object.keys(sub)[0];
 
-          this.dataSource.data[index].marks.push(percentage.toString());
+      if (sub[name].length > 0) {
+        // subject marks are available
+        // add them to students list in dataSource
+        // const students = this.dataSource.data;
+        for (let j = 0; j < this.dataSource.data.length; j++) {
+          // console.log(sub[name][j].mark);
+          const percentage = this.calculateMarkPectage(
+            sub[name][j].mark,
+            sub[name][j].max_score
+          );
+          this.dataSource.data[j].marks.push(percentage);
         }
-      });
-      index++;
-    });
+      }
+    }
   }
 
   // function to calculate the percentage for each student
