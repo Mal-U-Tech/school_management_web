@@ -19,6 +19,7 @@ export class SchoolRegApiService extends SharedApiConstants {
 
   // HTTPClient API post() method => create School Info record
   postSchoolInfo(school: ISchoolInfo): Observable<ISchoolInfo> {
+    console.log(school);
     return this.http
       .post<ISchoolInfo>(
         this.apiUrl + `${this.module}/create`,
