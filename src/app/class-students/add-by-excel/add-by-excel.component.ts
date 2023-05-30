@@ -110,7 +110,10 @@ export class AddByExcelComponent {
     this.selectedSheets.forEach((item) => {
       let classId = '';
       streamsArr.forEach((el: { _id: string; name: string }) => {
-        if (el.name === item.class) {
+        const streamRegEx = el.name.match(/\d./);
+        const selectedItemRegEx = item.class.match(/\d./);
+
+        if (streamRegEx![0] == selectedItemRegEx[0]) {
           classId = el._id;
         }
       });
