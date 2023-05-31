@@ -111,16 +111,15 @@ export class MarksService extends SharedApiConstants {
     const subs = [];
     for (let i = 0; i < subjects.length; i++) {
       console.log('Inside here');
-      const subId:string = subjects[i]._id;
+      const subId: string = subjects[i]._id;
       console.log(subId);
-      subs.push(
-        this.http.get<IMarks[]>(
-          this.apiUrl +
-            `${this.module}/subject/${year}/${scoresheetId}/${subId}`
-        )
-      );
+      const link =
+        this.apiUrl + `${this.module}/subject/${year}/${scoresheetId}/${subId}`;
+      subs.push(this.http.get<IMarks[]>(link));
     }
 
+    console.log('This is right before the forkJoin');
+    console.log('These are subs: ' + subs);
     return forkJoin(subs);
     // this.http
     //   .get<IMarks[]>(
