@@ -115,18 +115,17 @@ export class SelectClassComponent implements AfterViewInit {
 
   // function to take user to the full scoresheet view of the class
   viewScoresheet(stream: any) {
-    console.log(stream);
-    console.log(this.service.selectedScoresheetId);
-    console.log(this.classes[this.selectedClass]);
+    // console.log(stream);
     const selectedStream = this.classes[this.selectedClass];
 
+    // console.log(selectedStream);
     this.isScoresheetLoading = true;
     // first get the class students
     this.classStudentsService
       .getAllLearnersByClassYear(stream.class_id, '2023', 0, 0)
       .subscribe({
         next: (data: IClassStudent[]) => {
-          console.log(data);
+          // console.log(data);
           sessionStorage.setItem('scoresheet-students', JSON.stringify(data));
         },
         error: (error) => {
@@ -136,6 +135,8 @@ export class SelectClassComponent implements AfterViewInit {
       });
 
     const finalSubjectsArray: any[] = [];
+
+    // console.log('I am about to get marks now');
     // get subjects marks
     this.marksService
       .getSubjectMarksWithArray(
@@ -145,15 +146,32 @@ export class SelectClassComponent implements AfterViewInit {
       )
       .subscribe({
         next: (data) => {
+          // console.log('I have retrieved marks');
           console.log(data);
           this.isScoresheetLoading = false;
 
+          // try {
           for (let i = 0; i < data.length; i++) {
             const temp = data[i];
+            console.log(temp);
             const subjects: any = [];
             if (temp.length != 0) {
               temp.forEach((mark: any) => {
-                if (mark.class_student_id.class_id == stream.class_id) {
+                console.log(mark);
+                // console.log('I am from api + '' +mark.class_student_id.class_id)
+                console.log(selectedStream.class_id);
+                // console.log(mark.class_student_id.class_id);
+                if (mark.subject_teacher_id.class_id == null) {
+                  console.log('i am null');
+                }
+
+                if (selectedStream.class_id == null) {
+                  console.log('i am null too');
+                }
+                if (
+                  mark.subject_teacher_id.class_id == selectedStream.class_id
+                ) {
+                  // console.table(mark);
                   subjects.push(mark);
                 }
               });
@@ -163,7 +181,9 @@ export class SelectClassComponent implements AfterViewInit {
             subObj[selectedStream.subjects[i].name] = subjects;
             finalSubjectsArray.push(subObj);
           }
-
+          // } catch (error) {
+          //   console.log('This is error: ' + error);
+          // }
           console.log(finalSubjectsArray);
           sessionStorage.setItem(
             'scoresheet-subjects',
