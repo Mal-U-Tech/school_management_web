@@ -106,26 +106,29 @@ export class MarksService extends SharedApiConstants {
   getSubjectMarksWithArray(
     year: string,
     scoresheetId: string,
-    subjects: any[]
+    subjects: any[],
+    start: number,
+    end: number
   ) {
+    console.log(year);
+    console.log(scoresheetId);
+    console.log(subjects.length);
     const subs = [];
-    for (let i = 0; i < subjects.length; i++) {
-      console.log('Inside here');
-      const subId: string = subjects[i]._id;
-      console.log(subId);
+
+    // return this.http.get(
+    //   this.apiUrl +
+    //     `${this.module}/subject/${year}/${scoresheetId}/${subjects[0]._id}`
+    // ).pipe(retry(1), catchError(this.handleError));
+    for (let i = start; i < end; i++) {
+      const subId = subjects[i]._id;
       const link =
         this.apiUrl + `${this.module}/subject/${year}/${scoresheetId}/${subId}`;
-      subs.push(this.http.get<IMarks[]>(link));
+      subs.push(
+        this.http
+          .get<IMarks[]>(link)
+          .pipe(retry(1), catchError(this.handleError))
+      );
     }
-
-    console.log('This is right before the forkJoin');
-    console.log('These are subs: ' + subs);
     return forkJoin(subs);
-    // this.http
-    //   .get<IMarks[]>(
-    //     this.apiUrl +
-    //       `${this.module}/subject/${year}/${scoresheetId}/${subjectId}`
-    //   )
-    //   .pipe(retry(1), catchError(this.handleError));
   }
 }
