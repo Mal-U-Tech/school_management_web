@@ -53,10 +53,10 @@
       <th mat-header *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let element">
         <button mat-icon-button (click)="openUpdateClassStudentDialog(element)">
-          <mat-icon color="primary">edit</mat-icon>
+          <mat-icon class="edit-button">edit</mat-icon>
         </button>
         <button mat-icon-button (click)="openDeleteClassStudentDialog(element)">
-          <mat-icon color="warn">delete</mat-icon>
+          <mat-icon class="delete-button">delete</mat-icon>
         </button>
       </td>
     </ng-container>

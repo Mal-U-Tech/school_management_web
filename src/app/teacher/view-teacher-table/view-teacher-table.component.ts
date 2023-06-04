@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TeacherService } from 'src/app/shared/teacher/teacher.service';
 import { DialogConfirmTeacherDeleteComponent } from '../dialog-confirm-teacher-delete/dialog-confirm-teacher-delete.component';
 import { TeacherComponent } from '../teacher.component';
+import { UpdateTeacherComponent } from '../update-teacher/update-teacher.component';
 
 interface TEACHER {
   _id: string;
@@ -64,7 +65,7 @@ export class ViewTeacherTableComponent {
       next: (data: any) => {
         console.log(data);
 
-        let arr: TEACHER[] = [];
+        const arr: TEACHER[] = [];
 
         for (let i = 0; i < data.data.length; i++) {
           arr.push({
@@ -139,7 +140,7 @@ export class ViewTeacherTableComponent {
     dialogConfig.width = '45%';
 
     this.dialogRef = this.dialog.open(TeacherComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
 
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
@@ -155,6 +156,23 @@ export class ViewTeacherTableComponent {
 
   openUpdateTeacherDialog(teacher: any) {
     console.log(teacher);
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = teacher;
+
+    this.dialogRef = this.dialog.open(UpdateTeacherComponent, dialogConfig);
+    const instance = this.dialogRef.componentInstance;
+
+    instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    instance.onSubmit.subscribe(() => {
+      instance.updateTeacher();
+    });
+
+    instance.onLoadData.subscribe(() => {
+      this.loadData();
+    });
   }
 
   openDeleteTeacherDialog(teacher: any) {

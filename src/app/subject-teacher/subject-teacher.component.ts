@@ -22,7 +22,6 @@ export class SubjectTeacherComponent {
     this.subjects = JSON.parse(sessionStorage.getItem('subjects')!);
   }
 
-  ngAfterViewInit(): void {}
 
   // dialog title
   public title = 'Add Subject Teacher';

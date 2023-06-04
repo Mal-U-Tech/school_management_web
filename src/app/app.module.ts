@@ -73,6 +73,10 @@ import { SelectClassComponent } from './scoresheet/select-class/select-class.com
 import { ClassScoresheetComponent } from './scoresheet/class-scoresheet/class-scoresheet.component';
 import { PassControlsComponent } from './pass-controls/pass-controls.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
+import { UpdateClassStudentComponent } from './class-students/update-class-student/update-class-student.component';
+import { UpdateTeacherComponent } from './teacher/update-teacher/update-teacher.component';
+import { UpdateSubjectTeacherComponent } from './subject-teacher/update-subject-teacher/update-subject-teacher.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -181,6 +185,10 @@ const routes: Routes = [
     SelectClassComponent,
     ClassScoresheetComponent,
     PassControlsComponent,
+    UpdateDialogComponent,
+    UpdateClassStudentComponent,
+    UpdateTeacherComponent,
+    UpdateSubjectTeacherComponent,
   ],
   imports: [
     BrowserModule,

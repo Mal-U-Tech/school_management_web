@@ -222,9 +222,9 @@ export class AddMarksComponent implements OnInit {
         year: year,
         scoresheet_id: scoresheetId,
         mark: '',
-        max_score:0,
+        max_score: 0,
         num_students: 0,
-        class_student_id: ''
+        class_student_id: '',
       })
       .subscribe({
         next: (data: any) => {
@@ -306,11 +306,16 @@ export class AddMarksComponent implements OnInit {
         return 0;
       } else {
         this.maxScoreExceeded = false;
-        return Math.round(
-          (Number.parseInt(score.toString()) /
-            Number.parseInt(this.maxScore.toString())) *
-            100
-        );
+
+        if (score != null || score != undefined) {
+          return Math.round(
+            (Number.parseInt(score.toString()) /
+              Number.parseInt(this.maxScore.toString())) *
+              100
+          );
+        } else {
+          return 0;
+        }
       }
     } else {
       return 0;
