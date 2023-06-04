@@ -1,10 +1,17 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
 import { ClassStudentsComponent } from '../class-students.component';
 import { DialogConfirmClassStudentDeleteComponent } from '../dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
+import { UpdateClassStudentComponent } from '../update-class-student/update-class-student.component';
 
 interface CLASS_STUDENT {
   _id: string;
@@ -22,7 +29,7 @@ interface CLASS_STUDENT {
   templateUrl: './view-class-students-table.component.html',
   styleUrls: ['./view-class-students-table.component.scss'],
 })
-export class ViewClassStudentsTableComponent {
+export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: CLASS_STUDENT[] = [];
   isLoading = false;
   totalRows = 0;
@@ -62,7 +69,7 @@ export class ViewClassStudentsTableComponent {
       next: (data: any) => {
         console.log(data);
 
-        let arr: CLASS_STUDENT[] = [];
+        const arr: CLASS_STUDENT[] = [];
         let tempArray: any;
         let stream: any;
         if (sessionStorage.getItem('streams') != null) {
@@ -70,7 +77,7 @@ export class ViewClassStudentsTableComponent {
         }
 
         for (let i = 0; i < data.data.length; i++) {
-          let temp = data.data[i];
+          const temp = data.data[i];
 
           tempArray.forEach((element: any) => {
             console.log(`This is the index ${element}`);
@@ -138,10 +145,10 @@ export class ViewClassStudentsTableComponent {
     dialogConfig.closeOnNavigation = true;
     dialogConfig.width = '45%';
     dialogConfig.height = '80%';
-    dialogConfig.data = JSON.parse(sessionStorage.getItem('streams')!); // TODO: make this guy work
+    dialogConfig.data = JSON.parse(sessionStorage.getItem('streams') || ''); // TODO: make this guy work
 
     this.dialogRef = this.dialog.open(ClassStudentsComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
 
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
@@ -157,6 +164,32 @@ export class ViewClassStudentsTableComponent {
 
   openUpdateClassStudentDialog(student: any) {
     console.log(student);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.autoFocus = false;
+    dialogConfig.disableClose = false;
+    dialogConfig.data = {
+      streams: JSON.parse(sessionStorage.getItem('streams') || ''),
+      student: student,
+    };
+
+    this.dialogRef = this.dialog.open(
+      UpdateClassStudentComponent,
+      dialogConfig
+    );
+    const instance = this.dialogRef.componentInstance;
+
+    instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    instance.onSubmit.subscribe(() => {
+      instance.updateClassStudent();
+    });
+
+    instance.onLoadData.subscribe(() => {
+      this.loadData();
+    });
   }
 
   openDeleteClassStudentDialog(student: any) {

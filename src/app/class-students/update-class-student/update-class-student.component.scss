@@ -1,0 +1,39 @@
+@use "../../../my-styles.scss" as var;
+.form-container {
+  background-color: #eee;
+  padding: 24px;
+  position: relative;
+  // top: px;
+  // width: 50%;
+  border-radius: 12px;
+  margin: 24px auto;
+}
+
+.form-field {
+  margin: 7px auto;
+  //padding: 12px;
+  border-radius: 12px;
+}
+
+mat-form-field {
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.buttons-container {
+  text-align: center;
+}
+
+.menu {
+  margin: 7px auto;
+  text-align: center;
+}
+
+button.submit {
+  background-color: var.$primary;
+  color: white;
+}

@@ -34,7 +34,7 @@
       <div *ngFor="let class of classes; let i = index">
         <mat-expansion-panel
           [expanded]="selectedClass === i"
-          (open)="setSelectedClass(i)"
+          (opened)="setSelectedClass(i)"
         >
           <mat-expansion-panel-header>
             <mat-panel-title>{{ class.name }}</mat-panel-title>

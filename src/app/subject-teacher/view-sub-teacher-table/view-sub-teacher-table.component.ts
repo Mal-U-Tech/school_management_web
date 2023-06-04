@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
 import { DialogConfirmSubTeacherDeleteComponent } from '../dialog-confirm-sub-teacher-delete/dialog-confirm-sub-teacher-delete.component';
 import { SubjectTeacherComponent } from '../subject-teacher.component';
+import { UpdateSubjectTeacherComponent } from '../update-subject-teacher/update-subject-teacher.component';
 
 interface SUBJECT_TEACHER {
   _id: string;
@@ -57,7 +58,7 @@ export class ViewSubTeacherTableComponent {
       next: (data: any) => {
         console.log(data.data);
 
-        let arr: SUBJECT_TEACHER[] = [];
+        const arr: SUBJECT_TEACHER[] = [];
 
         for (let i = 0; i < data.data.length; i++) {
           const temp = data.data[i];
@@ -66,13 +67,14 @@ export class ViewSubTeacherTableComponent {
             _id: temp._id,
             subject_id: temp.subject_id,
             teacher_id: {
+              _id: temp.teacher_id._id,
               name: temp.teacher_id.user_id.name,
               surname: temp.teacher_id.user_id.surname,
               contact: temp.teacher_id.user_id.contact,
             },
             class_id: temp.class_id,
             index: `${i + 1}`,
-            title: this.computeTeacherTitle(
+            title: this.api.computeTeacherTitle(
               temp.teacher_id.gender,
               temp.teacher_id.marital_status
             ),
@@ -96,16 +98,6 @@ export class ViewSubTeacherTableComponent {
         this.isLoading = false;
       },
     });
-  }
-
-  computeTeacherTitle(gender: string, maritalStatus: string): string {
-    if (gender === 'Male') {
-      return 'Mr.';
-    } else if (gender === 'Female' && maritalStatus === 'Single') {
-      return 'Ms.';
-    } else {
-      return 'Mrs.';
-    }
   }
 
   deleteRow(data: any) {
@@ -140,7 +132,7 @@ export class ViewSubTeacherTableComponent {
     dialogConfig.closeOnNavigation = true;
 
     this.dialogRef = this.dialog.open(SubjectTeacherComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
 
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
@@ -156,6 +148,27 @@ export class ViewSubTeacherTableComponent {
 
   openUpdateSubjectTeacherDialog(teacher: any) {
     console.log(teacher);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = teacher;
+
+    this.dialogRef = this.dialog.open(
+      UpdateSubjectTeacherComponent,
+      dialogConfig
+    );
+    const instance = this.dialogRef.componentInstance;
+
+    instance.onClose.subscribe(() => {
+      this.dialogRef.close();
+    });
+
+    instance.onSubmit.subscribe(() => {
+      instance.updateSubjectTeacher();
+    });
+
+    instance.onLoadData.subscribe(() => {
+      this.loadData();
+    });
   }
 
   openDeleteSubjectTeacherDialog(teacher: any) {

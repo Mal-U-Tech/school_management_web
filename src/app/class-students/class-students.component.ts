@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { IClassStudent } from '../shared/class-students/class-students.interface';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
 
 export interface StreamDialogData {
@@ -18,19 +19,19 @@ export class ClassStudentsComponent {
     @Inject(MAT_DIALOG_DATA) public data: StreamDialogData[]
   ) {}
 
-  ngAfterViewInit(): void {}
-
   // dialog title
   public title = 'Add Student';
   public res = 0;
 
   // class student schema properties
-  public name: string = '';
-  public surname: string = '';
-  public student_contact: string = '';
-  public year: string = '';
+  public name = '';
+  public surname = '';
+  public student_contact = '';
+  public year = '';
   public genderSelection = 'Select Gender';
   public classSelection = { name: 'Select Grade & Stream', _id: '' };
+  public isUpdating = false;
+  public selectedClassStudentId = '';
 
   // variables for adding file from local system
   file?: File;
@@ -70,7 +71,7 @@ export class ClassStudentsComponent {
 
   // method to submit class studnet to database via api
   saveClassStudent() {
-    let student = {
+    const student = {
       name: this.name,
       surname: this.surname,
       student_contact: this.student_contact,
@@ -80,7 +81,7 @@ export class ClassStudentsComponent {
     };
 
     this.apiService.postStudent(student).subscribe({
-      next: (data: any) => {
+      next: (data: IClassStudent) => {
         console.log(data);
         this.closeClassStudentDialog();
         this.apiService.successToast('Successfully added student');
@@ -93,29 +94,4 @@ export class ClassStudentsComponent {
       },
     });
   }
-
-  // function to add file from local system
-  // addFile(event: any) {
-  //   this.file = event.target.files[0];
-  //   let fileReader = new FileReader();
-  //   fileReader.readAsArrayBuffer(this.file!);
-  //   fileReader.onload = (e) => {
-  //     this.arrayBuffer = fileReader.result;
-  //     var data = new Uint8Array(this.arrayBuffer);
-  //     var arr = new Array();
-  //
-  //     for (var i = 0; i != data.length; ++i) {
-  //       arr[i] = String.fromCharCode(data[i]);
-  //     }
-  //
-  //     var bstr = arr.join('');
-  //     var workbook = XLSX.read(bstr, { type: 'binary' });
-  //     var first_sheet_name = workbook.SheetNames[1];
-  //     var worksheet = workbook.Sheets[first_sheet_name];
-  //     console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
-  //     var arraylist = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-  //     this.filelist = [];
-  //     console.log(this.filelist);
-  //   };
-  // }
 }

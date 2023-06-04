@@ -1,22 +1,5 @@
-<app-add-dialog [dialogTitle]="title">
-  <div class="dialogContent">
-    <div class="mat-typography instructions">
-      The form below contains input fields for class learner.
-    </div>
-
-    <div class="file-selector">
-      <p>You can use also add students by selecting an excel file</p>
-
-      <button
-        mat-raised-button
-        color="accent"
-        [routerLink]="routerLink"
-        (click)="addStudentsByExcel()"
-      >
-        Add Students By Excel
-      </button>
-    </div>
-
+<app-update-dialog [title]="dialogTitle">
+  <section class="dialogContent">
     <div id="form-container" class="form-container">
       <form id="input-container" class="form">
         <div class="form-field menu class-stream">
@@ -24,13 +7,14 @@
             {{ classSelection.name }}
           </button>
           <mat-menu #classStream="matMenu">
-            <div *ngFor="let class of data; let i = index">
+            <div *ngFor="let class of data.streams; let i = index">
               <button mat-menu-item (click)="selectClassname(class)">
                 {{ class.name }}
               </button>
             </div>
           </mat-menu>
         </div>
+
         <mat-form-field class="form-field name">
           <mat-label>Name</mat-label>
           <input
@@ -53,7 +37,6 @@
             [(ngModel)]="surname"
           />
         </mat-form-field>
-
         <div class="form-field menu gender">
           <button mat-raised-button [matMenuTriggerFor]="gender">
             {{ genderSelection }}
@@ -89,18 +72,14 @@
         </mat-form-field>
       </form>
     </div>
-  </div>
-  <mat-dialog-actions class="dialogButtons buttons-container">
-    <button mat-raised-button color="warn" (click)="closeClassStudentDialog()">
+  </section>
+
+  <section class="dialogButtons">
+    <button mat-raised-button color="warn" (click)="onCloseClicked()">
       Close
     </button>
-    <button
-      class="submit"
-      mat-raised-button
-      color="primary"
-      (click)="submitClassStudent()"
-    >
-      Submit
+    <button class="submit" mat-raised-button (click)="updateClassStudent()">
+      Update
     </button>
-  </mat-dialog-actions>
-</app-add-dialog>
+  </section>
+</app-update-dialog>

@@ -1,0 +1,14 @@
+@use "../../../my-styles.scss" as var;
+.form-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+  text-align: center;
+  gap: 20px;
+}
+
+.update-button {
+  background-color: var.$primary;
+  color: white;
+}

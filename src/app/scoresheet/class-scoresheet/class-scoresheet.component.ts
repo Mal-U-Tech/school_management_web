@@ -59,6 +59,9 @@ export class ClassScoresheetComponent implements OnInit {
       sessionStorage.getItem('scoresheet-subjects') || ''
     );
 
+    console.log(studentData);
+    console.log(subjectData);
+
     // assign values to scoresheet interface
     const arr: IScoresheetDatasource[] = [];
 
@@ -82,7 +85,10 @@ export class ClassScoresheetComponent implements OnInit {
     for (let j = 0; j < subjectData.length; j++) {
       const tempSubject = subjectData[j];
 
+      // get subject name
       const name = Object.keys(tempSubject)[0].toString();
+
+      // find if the subject has been added to the displayed columns array
       const subjectFound = this.displayedColumns.find(
         (el) => el == Object.keys(tempSubject)[0].toString()
       );
@@ -92,6 +98,7 @@ export class ClassScoresheetComponent implements OnInit {
         tempSubject[Object.keys(tempSubject)[0]].length > 0
       ) {
         const tempStud = tempSubject[name][0];
+        // console.log(tempStud);
         this.displayedColumns.push(Object.keys(tempSubject)[0]);
 
         // assing subjects and subject teacher to subjects array
@@ -107,29 +114,6 @@ export class ClassScoresheetComponent implements OnInit {
         });
       }
     }
-
-    //
-    //   const subjectFound = this.displayedColumns.find(
-    //     (el) => el == tempStudent.subject_teacher_id.subject_id.name
-    //   );
-    //
-    //   if (!subjectFound) {
-    //     this.displayedColumns.push(
-    //       tempStudent.subject_teacher_id.subject_id.name
-    //     );
-    //
-    //     // assing subjects and subject teacher to subjects array
-    //     this.subjects.push({
-    //       subjectName: tempStudent.subject_teacher_id.subject_id.name,
-    //       teacherTitle: this.computeTeacherTitle(
-    //         tempStudent.subject_teacher_id.teacher_id.gender,
-    //         tempStudent.subject_teacher_id.teacher_id.marital_status
-    //       ),
-    //       teacherName: tempStudent.subject_teacher_id.teacher_id.user_id.name,
-    //       teacherSurname:
-    //         tempStudent.subject_teacher_id.teacher_id.user_id.surname,
-    //     });
-    //   }
 
     // assign to dataSource
     this.dataSource.data = arr;
@@ -158,6 +142,7 @@ export class ClassScoresheetComponent implements OnInit {
     for (let i = 0; i < subjectData.length; i++) {
       const sub: any = subjectData[i];
       const name = Object.keys(sub)[0];
+      console.log(name + sub[name].length);
 
       if (sub[name].length > 0) {
         // subject marks are available
@@ -165,11 +150,13 @@ export class ClassScoresheetComponent implements OnInit {
         // const students = this.dataSource.data;
         for (let j = 0; j < this.dataSource.data.length; j++) {
           // console.log(sub[name][j].mark);
-          const percentage = this.calculateMarkPectage(
-            sub[name][j].mark,
-            sub[name][j].max_score
-          );
-          this.dataSource.data[j].marks.push(percentage);
+          if (sub[name][j].mark != null || undefined) {
+            const percentage = this.calculateMarkPectage(
+              sub[name][j].mark,
+              sub[name][j].max_score
+            );
+            this.dataSource.data[j].marks.push(percentage);
+          }
         }
       }
     }

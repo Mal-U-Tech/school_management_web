@@ -118,7 +118,6 @@ export class SelectClassComponent implements AfterViewInit {
     // console.log(stream);
     const selectedStream = this.classes[this.selectedClass];
 
-    // console.log(selectedStream);
     this.isScoresheetLoading = true;
     // first get the class students
     this.classStudentsService
@@ -153,14 +152,13 @@ export class SelectClassComponent implements AfterViewInit {
           // try {
           for (let i = 0; i < data.length; i++) {
             const temp = data[i];
-            console.log(temp);
             const subjects: any = [];
             if (temp.length != 0) {
               temp.forEach((mark: any) => {
-                console.log(mark);
+                // console.log(mark);
                 // console.log('I am from api + '' +mark.class_student_id.class_id)
-                console.log(selectedStream.class_id);
-                // console.log(mark.class_student_id.class_id);
+                // console.log(selectedStream);
+                // console.log(mark.subject_teacher_id);
                 if (mark.subject_teacher_id.class_id == null) {
                   console.log('i am null');
                 }
@@ -171,7 +169,10 @@ export class SelectClassComponent implements AfterViewInit {
                 if (
                   mark.subject_teacher_id.class_id == selectedStream.class_id
                 ) {
-                  // console.table(mark);
+                  // console.log(
+                  //   selectedStream.name + ' ' + selectedStream.class_id
+                  // );
+                  // console.log(mark.subject_teacher_id.class_id);
                   subjects.push(mark);
                 }
               });
@@ -201,67 +202,6 @@ export class SelectClassComponent implements AfterViewInit {
           console.log(error);
         },
       });
-
-    // const finalSubjectsArray: any = [];
-    // const observables = [];
-    // const responses = [];
-    // for (let i = 0; i < selectedStream.subjects.length; i++) {
-    //   responses.push([]);
-    //   observables.push(
-    //     this.marksService
-    //       .getSubjectMarks(
-    //         this.service.selectedYear,
-    //         this.service.selectedScoresheetId,
-    //         selectedStream.subjects
-    //       )
-    //       .subscribe({
-    //         next: (data: IMarks[]) => {
-    //           // console.log(selectedStream.subjects[i].name);
-    //
-    //           const subjects: IMarks[] = [];
-    //           // console.log(data);
-    //           if (data.length != 0) {
-    //             data.forEach((mark: any) => {
-    //               if (mark.class_student_id.class_id == stream.class_id) {
-    //                 subjects.push(mark);
-    //               }
-    //             });
-    //           }
-    //           finalSubjectsArray.push(subjects);
-    //         },
-    //         error: (error) => {
-    //           console.log(error);
-    //         },
-    //       })
-    //   );
-    // }
-    //
-    // forkJoin(observables).subscribe({
-    //   next: (data) => {
-    //     console.log(data);
-    //   },
-    //   complete: () => console.log('This is the end.'),
-    // });
-
-    // this.marksService
-    //   .getFullScoresheet(stream.class_id, this.service.selectedScoresheetId)
-    //   .subscribe({
-    //     next: (data: any) => {
-    //       // console.log(data[0]);
-    //       this.service.className = stream.name;
-    //       this.marksService.selectedClass = {
-    //         class_id: stream.class_id,
-    //         name: stream.name,
-    //       };
-    //
-    //       sessionStorage.setItem('scoresheet-data', JSON.stringify(data));
-    //       // navigate to class scoresheet component
-    //       this.router.navigateByUrl('class-scoresheet');
-    //     },
-    //     error: (error) => {
-    //       console.log(error);
-    //     },
-    //   });
   }
 
   // function navigate to pass controls

@@ -1,0 +1,61 @@
+<app-update-dialog [title]="title">
+  <section class="dialogContent">
+    <form class="form-container">
+      <mat-form-field class="form-field name">
+        <mat-label>Name</mat-label>
+        <input matInput name="firstname" [(ngModel)]="name" type="text" />
+      </mat-form-field>
+
+      <mat-form-field class="form-field surname">
+        <mat-label>Surname</mat-label>
+        <input matInput name="lastname" [(ngModel)]="surname" type="text" />
+      </mat-form-field>
+
+      <mat-form-field class="form-field contact">
+        <mat-label>Contact</mat-label>
+        <input matInput [(ngModel)]="contact" name="contact" type="text" />
+      </mat-form-field>
+
+      <div>
+        <button
+          class="gender menu"
+          mat-raised-button
+          [matMenuTriggerFor]="gender"
+        >
+          {{ genderSelection }}
+        </button>
+        <mat-menu #gender="matMenu">
+          <button mat-menu-item (click)="selectGender('Female')">Female</button>
+          <button mat-menu-item (click)="selectGender('Male')">Male</button>
+        </mat-menu>
+      </div>
+
+      <div>
+        <button
+          class="maritalStatus menu"
+          mat-raised-button
+          [matMenuTriggerFor]="maritalStatus"
+        >
+          {{ marital_status }}
+        </button>
+        <mat-menu #maritalStatus="matMenu">
+          <button mat-menu-item (click)="selectMaritalStatus('Single')">
+            Single
+          </button>
+          <button mat-menu-item (click)="selectMaritalStatus('Married')">
+            Married
+          </button>
+        </mat-menu>
+      </div>
+    </form>
+  </section>
+
+  <section class="dialogButtons">
+    <button (click)="onCloseClicked()" mat-raised-button color="warn">
+      Close
+    </button>
+    <button (click)="onSubmitClicked()" mat-raised-button class="update-button">
+      Update
+    </button>
+  </section>
+</app-update-dialog>

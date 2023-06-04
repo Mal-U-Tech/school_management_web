@@ -1,0 +1,67 @@
+<app-update-dialog [title]="title">
+  <section class="dialogContent">
+    <form class="form-container">
+      <div>
+        <button mat-raised-button [matMenuTriggerFor]="streams">
+          {{ streamSelection.name }}
+        </button>
+        <mat-menu #streams="matMenu">
+          <div *ngFor="let stream of classes; let i = index">
+            <button mat-menu-item (click)="selectStream(stream)">
+              {{ stream["name"] }}
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+
+      <div>
+        <button
+          class="subjects menu"
+          mat-raised-button
+          [matMenuTriggerFor]="classSubjects"
+        >
+          {{ subjectSelection.name }} ({{ subjectSelection.level }})
+        </button>
+        <mat-menu #classSubjects="matMenu">
+          <div *ngFor="let subject of subjects; let i = index">
+            <button mat-menu-item (click)="selectSubject(subject)">
+              {{ subject["name"] }} ({{ subject["level"] }})
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+
+      <div>
+        <button
+          class="teacher menu"
+          mat-raised-button
+          [matMenuTriggerFor]="subjectTeachers"
+        >
+          {{ teacherSelection.title }} {{ teacherSelection.name }}
+          {{ teacherSelection.surname }}
+        </button>
+        <mat-menu #subjectTeachers="matMenu">
+          <div *ngFor="let teacher of teachers; let i = index">
+            <button mat-menu-item (click)="selectTeacher(teacher)">
+              {{ teacher["title"] }} {{ teacher["name"] }}
+              {{ teacher["surname"] }}
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+
+      <mat-form-field class="form-field year">
+        <mat-label>Year</mat-label>
+        <input matInput [(ngModel)]="year" name="year" type="text" />
+      </mat-form-field>
+    </form>
+  </section>
+  <section class="dialogButtons">
+    <button mat-raised-button color="warn" (click)="onCloseClicked()">
+      Close
+    </button>
+    <button mat-raised-button class="update-button" (click)="onSubmitClicked()">
+      Update
+    </button>
+  </section>
+</app-update-dialog>
