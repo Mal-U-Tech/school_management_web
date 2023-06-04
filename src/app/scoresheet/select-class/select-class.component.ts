@@ -115,7 +115,7 @@ export class SelectClassComponent implements AfterViewInit {
 
   // function to take user to the full scoresheet view of the class
   viewScoresheet(stream: any) {
-    // console.log(stream);
+    console.log(stream);
     const selectedStream = this.classes[this.selectedClass];
 
     this.isScoresheetLoading = true;
@@ -124,7 +124,7 @@ export class SelectClassComponent implements AfterViewInit {
       .getAllLearnersByClassYear(stream.class_id, '2023', 0, 0)
       .subscribe({
         next: (data: IClassStudent[]) => {
-          // console.log(data);
+          console.log(data);
           sessionStorage.setItem('scoresheet-students', JSON.stringify(data));
         },
         error: (error) => {
@@ -135,67 +135,94 @@ export class SelectClassComponent implements AfterViewInit {
 
     const finalSubjectsArray: any[] = [];
 
+    const allSubMarks: any[] = [];
     // console.log('I am about to get marks now');
     // get subjects marks
     this.marksService
       .getSubjectMarksWithArray(
         this.service.selectedYear,
         this.service.selectedScoresheetId,
-        selectedStream.subjects
+        selectedStream.subjects,
+        0,
+        7
       )
       .subscribe({
         next: (data) => {
           // console.log('I have retrieved marks');
           console.log(data);
-          this.isScoresheetLoading = false;
+          data.forEach((dat) => {
+            allSubMarks.push(dat);
+          });
 
-          // try {
-          for (let i = 0; i < data.length; i++) {
-            const temp = data[i];
-            const subjects: any = [];
-            if (temp.length != 0) {
-              temp.forEach((mark: any) => {
-                // console.log(mark);
-                // console.log('I am from api + '' +mark.class_student_id.class_id)
-                // console.log(selectedStream);
-                // console.log(mark.subject_teacher_id);
-                if (mark.subject_teacher_id.class_id == null) {
-                  console.log('i am null');
-                }
+          // get the rest of the marks here
+          this.marksService
+            .getSubjectMarksWithArray(
+              this.service.selectedYear,
+              this.service.selectedScoresheetId,
+              selectedStream.subjects,
+              7,
+              selectedStream.subjects.length
+            )
+            .subscribe({
+              next: (data) => {
+                console.log(data);
+                this.isScoresheetLoading = false;
+                data.forEach((dat) => {
+                  allSubMarks.push(dat);
+                });
 
-                if (selectedStream.class_id == null) {
-                  console.log('i am null too');
-                }
-                if (
-                  mark.subject_teacher_id.class_id == selectedStream.class_id
-                ) {
-                  // console.log(
-                  //   selectedStream.name + ' ' + selectedStream.class_id
-                  // );
-                  // console.log(mark.subject_teacher_id.class_id);
-                  subjects.push(mark);
-                }
-              });
-            }
+                for (let i = 0; i < allSubMarks.length; i++) {
+                  const temp = allSubMarks[i];
+                  const subjects: any = [];
+                  if (temp.length != 0) {
+                    temp.forEach((mark: any) => {
+                      // console.log(mark);
+                      // console.log('I am from api + '' +mark.class_student_id.class_id)
+                      // console.log(selectedStream);
+                      // console.log(mark.subject_teacher_id);
+                      if (mark.subject_teacher_id.class_id == null) {
+                        console.log('i am null');
+                      }
 
-            const subObj: any = {};
-            subObj[selectedStream.subjects[i].name] = subjects;
-            finalSubjectsArray.push(subObj);
-          }
-          // } catch (error) {
-          //   console.log('This is error: ' + error);
-          // }
-          console.log(finalSubjectsArray);
-          sessionStorage.setItem(
-            'scoresheet-subjects',
-            JSON.stringify(finalSubjectsArray)
-          );
-          this.service.className = stream.name;
-          this.marksService.selectedClass = {
-            class_id: stream.class_id,
-            name: stream.name,
-          };
-          this.router.navigateByUrl('class-scoresheet');
+                      if (selectedStream.class_id == null) {
+                        console.log('i am null too');
+                      }
+                      if (
+                        mark.subject_teacher_id.class_id ==
+                        selectedStream.class_id
+                      ) {
+                        // console.log(
+                        //   selectedStream.name + ' ' + selectedStream.class_id
+                        // );
+                        // console.log(mark.subject_teacher_id.class_id);
+                        subjects.push(mark);
+                      }
+                    });
+                  }
+
+                  const subObj: any = {};
+                  subObj[selectedStream.subjects[i].name] = subjects;
+                  finalSubjectsArray.push(subObj);
+                }
+                console.log(finalSubjectsArray);
+                sessionStorage.setItem(
+                  'scoresheet-subjects',
+                  JSON.stringify(finalSubjectsArray)
+                );
+                this.service.className = stream.name;
+                this.marksService.selectedClass = {
+                  class_id: stream.class_id,
+                  name: stream.name,
+                };
+                this.router.navigateByUrl('class-scoresheet');
+              },
+              error: (error) => {
+                this.marksService.errorToast(error);
+              },
+            });
+          // this.isScoresheetLoading = false;
+
+          // // try {
         },
         error: (error) => {
           this.isScoresheetLoading = false;
