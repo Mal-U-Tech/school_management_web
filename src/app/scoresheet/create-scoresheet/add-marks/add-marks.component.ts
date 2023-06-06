@@ -4,10 +4,11 @@ import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ClassMarksExcel } from 'src/app/OOP/classes/class-marks-excel';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 
-interface STUDENT {
+export interface STUDENT {
   index: string;
   _id: string;
   name: string;
@@ -41,6 +42,8 @@ export class AddMarksComponent implements OnInit {
   data: any;
   className = '';
   maxScoreExceeded = false;
+  isUploadMarks = false;
+  public marksExcel: any;
 
   constructor(
     private scoresheetService: ScoresheetService,
@@ -56,6 +59,16 @@ export class AddMarksComponent implements OnInit {
 
     this.loadData();
     this.checkClassSubjectMarks();
+
+    this.marksExcel = new ClassMarksExcel(
+      this.teacher,
+      this.subject_name,
+      this.pass_mark,
+      this.numStudents,
+      this.dataSource.data,
+      this.maxScore,
+      this.className
+    );
   }
 
   // function to send scoresheet marks to db
@@ -320,5 +333,28 @@ export class AddMarksComponent implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  // function to display upload marks container
+  showUploadOptions() {
+    this.isUploadMarks = !this.isUploadMarks;
+  }
+
+  // function to create excel sheet
+  exportToExcel() {
+    // console.log(this.dataSource.data);
+
+    this.marksExcel.formulateData();
+    this.marksExcel.createExcel();
+  }
+
+  // function to read marks from sheet
+  readMarks(event: any) {
+    this.marksExcel.readMarks(event, this.dataSource.data);
+    // this.marksExcel.assignMarksToStudents(this.dataSource.data);
+    setTimeout(() => {
+      this.maxScore = this.marksExcel.res['maxScore'];
+      this.numStudents = this.marksExcel.res['numStudents'];
+    }, 1000);
   }
 }

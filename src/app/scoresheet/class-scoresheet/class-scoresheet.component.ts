@@ -100,6 +100,7 @@ export class ClassScoresheetComponent implements OnInit {
         const tempStud = tempSubject[name][0];
         // console.log(tempStud);
         this.displayedColumns.push(Object.keys(tempSubject)[0]);
+        console.log(Object.keys(tempSubject)[0]);
 
         // assing subjects and subject teacher to subjects array
         this.subjects.push({
@@ -118,6 +119,10 @@ export class ClassScoresheetComponent implements OnInit {
     // assign to dataSource
     this.dataSource.data = arr;
     this.getStudentSubjectMark(subjectData);
+
+    // get physics and chemistry subjectIds
+    this.findPhysicalScienceIds(subjectData);
+
     this.rankStudent(this.calculateAggregateforEachStudent());
 
     // // add pass pass-controls
@@ -489,5 +494,51 @@ export class ClassScoresheetComponent implements OnInit {
       fillOpacity: fillOpacity || '',
       margin: margin || [],
     };
+  }
+
+  // function to get physics and chemistry _ids
+  findPhysicalScienceIds(subjects: any) {
+    const physicsRegEx = new RegExp('Physic');
+    const chemRegEx = new RegExp('Chem');
+
+    // variable for physics and chemistry marks
+    let physicsIndex = null;
+    let chemistryIndex = null;
+    for (let i = 0; i < this.displayedColumns.length; i++) {
+      const name = this.displayedColumns[i];
+      console.log(name);
+
+      if (physicsRegEx.test(name)) {
+        physicsIndex = i - 2;
+      }
+
+      if (chemRegEx.test(name)) {
+        chemistryIndex = i - 2;
+      }
+    }
+
+    for (let j = 0; j < this.dataSource.data.length; j++) {
+      const temp = this.dataSource.data[j];
+
+      const marks = [];
+      // console.log(j + ' ' + temp.marks);
+      if (physicsIndex != null && chemistryIndex != null) {
+        const finalPhysics =
+          Number.parseInt(temp.marks[physicsIndex]) +
+          Number.parseInt(temp.marks[chemistryIndex]);
+
+        if (!isNaN(finalPhysics)) {
+          temp.marks.splice(physicsIndex, 1, (finalPhysics / 2).toString());
+        }
+      }
+
+      this.dataSource.data[j].marks = temp.marks;
+      // console.log(this.dataSource.data[j].marks);
+    }
+
+    // remove chemistry from the displayed columns
+    if (chemistryIndex != null && physicsIndex != null) {
+      this.displayedColumns.splice(chemistryIndex + 2, 1);
+    }
   }
 }

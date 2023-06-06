@@ -55,6 +55,37 @@
         <mat-icon>assignment_turned_in</mat-icon> Finish
       </button>
     </div>
+
+    <div class="upload-excel-sheet">
+      <button
+        mat-raised-button
+        class="upload-sheet button"
+        (click)="showUploadOptions()"
+      >
+        <mat-icon>backup</mat-icon> Upload Class Marks
+      </button>
+      <section *ngIf="isUploadMarks">
+        <div class="upload-marks-container">
+          <button
+            mat-raised-button
+            (click)="exportToExcel()"
+            class="get-class-marks-sheet"
+          >
+            <mat-icon></mat-icon>Get Class Marks Sheet
+          </button>
+        </div>
+
+        <div class="upload-marks">
+          <input
+            type="file"
+            class="form-control"
+            (change)="readMarks($event)"
+            placeholder="Upload marks"
+            accept="*"
+          />
+        </div>
+      </section>
+    </div>
   </section>
 
   <section class="students-table-wrapper">
