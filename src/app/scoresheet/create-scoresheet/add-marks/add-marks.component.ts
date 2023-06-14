@@ -361,6 +361,7 @@ export class AddMarksComponent implements OnInit {
       // this.value = this.marksExcel.res['progressValue'];
 
       this.addedMarks = this.marksExcel.res['addedMarks'];
+      console.log(this.addedMarks)
       this.calculateAddedMarksValue();
       // this.value = Number.parseInt(this.marksExcel.res['numStudents']);
     }, 1000);

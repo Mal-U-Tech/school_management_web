@@ -77,6 +77,9 @@ import { UpdateDialogComponent } from './update-dialog/update-dialog.component';
 import { UpdateClassStudentComponent } from './class-students/update-class-student/update-class-student.component';
 import { UpdateTeacherComponent } from './teacher/update-teacher/update-teacher.component';
 import { UpdateSubjectTeacherComponent } from './subject-teacher/update-subject-teacher/update-subject-teacher.component';
+import { StoreModule } from '@ngrx/store';
+import { authReducer } from './store/user/user.reducer';
+import { EffectsModule } from '@ngrx/effects';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -221,6 +224,8 @@ const routes: Routes = [
     MatTabsModule,
     MatExpansionModule,
     MatFormFieldModule,
+    StoreModule.forRoot({ auth: authReducer }, {}),
+    EffectsModule.forRoot([]),
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
