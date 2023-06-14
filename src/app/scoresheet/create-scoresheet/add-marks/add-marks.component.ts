@@ -94,6 +94,7 @@ export class AddMarksComponent implements OnInit {
       );
       return;
     } else if (this.addedMarks.length > Number.parseInt(this.numStudents)) {
+      console.log(this.addedMarks.length + ' ' + this.numStudents);
       this.marksService.errorToast(`Too many added marks`);
     } else if (this.maxScoreExceeded) {
       this.marksService.errorToast('Some marks have exceeded max score!');
@@ -352,9 +353,16 @@ export class AddMarksComponent implements OnInit {
   readMarks(event: any) {
     this.marksExcel.readMarks(event, this.dataSource.data);
     // this.marksExcel.assignMarksToStudents(this.dataSource.data);
+
     setTimeout(() => {
+      console.log(this.marksExcel.res['numStudents']);
       this.maxScore = this.marksExcel.res['maxScore'];
       this.numStudents = this.marksExcel.res['numStudents'];
+      // this.value = this.marksExcel.res['progressValue'];
+
+      this.addedMarks = this.marksExcel.res['addedMarks'];
+      this.calculateAddedMarksValue();
+      // this.value = Number.parseInt(this.marksExcel.res['numStudents']);
     }, 1000);
   }
 }

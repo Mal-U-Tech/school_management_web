@@ -12,6 +12,7 @@ export class ClassMarksExcel {
   private className = '';
   private marks = [];
   public res: any;
+  private addedMarks: number[] = [];
 
   constructor(
     teacher: string,
@@ -118,12 +119,26 @@ export class ClassMarksExcel {
       // console.log(stud._id + ' ' + this.marks[i + 4][this.subject]);
       if (subjects[i]._id == this.marks[i + 4][this.subject]) {
         if (this.marks[i + 4]['__EMPTY'] != null) {
-          subjects[i].score = this.marks[i + 4]['__EMPTY'];
-          subjects[i].percentage = Math.round(
-            (Number.parseInt(subjects[i].score) /
-              Number.parseInt(this.marks[2][this.subTeacher])) *
-              100
-          );
+          // check nm or NM
+          if (
+            this.marks[i + 4]['__EMPTY'] == 'nm' ||
+            this.marks[i + 4]['__EMPTY'] == 'NM'
+          ) {
+            subjects[i].score = 0;
+            this.addedMarks.push(0);
+            subjects[i].percentage = 0;
+          } else {
+            // assign score
+            subjects[i].score = this.marks[i + 4]['__EMPTY'];
+            this.addedMarks.push(Number.parseInt(this.marks[i + 4]['__EMPTY']));
+
+            // calculate and assign percentage
+            subjects[i].percentage = Math.round(
+              (Number.parseInt(subjects[i].score) /
+                Number.parseInt(this.marks[2][this.subTeacher])) *
+                100
+            );
+          }
         }
       }
     }
@@ -131,6 +146,7 @@ export class ClassMarksExcel {
     this.res = {
       numStudents: this.marks[1][this.subTeacher],
       maxScore: this.marks[2][this.subTeacher],
+      addedMarks: this.addedMarks,
     };
   }
 }
