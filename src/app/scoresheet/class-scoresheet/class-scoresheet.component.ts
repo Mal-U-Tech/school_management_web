@@ -36,6 +36,7 @@ export class ClassScoresheetComponent implements OnInit {
   subjects: IScoresheetSubject[] = [];
   passControls: IPassControls[] = [];
   studentsScoresheet: any[][] = [];
+  chemistryIndex = -1;
 
   constructor(
     private marksService: MarksService,
@@ -118,10 +119,11 @@ export class ClassScoresheetComponent implements OnInit {
 
     // assign to dataSource
     this.dataSource.data = arr;
+
     this.getStudentSubjectMark(subjectData);
 
     // get physics and chemistry subjectIds
-    this.findPhysicalScienceIds(subjectData);
+    this.findPhysicalScienceIds();
 
     this.rankStudent(this.calculateAggregateforEachStudent());
 
@@ -152,19 +154,57 @@ export class ClassScoresheetComponent implements OnInit {
       if (sub[name].length > 0) {
         // subject marks are available
         // add them to students list in dataSource
-        // const students = this.dataSource.data;
-        for (let j = 0; j < this.dataSource.data.length; j++) {
-          // console.log(sub[name][j].mark);
-          if (sub[name][j].mark != null || undefined) {
-            const percentage = this.calculateMarkPectage(
-              sub[name][j].mark,
-              sub[name][j].max_score
-            );
-            this.dataSource.data[j].marks.push(percentage);
+        if (sub[name].length <= this.dataSource.data.length) {
+          for (let j = 0; j < this.dataSource.data.length; j++) {
+            // console.log(sub[name][j].mark);
+            if (sub[name][j].mark != null || undefined) {
+              const percentage = this.calculateMarkPectage(
+                sub[name][j].mark,
+                sub[name][j].max_score
+              );
+              this.dataSource.data[j].marks.push(percentage);
+            }
           }
+        } else {
+          console.log(`This is ${name}`);
+          this.assignMarksWithWhile(sub[name]);
         }
       }
     }
+  }
+
+  // function to add marks to students using while loop
+  assignMarksWithWhile(marks: []) {
+    let index = 0;
+    const subIndex = this.dataSource.data[0].marks.length;
+
+    while (index < marks.length) {
+      // find the student in student list
+      this.dataSource.data.forEach((student: any) => {
+        if (student['_id'] == marks[index]['class_student_id']['_id']) {
+          if (student.marks[subIndex] == undefined) {
+            student.marks.push(
+              this.calculateMarkPectage(
+                marks[index]['mark'],
+                marks[index]['max_score']
+              )
+            );
+          }
+
+          // console.log(student.marks);
+          if (student.marks[subIndex] == '') {
+            student.marks[subIndex] = this.calculateMarkPectage(
+              marks[index]['mark'],
+              marks[index]['max_score']
+            );
+          }
+        }
+      });
+
+      index++;
+    }
+
+    console.log(this.dataSource.data);
   }
 
   // function to calculate the percentage for each student
@@ -293,13 +333,15 @@ export class ClassScoresheetComponent implements OnInit {
       }
 
       // checking number of passed subject
-      student.marks.forEach((mark) => {
-        if (mark != '') {
+      for (let j = 0; j < student.marks.length; j++) {
+        const mark = student.marks[j];
+
+        if (mark != '' && j != this.chemistryIndex) {
           if (Number.parseInt(mark) >= controls.otherSubjectsPassMark) {
             passedSubjects++;
           }
         }
-      });
+      }
 
       // computing result
       const result =
@@ -436,9 +478,9 @@ export class ClassScoresheetComponent implements OnInit {
   createTableHeaders() {
     const headers = [this.addTableText('Pos'), this.addTableText('Name')];
 
-    for (let i = 0; i < this.subjects.length; i++) {
+    for (let i = 2; i < this.displayedColumns.length - 3; i++) {
       // console.log(this.subjects[i]);
-      headers.push(this.addTableText(this.subjects[i].subjectName));
+      headers.push(this.addTableText(this.displayedColumns[i]));
     }
 
     // add the last three column
@@ -447,6 +489,7 @@ export class ClassScoresheetComponent implements OnInit {
     headers.push(this.addTableText('Pass/Fail'));
 
     this.studentsScoresheet.push(headers);
+    // this.findPhysicalScienceIdScoresheet();
   }
 
   // function to sort students list using position
@@ -458,6 +501,7 @@ export class ClassScoresheetComponent implements OnInit {
   createStudentInfo() {
     for (let i = 0; i < this.dataSource.data.length; i++) {
       const student = this.dataSource.data[i];
+      console.log(student);
       // console.log(student);
       const tempArr = [];
 
@@ -474,6 +518,8 @@ export class ClassScoresheetComponent implements OnInit {
 
       this.studentsScoresheet.push(tempArr);
     }
+
+    this.findPhysicalScienceIdScoresheet();
   }
 
   addTableText(
@@ -497,13 +543,13 @@ export class ClassScoresheetComponent implements OnInit {
   }
 
   // function to get physics and chemistry _ids
-  findPhysicalScienceIds(subjects: any) {
+  findPhysicalScienceIds() {
     const physicsRegEx = new RegExp('Physic');
     const chemRegEx = new RegExp('Chem');
 
     // variable for physics and chemistry marks
     let physicsIndex = null;
-    let chemistryIndex = null;
+
     for (let i = 0; i < this.displayedColumns.length; i++) {
       const name = this.displayedColumns[i];
       console.log(name);
@@ -513,19 +559,17 @@ export class ClassScoresheetComponent implements OnInit {
       }
 
       if (chemRegEx.test(name)) {
-        chemistryIndex = i - 2;
+        this.chemistryIndex = i - 2;
       }
     }
 
     for (let j = 0; j < this.dataSource.data.length; j++) {
       const temp = this.dataSource.data[j];
 
-      const marks = [];
-      // console.log(j + ' ' + temp.marks);
-      if (physicsIndex != null && chemistryIndex != null) {
+      if (physicsIndex != null && this.chemistryIndex != -1) {
         const finalPhysics =
           Number.parseInt(temp.marks[physicsIndex]) +
-          Number.parseInt(temp.marks[chemistryIndex]);
+          Number.parseInt(temp.marks[this.chemistryIndex]);
 
         if (!isNaN(finalPhysics)) {
           temp.marks.splice(physicsIndex, 1, (finalPhysics / 2).toString());
@@ -533,12 +577,65 @@ export class ClassScoresheetComponent implements OnInit {
       }
 
       this.dataSource.data[j].marks = temp.marks;
-      // console.log(this.dataSource.data[j].marks);
+      console.log(this.dataSource.data[j].marks);
     }
 
     // remove chemistry from the displayed columns
-    if (chemistryIndex != null && physicsIndex != null) {
-      this.displayedColumns.splice(chemistryIndex + 2, 1);
+    if (this.chemistryIndex != -1 && physicsIndex != null) {
+      this.displayedColumns.splice(this.chemistryIndex + 2, 1);
+    }
+  }
+
+  findPhysicalScienceIdScoresheet() {
+    const physicsRegEx = new RegExp('Physic');
+    const chemRegEx = new RegExp('Chem');
+
+    // variable for physics and chemistry marks
+    let physicsIndex = null;
+    let chemistryIndex = null;
+    for (let i = 0; i < this.studentsScoresheet[0].length; i++) {
+      const name = this.studentsScoresheet[0][i];
+      console.log(name);
+
+      if (physicsRegEx.test(name['text'])) {
+        physicsIndex = i - 2;
+      }
+
+      if (chemRegEx.test(name['text'])) {
+        chemistryIndex = i - 2;
+      }
+    }
+
+    console.log(`Physics Index: ${physicsIndex}`);
+    console.log(`Chemistry Index: ${chemistryIndex}`);
+
+    // for (let j = 0; j < this.dataSource.data.length; j++) {
+    //   const temp = this.dataSource.data[j];
+    //
+    //   if (physicsIndex != null && chemistryIndex != null) {
+    //     const finalPhysics =
+    //       Number.parseInt(temp.marks[physicsIndex]) +
+    //       Number.parseInt(temp.marks[chemistryIndex]);
+    //
+    //     if (!isNaN(finalPhysics)) {
+    //       temp.marks.splice(physicsIndex, 1, (finalPhysics / 2).toString());
+    //     }
+    //   }
+    //
+    //   this.dataSource.data[j].marks = temp.marks;
+    //   // console.log(this.dataSource.data[j].marks);
+    // }
+
+    // remove chemistry from the displayed columns
+    if (physicsIndex != null) {
+      console.log(this.studentsScoresheet);
+
+      for (let i = 1; i < this.studentsScoresheet.length; i++) {
+        this.studentsScoresheet[i].splice(physicsIndex + 3, 1);
+      }
+
+      // remove chemistry mark for every student
+      // this.studentsScoresheet.for;
     }
   }
 }

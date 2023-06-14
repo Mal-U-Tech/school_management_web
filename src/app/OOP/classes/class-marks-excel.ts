@@ -128,16 +128,20 @@ export class ClassMarksExcel {
             this.addedMarks.push(0);
             subjects[i].percentage = 0;
           } else {
-            // assign score
-            subjects[i].score = this.marks[i + 4]['__EMPTY'];
-            this.addedMarks.push(Number.parseInt(this.marks[i + 4]['__EMPTY']));
+            if (this.marks[i + 4]['__EMPTY'] != '') {
+              // assign score
+              subjects[i].score = this.marks[i + 4]['__EMPTY'];
+              this.addedMarks.push(
+                Number.parseInt(this.marks[i + 4]['__EMPTY'])
+              );
 
-            // calculate and assign percentage
-            subjects[i].percentage = Math.round(
-              (Number.parseInt(subjects[i].score) /
-                Number.parseInt(this.marks[2][this.subTeacher])) *
-                100
-            );
+              // calculate and assign percentage
+              subjects[i].percentage = Math.round(
+                (Number.parseInt(subjects[i].score) /
+                  Number.parseInt(this.marks[2][this.subTeacher])) *
+                  100
+              );
+            }
           }
         }
       }
