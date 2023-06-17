@@ -279,4 +279,109 @@ export class SelectClassComponent implements AfterViewInit {
         },
       });
   }
+
+  // function to navigate to class marks
+  navigateToClassMarks(stream: any) {
+    console.log(stream);
+
+    const allSubMarks: any[] = [];
+    // first i have to retrieve the marks data
+    // get subjects marks
+    this.marksService
+      .getSubjectMarksWithArray(
+        this.service.selectedYear,
+        this.service.selectedScoresheetId,
+        stream.subjects,
+        0,
+        7
+      )
+      .subscribe({
+        next: (data) => {
+          // console.log('I have retrieved marks');
+          console.log(data);
+          data.forEach((dat) => {
+            allSubMarks.push(dat);
+          });
+
+          // get the rest of the marks here
+          this.marksService
+            .getSubjectMarksWithArray(
+              this.service.selectedYear,
+              this.service.selectedScoresheetId,
+              stream.subjects,
+              7,
+              stream.subjects.length
+            )
+            .subscribe({
+              next: (data) => {
+                console.log(data);
+                this.isScoresheetLoading = false;
+                data.forEach((dat) => {
+                  allSubMarks.push(dat);
+                });
+
+                const finalArray = this.getClassStudentsAndMarks(
+                  allSubMarks,
+                  stream
+                );
+                console.log(finalArray);
+                this.service.className = stream.name;
+                this.marksService.selectedClass = {
+                  class_id: stream.class_id,
+                  name: stream.name,
+                };
+
+                sessionStorage.setItem(
+                  'class-marks',
+                  JSON.stringify(finalArray)
+                );
+                this.router.navigateByUrl('class-marks');
+              },
+              error: (error) => {
+                this.marksService.errorToast(error);
+              },
+            });
+        },
+        error: (error) => {
+          this.marksService.errorToast(error);
+        },
+      });
+  }
+
+  // function to get class marks and students
+  getClassStudentsAndMarks(allSubMarks: any[], selectedStream: any) {
+    const finalSubjectsArray: any[] = [];
+    for (let i = 0; i < allSubMarks.length; i++) {
+      const temp = allSubMarks[i];
+      const subjects: any = [];
+      if (temp.length != 0) {
+        temp.forEach((mark: any) => {
+          // console.log(mark);
+          // console.log('I am from api + '' +mark.class_student_id.class_id)
+          // console.log(selectedStream);
+          // console.log(mark.subject_teacher_id);
+          if (mark.subject_teacher_id.class_id == null) {
+            console.log('i am null');
+          }
+
+          if (selectedStream.class_id == null) {
+            console.log('i am null too');
+          }
+          if (mark.subject_teacher_id.class_id == selectedStream.class_id) {
+            // console.log(
+            //   selectedStream.name + ' ' + selectedStream.class_id
+            // );
+            // console.log(mark.subject_teacher_id.class_id);
+            subjects.push(mark);
+          }
+        });
+      }
+
+      const subObj: any = {};
+      subObj[selectedStream.subjects[i].name] = subjects;
+      finalSubjectsArray.push(subObj);
+    }
+
+    return finalSubjectsArray;
+  }
 }
