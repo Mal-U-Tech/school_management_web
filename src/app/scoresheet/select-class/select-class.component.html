@@ -55,6 +55,13 @@
           </div>
 
           <mat-action-row>
+            <!--View class marks button-->
+            <div class="class-marks-wrapper">
+              <button mat-stroked-button (click)="navigateToClassMarks(class)">
+                View Marks
+              </button>
+            </div>
+
             <button
               *ngIf="!isScoresheetLoading"
               mat-button

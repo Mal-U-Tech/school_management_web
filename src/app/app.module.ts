@@ -80,6 +80,7 @@ import { UpdateSubjectTeacherComponent } from './subject-teacher/update-subject-
 import { StoreModule } from '@ngrx/store';
 import { authReducer } from './store/user/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
+import { ClassMarksComponent } from './scoresheet/class-marks/class-marks.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -137,6 +138,7 @@ const routes: Routes = [
   { path: 'add-marks', component: AddMarksComponent },
   { path: 'class-scoresheet', component: ClassScoresheetComponent },
   { path: 'pass-controls', component: PassControlsComponent },
+  { path: 'class-marks', component: ClassMarksComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -192,6 +194,7 @@ const routes: Routes = [
     UpdateClassStudentComponent,
     UpdateTeacherComponent,
     UpdateSubjectTeacherComponent,
+    ClassMarksComponent,
   ],
   imports: [
     BrowserModule,
