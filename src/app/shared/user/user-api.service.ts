@@ -4,6 +4,7 @@ import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IUser } from './user.interface';
+import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,16 @@ export class UserApiService extends SharedApiConstants {
   userLogin(email: string, password: string): Observable<IUser> {
     return this.http
       .post<IUser>(this.apiUrl + `${this.module}/login`, {
+        email,
+        password,
+      })
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // HttpClient API post() method => login
+  authLogin(email: string, password: string): Observable<IUser> {
+    return this.http
+      .post<IUser>(this.apiUrl + `auth/login`, {
         email,
         password,
       })
