@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { selectUserData } from '../store/user/user.selector';
 
 @Component({
   selector: 'app-nav-dashboard',
@@ -11,7 +13,12 @@ export class NavDashboardComponent {
   salutations = '';
   userName = '';
   userSurname = '';
-  constructor(private router: Router, private route: ActivatedRoute) {
+  user$ = this.store.select(selectUserData);
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private store: Store
+  ) {
     setInterval(() => {
       this.date = new Date();
 
@@ -38,9 +45,14 @@ export class NavDashboardComponent {
   }
 
   loadUserData() {
-    const user = JSON.parse(sessionStorage.getItem('userData') || '');
-    console.log(user);
-    this.userName = user.name;
-    this.userSurname = user.surname;
+    this.user$.subscribe({
+      next: (data) => {
+        console.log(data);
+      },
+    });
+    // const user = JSON.parse(sessionStorage.getItem('userData') || '');
+    // console.log(user);
+    // this.userName = user.name;
+    // this.userSurname = user.surname;
   }
 }
