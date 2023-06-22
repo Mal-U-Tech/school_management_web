@@ -79,9 +79,12 @@ import { UpdateTeacherComponent } from './teacher/update-teacher/update-teacher.
 import { UpdateSubjectTeacherComponent } from './subject-teacher/update-subject-teacher/update-subject-teacher.component';
 import { StoreModule } from '@ngrx/store';
 import { authReducer } from './store/user/user.reducer';
+import { schoolInfoReducer } from './store/school-info/school-info.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClassMarksComponent } from './scoresheet/class-marks/class-marks.component';
 import { DeleteDialogComponent } from './scoresheet/class-marks/delete-dialog/delete-dialog.component';
+import { AuthEffects } from './store/user/user.effects';
+import { SchoolInfoEffects } from './store/school-info/school-info.effects';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -229,8 +232,8 @@ const routes: Routes = [
     MatTabsModule,
     MatExpansionModule,
     MatFormFieldModule,
-    StoreModule.forRoot({ auth: authReducer }, {}),
-    EffectsModule.forRoot([]),
+    StoreModule.forRoot({ auth: authReducer, schoolInfo: schoolInfoReducer }),
+    EffectsModule.forRoot([AuthEffects, SchoolInfoEffects]),
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
