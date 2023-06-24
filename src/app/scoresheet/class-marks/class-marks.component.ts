@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 interface IClassMarks {
+  mark_id: string;
+  subject_index: number;
   index: string;
   student: {
     name: string;
@@ -41,7 +45,8 @@ export class ClassMarksComponent {
 
   constructor(
     public marksService: MarksService,
-    public subTeacher: SubjectTeacherService
+    public subTeacher: SubjectTeacherService,
+    public dialog: MatDialog
   ) {
     this.loadData();
   }
@@ -67,16 +72,26 @@ export class ClassMarksComponent {
 
       for (let j = 0; j < subject[subName].length; j++) {
         // assign students data
+        // console.log(subject[subName][j]);
+
         const stud: IClassMarks = {
+          subject_index: i,
+          mark_id: subject[subName][j]._id,
           index: `${j + 1}`,
           student: {
-            name: subject[subName][j].class_student_id.name,
-            surname: subject[subName][j].class_student_id.surname,
+            name:
+              subject[subName][j].class_student_id == null
+                ? ''
+                : subject[subName][j].class_student_id.name,
+            surname:
+              subject[subName][j].class_student_id == null
+                ? ''
+                : subject[subName][j].class_student_id.surname,
           },
           teacher: {
             title: this.subTeacher.computeTeacherTitle(
-              subject[subName][j].subject_teacher_id.gender,
-              subject[subName][j].subject_teacher_id.marital_status
+              subject[subName][j].subject_teacher_id.teacher_id.gender,
+              subject[subName][j].subject_teacher_id.teacher_id.marital_status
             ),
             name: subject[subName][j].subject_teacher_id.teacher_id.user_id
               .name,
@@ -90,7 +105,7 @@ export class ClassMarksComponent {
           ).toString(),
         };
 
-        // console.log(stud.percentage);
+        // console.log(stud.teacher);
         // add data to datasource multi array
         studentData.push(stud);
         // console.log(studentData);
@@ -123,5 +138,63 @@ export class ClassMarksComponent {
   // function to delete student mark
   deleteStudentMark(element: any) {
     console.log(element);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = {
+      title: 'Delete Learner Mark',
+      studentName: element.student.name,
+      studentSurname: element.student.surname,
+    };
+
+    const dialog = this.dialog.open(DeleteDialogComponent, dialogConfig);
+    const instance = dialog.componentInstance;
+
+    instance.onClose.subscribe(() => {
+      dialog.close();
+    });
+
+    instance.onConfirm.subscribe(() => {
+      this.deleteMarkAPI(element);
+      dialog.close();
+    });
+  }
+
+  // function to check if value is null and return a empty string
+  checkValue(value: any) {
+    // console.log(value);
+    if (value != null || value != undefined) {
+      return value;
+    } else {
+      return '';
+    }
+  }
+
+  // function to delete mark from the database
+  deleteMarkAPI(mark: IClassMarks) {
+    this.marksService.deleteMark(mark.mark_id).subscribe({
+      next: (data: any) => {
+        console.log(data);
+        this.dataSource[mark.subject_index].data.splice(
+          [Number.parseInt(mark.index) - 1],
+          1
+        );
+
+        // update index
+        let index = 1;
+        this.dataSource[mark.subject_index].data.forEach(
+          (stud: IClassMarks) => {
+            stud.index = index.toString();
+            index++;
+          }
+        );
+
+        this.dataSource[mark.subject_index].data = [
+          ...this.dataSource[mark.subject_index].data,
+        ];
+      },
+      error: (error) => {
+        this.marksService.errorToast(error);
+      },
+    });
   }
 }

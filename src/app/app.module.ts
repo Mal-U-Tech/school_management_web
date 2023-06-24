@@ -81,6 +81,7 @@ import { StoreModule } from '@ngrx/store';
 import { authReducer } from './store/user/user.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClassMarksComponent } from './scoresheet/class-marks/class-marks.component';
+import { DeleteDialogComponent } from './scoresheet/class-marks/delete-dialog/delete-dialog.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -195,6 +196,7 @@ const routes: Routes = [
     UpdateTeacherComponent,
     UpdateSubjectTeacherComponent,
     ClassMarksComponent,
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,

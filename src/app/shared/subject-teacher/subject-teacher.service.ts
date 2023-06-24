@@ -98,6 +98,7 @@ export class SubjectTeacherService extends SharedApiConstants {
   }
 
   computeTeacherTitle(gender: string, maritalStatus: string): string {
+
     if (gender === 'Male') {
       return 'Mr.';
     } else if (gender === 'Female' && maritalStatus === 'Single') {
