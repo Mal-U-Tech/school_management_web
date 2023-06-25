@@ -28,7 +28,7 @@ export class AuthEffects {
         from(this.authService.authLogin(email, password)).pipe(
           tap(({ token }) => {
             this.authService.successToast('Login successful.');
-            return setToken({ token });
+            return of(setToken({ token }));
           }),
           // map(({ user }) => setUser({user: user as IUser})),
           catchError((error) => {
@@ -37,22 +37,12 @@ export class AuthEffects {
           })
         )
       ),
-      // switchMap((user) => {
-      //   // console.log(user as IUser);
-      //   // assign values to new user
-      //   const currUser = user as IUser;
-      //   of(setUser({ user: currUser }));
-      //   of(setToken({ token: currUser.token }));
-      //   isLoading({ isLoading: false });
-      //
-      //   // dispatch action to load school info from the server
-      //   return of(
-      //     checkModulesRequest({ _id: currUser._id || '', user: currUser })
-      //   );
-      // })
-      switchMap(
-        (user) =>
-          of(
+      switchMap((user) => {
+        console.log(user);
+        const currUser = user as any;
+        // console.log(currUser['message']);
+        if (currUser['token'] != null || currUser['token'] != undefined) {
+          return of(
             isLoading({ isLoading: false }),
             setUser({ user: user as IUser }),
             setToken({ token: (user as IUser).token }),
@@ -61,28 +51,11 @@ export class AuthEffects {
               _id: (user as IUser)._id || '',
               user: user as IUser,
             })
-          )
-
-        //   from(user).pipe(
-        //     tap(({ user }) => setUser({ user: user as IUser })),
-        //     tap(({ user }) => setToken({ token: (user as IUser).token })),
-        //     tap(({ user }) => {
-        //       const currUser = user as IUser;
-        //       if (currUser.token != null || currUser.token != '') {
-        //         return of(isLoading({ isLoading: false }));
-        //       }
-        //
-        //       return of(
-        //         loginSuccessful({
-        //           user: currUser,
-        //           isLoading: false,
-        //         })
-        //       );
-        //     })
-        //   )
-        // )
-        // switchMap(() => checkModulesRequest({ _id: (user as IUser)._id || '', user: user as IUser }),
-      )
+          );
+        } else {
+          return of(isLoading({ isLoading: false }));
+        }
+      })
     );
   });
 

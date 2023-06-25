@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -85,6 +85,9 @@ import { ClassMarksComponent } from './scoresheet/class-marks/class-marks.compon
 import { DeleteDialogComponent } from './scoresheet/class-marks/delete-dialog/delete-dialog.component';
 import { AuthEffects } from './store/user/user.effects';
 import { SchoolInfoEffects } from './store/school-info/school-info.effects';
+import { StreamEffects } from './store/streams/streams.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { streamsReducer } from './store/streams/streams.reducer';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -232,48 +235,16 @@ const routes: Routes = [
     MatTabsModule,
     MatExpansionModule,
     MatFormFieldModule,
-    StoreModule.forRoot({ auth: authReducer, schoolInfo: schoolInfoReducer }),
-    EffectsModule.forRoot([AuthEffects, SchoolInfoEffects]),
+    StoreModule.forRoot({
+      auth: authReducer,
+      schoolInfo: schoolInfoReducer,
+      stream: streamsReducer,
+    }),
+    EffectsModule.forRoot([AuthEffects, SchoolInfoEffects, StreamEffects]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   exports: [RouterModule],
   providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-
-/*
-function logProvider() {
-  return winston.createLogger({
-    level: "debug",
-    format: winston.format.combine(
-      winston.format.splay(),
-      winston.format.simple()
-    ),
-    transports: [new winston.transports.Console()],
-  });
-}
-
-var PROXY_CONF = {
-  "/dev": {
-    target: "https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com",
-    secure: true,
-    changeOrigin: true,
-    logLevel: "debug",
-    logProvider: logProvider,
-    cookiePathRewrite: "/dev/",
-    pathRewrite: {
-      "/dev": "",
-    },
-  },
-};
-
-module.exports = PROXY_CONF;
-
-var defaultTarget = "https://4c3y8kcqc2.execute-api.us-east-1.amazonaws.com";
-module.export = [
-  {
-    context: ["/dev/**"],
-    target: defaultTarget,
-    changeOrigin: true,
-  },
-];*/

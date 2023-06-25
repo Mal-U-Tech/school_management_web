@@ -21,7 +21,7 @@ import {
   checkModulesRequest,
   isSchoolInfoLoading,
 } from '../store/school-info/school-info.actions';
-import { selectSchoolInfoIsLoading } from '../store/school-info/school-info.selector';
+import { selectSchoolInfo, selectSchoolInfoIsLoading } from '../store/school-info/school-info.selector';
 import { tap } from 'rxjs';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -70,6 +70,7 @@ export class LoginComponent {
 
   public user$ = this.store.select(selectUserData);
   public token$ = this.store.select(selectToken);
+  public schoolInfo$ = this.store.select(selectSchoolInfo);
 
   public submitForm() {
     this.store.dispatch(

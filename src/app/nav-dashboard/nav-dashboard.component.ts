@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { selectSchoolInfoObject } from '../store/school-info/school-info.selector';
 import { selectUserData } from '../store/user/user.selector';
 
 @Component({
@@ -14,6 +15,8 @@ export class NavDashboardComponent {
   userName = '';
   userSurname = '';
   user$ = this.store.select(selectUserData);
+  schoolInfo$ = this.store.select(selectSchoolInfoObject);
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -36,6 +39,11 @@ export class NavDashboardComponent {
     }, 1000);
 
     this.loadUserData();
+    this.schoolInfo$.subscribe({
+      next: (data) => {
+        console.log(data);
+      }
+    })
   }
 
   navigate(path: string) {

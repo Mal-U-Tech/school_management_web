@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
-import { IUser } from 'src/app/shared/user/user.interface';
+import { ICheckModulesResult, IUser } from 'src/app/shared/user/user.interface';
 
 // action to add school info for user
 export const addSchoolInfo = createAction(
@@ -10,8 +10,14 @@ export const addSchoolInfo = createAction(
 
 // action to check school modules
 export const checkModulesRequest = createAction(
-  '[School Info API] Check School Module',
+  '[School Info API] Get School Info Request',
   props<{ _id: string; user: IUser }>()
+);
+
+// action to handle successful retrieval of school info
+export const checkModulesSuccess = createAction(
+  '[School Info] Get school successful',
+  props<{ info: ICheckModulesResult }>()
 );
 
 // action to handle loading school modules

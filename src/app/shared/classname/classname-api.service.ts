@@ -3,8 +3,12 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { IClassname, IClassnameArray } from './classname.interface';
-
+import {
+  IClassname,
+  IClassnameArray,
+  IClassnamePaginatorResult,
+  IClassnamePostResult,
+} from './classname.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -34,11 +38,13 @@ export class ClassnameApiService extends SharedApiConstants {
   }
 
   // HttpClient API post() => registers new classnames array
-  postClassnamesArray(classnames: IClassnameArray): Observable<IClassnameArray> {
+  postClassnamesArray(
+    classnames: IClassnameArray
+  ): Observable<IClassnamePostResult> {
     return this.http
-      .post<IClassnameArray>(
+      .post<IClassnamePostResult>(
         this.apiUrl + `${this.module}/register-array`,
-        classnames,
+        classnames
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -46,10 +52,7 @@ export class ClassnameApiService extends SharedApiConstants {
   // HttpClient API post() => registers new classname
   postClassname(classname: IClassname): Observable<IClassname> {
     return this.http
-      .post<IClassname>(
-        this.apiUrl + `${this.module}/register`,
-        classname
-      )
+      .post<IClassname>(this.apiUrl + `${this.module}/register`, classname)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -57,9 +60,9 @@ export class ClassnameApiService extends SharedApiConstants {
   viewAllClasses(
     currentPage: number,
     pageSize: number
-  ): Observable<IClassname> {
+  ): Observable<IClassnamePaginatorResult> {
     return this.http
-      .get<IClassname>(
+      .get<IClassnamePaginatorResult>(
         this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -68,10 +71,7 @@ export class ClassnameApiService extends SharedApiConstants {
   // HttpClient API put() => update classname by id
   updateClassname(id: string, classname: IClassname): Observable<IClassname> {
     return this.http
-      .put<IClassname>(
-        this.apiUrl + `${this.module}/update/${id}`,
-        classname,
-      )
+      .put<IClassname>(this.apiUrl + `${this.module}/update/${id}`, classname)
       .pipe(retry(1), catchError(this.handleError));
   }
 

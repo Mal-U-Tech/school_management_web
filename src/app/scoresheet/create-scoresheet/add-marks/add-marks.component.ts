@@ -4,6 +4,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { delay, of } from 'rxjs';
 import { ClassMarksExcel } from 'src/app/OOP/classes/class-marks-excel';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
@@ -354,7 +355,9 @@ export class AddMarksComponent implements OnInit {
     this.marksExcel.readMarks(event, this.dataSource.data);
     // this.marksExcel.assignMarksToStudents(this.dataSource.data);
 
-    setTimeout(() => {
+    of([]).pipe(
+      delay(1000)
+    ).subscribe(() => {
       console.log(this.marksExcel.res['numStudents']);
       this.maxScore = this.marksExcel.res['maxScore'];
       this.numStudents = this.marksExcel.res['numStudents'];
@@ -363,7 +366,10 @@ export class AddMarksComponent implements OnInit {
       this.addedMarks = this.marksExcel.res['addedMarks'];
       console.log(this.addedMarks)
       this.calculateAddedMarksValue();
-      // this.value = Number.parseInt(this.marksExcel.res['numStudents']);
-    }, 1000);
+
+      })
+    // setTimeout(() => {
+    //         // this.value = Number.parseInt(this.marksExcel.res['numStudents']);
+    // }, 1000);
   }
 }

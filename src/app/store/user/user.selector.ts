@@ -23,4 +23,3 @@ export const selectIsLoading = createSelector(
   selectAuth,
   (state: AuthState) => state.isLoginProgress
 );
-

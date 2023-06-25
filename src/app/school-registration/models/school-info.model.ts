@@ -3,6 +3,6 @@ export interface ISchoolInfo {
   name: string;
   region?: string;
   administrators?: { user: string }[];
-  teachers?: string[];
+  teachers?: { teacher: string }[];
   email?: string;
 }

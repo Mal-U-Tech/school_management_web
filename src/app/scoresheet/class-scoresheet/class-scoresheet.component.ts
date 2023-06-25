@@ -16,6 +16,9 @@ import { IScoresheetDatasource } from '../models/scoresheet-datasource.model';
 import { IScoresheetSubject } from '../models/scoresheet-subject.model';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
+import { Store } from '@ngrx/store';
+import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
+import { selectSchoolInfoObject } from 'src/app/store/school-info/school-info.selector';
 
 @Component({
   selector: 'app-class-scoresheet',
@@ -37,13 +40,15 @@ export class ClassScoresheetComponent implements OnInit {
   passControls: IPassControls[] = [];
   studentsScoresheet: any[][] = [];
   chemistryIndex = -1;
+  schoolInfo$ = this.store.select(selectSchoolInfoObject);
 
   constructor(
     private marksService: MarksService,
     private passControlService: PassControlsService,
     private scoresheetService: ScoresheetService,
     private dialog: MatDialog,
-    private classStudentService: ClassStudentsService
+    private classStudentService: ClassStudentsService,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -131,9 +136,18 @@ export class ClassScoresheetComponent implements OnInit {
     this.passControls = this.passControlService.passControls;
     //
     // load school info
-    const schoolInfo: ISchoolInfo = JSON.parse(
-      sessionStorage.getItem('school-info') || ''
-    );
+    // const schoolInfo: ISchoolInfo = JSON.parse(
+    //   sessionStorage.getItem('school-info') || ''
+    // );
+    let schoolInfo:any;
+
+    this.schoolInfo$.subscribe({
+      next: (data) => {
+        if(data != null) {
+          schoolInfo = data;
+        }
+      }
+    })
     console.log(schoolInfo);
     this.classname = this.scoresheetService.className;
     this.schoolName = schoolInfo.name;
@@ -577,7 +591,7 @@ export class ClassScoresheetComponent implements OnInit {
       }
 
       this.dataSource.data[j].marks = temp.marks;
-      console.log(this.dataSource.data[j].marks);
+      // console.log(this.dataSource.data[j].marks);
     }
 
     // remove chemistry from the displayed columns
