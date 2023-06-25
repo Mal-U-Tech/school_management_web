@@ -13,6 +13,15 @@ import { HodService } from '../shared/hod/hod.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmScoresheetModulesCreatedComponent } from '../scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
 import { ITeacher } from '../shared/teacher/teacher.interface';
+import { Store } from '@ngrx/store';
+import {
+  getStreamsRequest,
+  streamsIsLoading,
+} from '../store/streams/streams.actions';
+import { selectSchoolInfo } from '../store/school-info/school-info.selector';
+import { SchoolInfoState } from '../store/school-info/school-info.reducer';
+import { selectUserData } from '../store/user/user.selector';
+import { IUser } from '../shared/user/user.interface';
 
 interface TEACHER {
   _id: string;
@@ -65,20 +74,19 @@ export class AcademicsComponent implements OnInit {
 
   numCols = 2;
   cards = [
-        { title: 'Overview', cols: this.numCols, rows: 1 },
-        { title: 'Streams', cols: 1, rows: 1 },
-        { title: 'Departments', cols: 1, rows: 1 },
-        { title: 'Subjects', cols: 1, rows: 1 },
-        { title: 'Teachers', cols: 1, rows: 1 },
-        { title: 'Class Students', cols: 1, rows: 1 },
-        { title: 'Subject Teachers', cols: 1, rows: 1 },
-        { title: 'Class Teachers', cols: 1, rows: 1 },
-        { title: 'Head of Departments', cols: 1, rows: 1 },
-        { title: 'Committees', cols: 1, rows: 1 },
-      ];
+    { title: 'Overview', cols: this.numCols, rows: 1 },
+    { title: 'Streams', cols: 1, rows: 1 },
+    { title: 'Departments', cols: 1, rows: 1 },
+    { title: 'Subjects', cols: 1, rows: 1 },
+    { title: 'Teachers', cols: 1, rows: 1 },
+    { title: 'Class Students', cols: 1, rows: 1 },
+    { title: 'Subject Teachers', cols: 1, rows: 1 },
+    { title: 'Class Teachers', cols: 1, rows: 1 },
+    { title: 'Head of Departments', cols: 1, rows: 1 },
+    { title: 'Committees', cols: 1, rows: 1 },
+  ];
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
     private api: ClassnameApiService,
     private subjectsApi: AddSubjectsService,
     private deptApi: AddDepartmentsService,
@@ -88,12 +96,12 @@ export class AcademicsComponent implements OnInit {
     private classTeacherApi: ClassTeacherService,
     private hodApi: HodService,
     private router: Router,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
-
-    this.numCols = (window.innerWidth <= 768) ? 2: 1;
+    this.numCols = window.innerWidth <= 768 ? 2 : 1;
 
     this.getStreams();
     this.getSubjects();
@@ -105,9 +113,9 @@ export class AcademicsComponent implements OnInit {
     this.getHOD();
   }
 
-  onResize(event: any){
-    console.log('Resizing ' + event.target.innerWidth)
-    this.numCols = (event.target.innerWidth <=768) ? 2: 1;
+  onResize(event: any) {
+    console.log('Resizing ' + event.target.innerWidth);
+    this.numCols = event.target.innerWidth <= 768 ? 2 : 1;
   }
 
   public larger = '350px';
@@ -121,18 +129,46 @@ export class AcademicsComponent implements OnInit {
   public subjectTeachersCount = '0';
   public classTeachersCount = '0';
   public hodCount = '0';
+  schoolInfo$ = this.store.select(selectSchoolInfo);
+  user$ = this.store.select(selectUserData);
 
   getStreams() {
-    this.api.viewAllClasses(0, 0).subscribe({
-      next: (data: any) => {
-        this.classStreams = data;
-        sessionStorage.setItem('streams', JSON.stringify(data));
-        this.streamsCount = data.length.toString();
-      },
-      error: (err) => {
-        this.api.errorToast(err.toString());
+    // this.api.viewAllClasses(0, 0).subscribe({
+    //   next: (data: any) => {
+    //     this.classStreams = data;
+    //     sessionStorage.setItem('streams', JSON.stringify(data));
+    //     this.streamsCount = data.length.toString();
+    //   },
+    //   error: (err) => {
+    //     this.api.errorToast(err.toString());
+    //   },
+    // });
+
+    let schoolId = '';
+    this.schoolInfo$.subscribe({
+      next: (data: SchoolInfoState) => {
+        console.log(data);
+        schoolId = data.schoolInfo._id || '';
+
+        // dispatch action to retrieve streams
+        if (schoolId != null || schoolId != '') {
+          // dispatch action to start loading
+          this.dispatchStreamsIsLoading();
+
+          this.store.dispatch(
+            getStreamsRequest({
+              schoolId: schoolId,
+              currentPage: 0,
+              pageSize: 0,
+            })
+          );
+        }
       },
     });
+  }
+
+  dispatchStreamsIsLoading() {
+    this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
   }
 
   getSubjects() {
@@ -166,31 +202,31 @@ export class AcademicsComponent implements OnInit {
         this.teacherCount = data.length.toString();
 
         // get current user
-        const user = JSON.parse(sessionStorage.getItem('userData') || '');
+        this.user$.subscribe((user: IUser) => {
+          // compute teacher title and store in session storage
+          sessionStorage.setItem(
+            'teachers',
+            JSON.stringify(this.assignTeacherTitles(data))
+          );
 
-        // compute teacher title and store in session storage
-        sessionStorage.setItem(
-          'teachers',
-          JSON.stringify(this.assignTeacherTitles(data))
-        );
-
-        // find out if current user is a teacher
-        // console.log(data);
-        data.forEach((element: any) => {
-          if (element.user_id._id == user._id) {
-            // console.log('I am a teacher');
-            sessionStorage.setItem(
-              'user',
-              JSON.stringify({
-                _id: user._id,
-                name: user.name,
-                surname: user.surname,
-                contact: user.contact,
-                email: user.email,
-                teacher_id: element._id,
-              })
-            );
-          }
+          // find out if current user is a teacher
+          // console.log(data);
+          data.forEach((element: any) => {
+            if (element.user_id._id == user._id) {
+              // console.log('I am a teacher');
+              sessionStorage.setItem(
+                'user',
+                JSON.stringify({
+                  _id: user._id,
+                  name: user.name,
+                  surname: user.surname,
+                  contact: user.contact,
+                  email: user.email,
+                  teacher_id: element._id,
+                })
+              );
+            }
+          });
         });
       },
       error: (err) => {

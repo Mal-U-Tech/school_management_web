@@ -5,8 +5,8 @@
         <mat-icon class="nav">menu</mat-icon>
       </button>
       <span>
-        {{ salutations }} {{ userName }}
-        {{ userSurname }}
+        {{ salutations }} {{ (user$ | async)?.name }}
+        {{ (user$ | async)?.surname }}
       </span>
     </mat-toolbar-row>
   </mat-toolbar>

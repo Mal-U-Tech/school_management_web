@@ -1,12 +1,21 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { AddDepartmentsComponent } from 'src/app/add-departments/add-departments.component';
 import { AddSubjectsComponent } from 'src/app/add-subjects/add-subjects.component';
 import { ClassStudentsComponent } from 'src/app/class-students/class-students.component';
 import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
+import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
+import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
@@ -15,8 +24,12 @@ import { TeacherComponent } from 'src/app/teacher/teacher.component';
   templateUrl: './dashboard-card.component.html',
   styleUrls: ['./dashboard-card.component.scss'],
 })
-export class DashboardCardComponent {
-  constructor(public dialog: MatDialog,private api: UserApiService) {}
+export class DashboardCardComponent implements AfterViewInit, OnChanges {
+  constructor(
+    public dialog: MatDialog,
+    private api: UserApiService,
+    private store: Store
+  ) {}
   @Input() title = '';
   @Input() section = '';
   @Input() index = 0;
@@ -29,6 +42,19 @@ export class DashboardCardComponent {
   @Input() subjectTeachersCount = '0';
   @Input() classTeachersCount = '0';
   @Input() hodCount = '0';
+
+  public streams$ = this.store.select(selectStreamsArray);
+
+  ngAfterViewInit(): void {
+    this.streams$.subscribe((data: IClassname[]) => {
+      if (data.length) {
+        console.log(data.length);
+        this.streamsCount = data.length.toString();
+        console.log('After assigning streamsCount ' + this.streamsCount);
+        this.numberOfItems[1] = this.streamsCount;
+      }
+    });
+  }
 
   dialogRef: any;
   instance: any;
@@ -316,6 +342,6 @@ export class DashboardCardComponent {
   }
 
   comingSoon() {
-    this.api.successToast('Comming Soon')
+    this.api.successToast('Comming Soon');
   }
 }

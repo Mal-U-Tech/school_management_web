@@ -8,27 +8,44 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
 import { IClassnameArray } from '../shared/classname/classname.interface';
+import {
+  postStreamArrayRequest,
+  postSuccessAction,
+  streamsIsLoading,
+} from '../store/streams/streams.actions';
+import { selectPostSuccess } from '../store/streams/streams.selector';
 
 @Component({
   selector: 'app-classname',
   templateUrl: './classname.component.html',
   styleUrls: ['./classname.component.scss'],
 })
-export class ClassnameComponent  {
+export class ClassnameComponent {
   @ViewChild('streamDialogContent') streamDialog = {} as TemplateRef<string>;
   @Input() closeDialog: any;
   @ViewChildren('inputField') inputs!: QueryList<any>;
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
+  postSuccess$ = this.store.select(selectPostSuccess);
+
   listLength = 0;
   constructor(
     public apiService: ClassnameApiService,
-    public router: Router
-  ) {}
-
-
+    public router: Router,
+    private store: Store
+  ) {
+    this.postSuccess$.subscribe({
+      next: (data: boolean) => {
+        console.log(`This is postSuccess ${data}`)
+        if (data) {
+          this.closeStreamDialog();
+        }
+      },
+    });
+  }
 
   public classNames = [{ id: this.listLength, name: '' }];
   public title = 'Add Streams';
@@ -42,26 +59,44 @@ export class ClassnameComponent  {
     this.onSubmit.emit();
   }
 
+  streamsIsLoading(state: boolean) {
+    this.store.dispatch(streamsIsLoading({ streamsIsLoading: state }));
+  }
+
+  dispatchPostSuccessAction(state: boolean) {
+    this.store.dispatch(postSuccessAction({postSuccess: state}));
+  }
+
   Geeks() {
+    this.streamsIsLoading(true);
     // assign classnames to classname array
     const namesArray: IClassnameArray = {
       names: this.classNames,
-    }
+    };
 
-    // make api call via service
-    this.apiService.postClassnamesArray(namesArray).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.apiService.successToast('Successfully added streams');
-        this.closeStreamDialog();
-        this.res = 1;
-      },
-      error: (error) => {
-        this.apiService.errorToast(error);
-        this.closeStreamDialog();
-        this.res = 0;
-      },
-    });
+    this.dispatchPostSuccessAction(false);
+
+    // make api call via store effect
+    this.store.dispatch(
+      postStreamArrayRequest({
+        classnames: namesArray,
+        postSuccess: false,
+      })
+    );
+
+    // this.apiService.postClassnamesArray(namesArray).subscribe({
+    //   next: (data: any) => {
+    //     console.log(data);
+    //     this.apiService.successToast('Successfully added streams');
+    //     this.closeStreamDialog();
+    //     this.res = 1;
+    //   },
+    //   error: (error) => {
+    //     this.apiService.errorToast(error);
+    //     this.closeStreamDialog();
+    //     this.res = 0;
+    //   },
+    // });
   }
 
   jumpToDashboard() {

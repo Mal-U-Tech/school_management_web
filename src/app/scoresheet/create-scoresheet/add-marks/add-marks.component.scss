@@ -41,6 +41,28 @@ td {
   text-align: center;
 }
 
+.upload-excel-sheet {
+  background-color: #eee;
+  text-align: center;
+  margin: 12px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.is-upload-marks {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
+}
+
+.form-control {
+  border: 1px solid black;
+  max-width: 250px;
+}
+
 @media screen and (max-width: 768px) {
   .add-marks-wrapper {
     width: 100%;

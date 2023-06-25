@@ -1,5 +1,13 @@
 import { createAction, props } from '@ngrx/store';
+import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
 import { IUser } from 'src/app/shared/user/user.interface';
+
+export const setToken = createAction(
+  '[Auth] Set Token',
+  props<{ token: string }>()
+);
+
+export const removeToken = createAction('[Auth] Remove Token');
 
 export const setUser = createAction(
   '[Auth] Set user',
@@ -7,13 +15,29 @@ export const setUser = createAction(
 );
 
 export const login = createAction(
-  '[Auth] Login',
+  '[Auth API] Login',
   props<{ email: string; password: string }>()
 );
 
+export const loginSuccessful = createAction(
+  '[Auth API] Login Successful',
+  props<{ user: IUser; isLoading: boolean }>()
+);
+
 export const loginError = createAction(
-  '[Auth] Login',
+  '[Auth API] Login Error',
   props<{ message: string }>()
 );
 
 export const logout = createAction('[Auth] Log Out');
+
+// function to change isLoading
+export const isLoading = createAction(
+  '[Auth] Is Loading',
+  props<{ isLoading: boolean }>()
+);
+
+export const isLoginSuccess = createAction(
+  '[Auth API] Login Successful',
+  props<{ _id: string; user: IUser }>()
+);

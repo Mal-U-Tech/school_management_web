@@ -8,10 +8,13 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
+import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { ClassStudentsComponent } from '../class-students.component';
 import { DialogConfirmClassStudentDeleteComponent } from '../dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
 import { UpdateClassStudentComponent } from '../update-class-student/update-class-student.component';
+import { map } from 'rxjs';
 
 interface CLASS_STUDENT {
   _id: string;
@@ -49,8 +52,13 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<CLASS_STUDENT> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
+  streams$ = this.store.select(selectStreamsArray);
 
-  constructor(private api: ClassStudentsService, public dialog: MatDialog) {}
+  constructor(
+    private api: ClassStudentsService,
+    public dialog: MatDialog,
+    private store: Store
+  ) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -72,9 +80,10 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
         const arr: CLASS_STUDENT[] = [];
         let tempArray: any;
         let stream: any;
-        if (sessionStorage.getItem('streams') != null) {
-          tempArray = JSON.parse(sessionStorage.getItem('streams')!);
-        }
+        // if (sessionStorage.getItem('streams') != null) {
+        //   tempArray = JSON.parse(sessionStorage.getItem('streams')!);
+        // }
+        this.streams$.pipe(map((data) => (tempArray = data)));
 
         for (let i = 0; i < data.data.length; i++) {
           const temp = data.data[i];
