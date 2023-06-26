@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
+import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 
 @Component({
   selector: 'app-update-subject-teacher',
@@ -10,7 +13,8 @@ import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-te
 export class UpdateSubjectTeacherComponent {
   constructor(
     public apiService: SubjectTeacherService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private store: Store
   ) {
     const subjectTeacher = data;
     this._id = subjectTeacher._id;
@@ -59,13 +63,15 @@ export class UpdateSubjectTeacherComponent {
   year = '';
   title = 'Update Subject Teacher';
 
-  classes = [];
+  classes: IClassname[] = [];
   subjects = [];
   teachers = [];
 
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
   onLoadData = new EventEmitter();
+
+  streams$ = this.store.select(selectStreamsArray);
 
   onCloseClicked() {
     this.onClose.emit();
@@ -99,12 +105,18 @@ export class UpdateSubjectTeacherComponent {
   }
 
   loadData() {
-    this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
+    // this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
+    this.streams$.subscribe({
+      next: (data: IClassname[]) => {
+        if (data != null) {
+          this.classes = data;
+        }
+      },
+    });
 
     this.subjects = JSON.parse(sessionStorage.getItem('subjects') || '');
 
     this.teachers = JSON.parse(sessionStorage.getItem('teachers') || '');
-
   }
 
   updateSubjectTeacher() {

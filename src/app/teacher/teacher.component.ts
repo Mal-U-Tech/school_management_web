@@ -1,19 +1,23 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { MyErrorStateMatcher } from '../login/login.component';
+import { ISchoolInfo } from '../school-registration/models/school-info.model';
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { matchValidator } from '../shared/user/form.validators';
 import { UserApiService } from '../shared/user/user-api.service';
+import { selectSchoolInfoObject } from '../store/school-info/school-info.selector';
 
 @Component({
   selector: 'app-teacher',
   templateUrl: './teacher.component.html',
   styleUrls: ['./teacher.component.scss'],
 })
-export class TeacherComponent implements OnInit{
+export class TeacherComponent implements OnInit {
   constructor(
     private apiService: TeacherService,
-    public userService: UserApiService
+    public userService: UserApiService,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +74,7 @@ export class TeacherComponent implements OnInit{
   });
   public visible = false;
   public confirmVisible = false;
+  schoolInfo$ = this.store.select(selectSchoolInfoObject);
 
   showPassword() {
     console.log('Making password visible');
@@ -133,16 +138,25 @@ export class TeacherComponent implements OnInit{
     let teacher: any;
 
     // get school info data from session storage
-    const schoolInfo = JSON.parse(sessionStorage.getItem('school-info') || '');
+    // const schoolInfo = JSON.parse(sessionStorage.getItem('school-info') || '');
+    let schoolInfo: any;
+
+    this.schoolInfo$.subscribe({
+      next: (data: ISchoolInfo) => {
+        if (data != null) {
+          schoolInfo = data;
+        }
+      },
+    });
     console.log(schoolInfo);
 
     if (this.showPasswordContainer) {
       if (
-        this.passwordForm.get('password')!.value !=
-        this.passwordForm.get('confirmPassword')!.value
+        this.passwordForm.get('password')?.value !=
+        this.passwordForm.get('confirmPassword')?.value
       ) {
         this.apiService.errorToast('Passwords do not match');
-      } else if (this.passwordForm.get('password')!.value == '') {
+      } else if (this.passwordForm.get('password')?.value == '') {
         this.apiService.errorToast('Passwords are empty');
       } else {
         teacher = {
