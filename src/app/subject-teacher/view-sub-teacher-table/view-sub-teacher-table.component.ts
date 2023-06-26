@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,12 +17,24 @@ interface SUBJECT_TEACHER {
   year: string;
 }
 
+interface TAB_GROUP_OBJECT {
+  name: string; // classname
+  data: {
+    index: string;
+    _id: string;
+    subject_id: object;
+    teacher_id: object;
+    title: string;
+    year: string;
+  };
+}
+
 @Component({
   selector: 'app-view-sub-teacher-table',
   templateUrl: './view-sub-teacher-table.component.html',
   styleUrls: ['./view-sub-teacher-table.component.scss'],
 })
-export class ViewSubTeacherTableComponent {
+export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: SUBJECT_TEACHER[] = [];
   isLoading = false;
   totalRows = 0;
@@ -33,18 +45,19 @@ export class ViewSubTeacherTableComponent {
     'index',
     'teacher',
     'subject',
-    'class',
     'year',
     'actions',
   ];
-  dataSource: MatTableDataSource<SUBJECT_TEACHER> = new MatTableDataSource();
+  // dataSource: MatTableDataSource<SUBJECT_TEACHER> = new MatTableDataSource();
   dialogRef: any;
+  public streams: any = [];
 
   constructor(private api: SubjectTeacherService, public dialog: MatDialog) {}
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
+    console.log('Inside after view init');
   }
 
   ngOnInit(): void {
@@ -54,47 +67,123 @@ export class ViewSubTeacherTableComponent {
   loadData() {
     this.isLoading = true;
 
-    this.api.getAllSubjectTeachers(this.currentPage, this.pageSize).subscribe({
+    this.api.getAllSubjectTeachers(0, 0).subscribe({
       next: (data: any) => {
-        console.log(data.data);
+        console.log(data);
 
-        const arr: SUBJECT_TEACHER[] = [];
+        const arr: TAB_GROUP_OBJECT[] = [];
+        const labels: string[] = [];
+        const teacherData: SUBJECT_TEACHER[][] = [[]];
 
-        for (let i = 0; i < data.data.length; i++) {
-          const temp = data.data[i];
+        for (let i = 0; i < data.length; i++) {
+          const temp = data[i];
+          // console.log(temp.teacher_id.user_id.name);
 
-          arr.push({
-            _id: temp._id,
-            subject_id: temp.subject_id,
-            teacher_id: {
-              _id: temp.teacher_id._id,
-              name: temp.teacher_id.user_id.name,
-              surname: temp.teacher_id.user_id.surname,
-              contact: temp.teacher_id.user_id.contact,
-            },
-            class_id: temp.class_id,
-            index: `${i + 1}`,
-            title: this.api.computeTeacherTitle(
-              temp.teacher_id.gender,
-              temp.teacher_id.marital_status
-            ),
-            year: temp.year,
-          });
+          let index = labels.findIndex((label) => label === temp.class_id.name);
 
-          console.log(arr);
+          // add classname to labels array
+          if (index === null || index === undefined || index < 0) {
+
+
+            if (index < 0 && labels.length === 0) {
+              index = 0;
+            } else {
+              index = labels.length;
+              console.log(`Index is ${index}`);
+            }
+
+            // add new class to labels array
+            labels.push(temp.class_id.name);
+          }
+          //
+
+          // console.log(labels);
+
+          // check if index exits for the teacher data array
+          if (teacherData[index] === null || teacherData[index] === undefined) {
+            teacherData.push([]);
+            console.log(teacherData[index]);
+            // append current data to correct teacherData index
+            teacherData[index].push({
+              _id: temp._id,
+              index: (teacherData[index].length + 1).toString(),
+              subject_id: temp.subject_id,
+              teacher_id: {
+                _id: temp.teacher_id._id,
+                name: temp.teacher_id.user_id.name,
+                surname: temp.teacher_id.user_id.surname,
+                contact: temp.teacher_id.user_id.contact,
+              },
+              title: this.api.computeTeacherTitle(
+                temp.teacher_id.gender,
+                temp.teacher_id.marital_status
+              ),
+              class_id: temp.class_id,
+              year: temp.year,
+            });
+          } else {
+            // append current data to correct teacherData index
+            teacherData[index].push({
+              _id: temp._id,
+              index: (teacherData[index].length + 1).toString(),
+              subject_id: temp.subject_id,
+              teacher_id: {
+                _id: temp.teacher_id._id,
+                name: temp.teacher_id.user_id.name,
+                surname: temp.teacher_id.user_id.surname,
+                contact: temp.teacher_id.user_id.contact,
+              },
+              title: this.api.computeTeacherTitle(
+                temp.teacher_id.gender,
+                temp.teacher_id.marital_status
+              ),
+              class_id: temp.class_id,
+              year: temp.year,
+            });
+          }
+
+          // arr.push({
+          //   _id: temp._id,
+          //   subject_id: temp.subject_id,
+          //   teacher_id: {
+          //     _id: temp.teacher_id._id,
+          //     name: temp.teacher_id.user_id.name,
+          //     surname: temp.teacher_id.user_id.surname,
+          //     contact: temp.teacher_id.user_id.contact,
+          //   },
+          //   class_id: temp.class_id,
+          //   index: `${i + 1}`,
+          //   title: this.api.computeTeacherTitle(
+          //     temp.teacher_id.gender,
+          //     temp.teacher_id.marital_status
+          //   ),
+          //   year: temp.year,
+          // });
         }
 
-        this.dataSource.data = arr;
+        console.log(labels);
+        console.log(teacherData);
+         this.streams = [];
 
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = data.count;
-        });
+        for (let i = 0; i < teacherData.length; i++) {
+
+          this.streams.push({
+            label: labels[i],
+            data: (new MatTableDataSource<SUBJECT_TEACHER>().data =
+              teacherData[i]),
+          });
+        }
+        // this.dataSource.data = arr;
+
+        // setTimeout(() => {
+        //   this.paginator.pageIndex = this.currentPage;
+        //   this.paginator.length = data.count;
+        // });
         this.isLoading = false;
       },
       error: (error) => {
         console.log(error.toString());
-        this.dataSource.data = [];
+        this.streams = [];
         this.isLoading = false;
       },
     });
@@ -190,7 +279,7 @@ export class ViewSubTeacherTableComponent {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });
