@@ -1,8 +1,26 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { IDepartments } from 'src/app/shared/add-departments/add-departments.interface';
 import { AddDepartmentsService } from 'src/app/shared/add-departments/add-departments.service';
+import {
+  addDepartmentPaginatorOptions,
+  deleteDepartmentRequest,
+  departmentsIsLoading,
+  getDepartmentsError,
+} from 'src/app/store/departments/departments.actions';
+import {
+  selectDepartmentsArray,
+  selectDepartmentsPaginatorOptions,
+} from 'src/app/store/departments/departments.selector';
 import { AddDepartmentsComponent } from '../add-departments.component';
 import { DialogConfirmDeptDeleteComponent } from '../dialog-confirm-dept-delete/dialog-confirm-dept-delete.component';
 
@@ -17,7 +35,7 @@ interface DEPARTMENT {
   templateUrl: './view-departments-table.component.html',
   styleUrls: ['./view-departments-table.component.scss'],
 })
-export class ViewDepartmentsTableComponent {
+export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: DEPARTMENT[] = [];
   isLoading = false;
   totalRows = 0;
@@ -30,8 +48,14 @@ export class ViewDepartmentsTableComponent {
   dataSource: MatTableDataSource<DEPARTMENT> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
+  departments$ = this.store.select(selectDepartmentsArray);
+  paginator$ = this.store.select(selectDepartmentsPaginatorOptions);
 
-  constructor(private api: AddDepartmentsService, public dialog: MatDialog) {}
+  constructor(
+    private api: AddDepartmentsService,
+    public dialog: MatDialog,
+    private store: Store
+  ) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,55 +68,100 @@ export class ViewDepartmentsTableComponent {
     this.loadData();
   }
 
+  dispatchIsLoading() {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
+  }
+
   loadData() {
-    this.isLoading = true;
+    this.dispatchIsLoading();
 
-    this.api.viewAllDepartments(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        let arr: DEPARTMENT[] = [];
-
-        for (let i = 0; i < data.data.length; i++) {
-          arr.push({
-            index: `${i + 1}`,
-            department: data.data[i].name,
-            _id: data.data[i]._id,
-          });
+    this.departments$.subscribe({
+      next: (data: IDepartments[]) => {
+        if (data != null && data.length > 0) {
+          const arr: DEPARTMENT[] = [];
+          for (let i = 0; i < data.length; i++) {
+            arr.push({
+              index: `${i + 1}`,
+              department: data[i].name,
+              _id: data[i]._id || '',
+            });
+          }
+          this.dataSource.data = arr;
         }
-        this.dataSource.data = arr;
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = data.count;
-        });
-        this.isLoading = false;
       },
-      error: (err) => {
-        console.log(err);
-        this.dataSource.data = [];
-        this.isLoading = false;
+      error: (error) => {
+        this.store.dispatch(getDepartmentsError({ message: error }));
       },
     });
+
+    // set paginator options
+    this.paginator$.subscribe({
+      next: (data) => {
+        this.paginator.pageIndex = data.currentPage;
+        this.paginator.length = data.count;
+      },
+      error: (error) => {
+        this.store.dispatch(getDepartmentsError({ message: error }));
+      },
+    });
+
+    // this.api.viewAllDepartments(this.currentPage, this.pageSize).subscribe({
+    //   next: (data: any) => {
+    //     console.log(data);
+    //     const arr: DEPARTMENT[] = [];
+    //
+    //     for (let i = 0; i < data.data.length; i++) {
+    //       arr.push({
+    //         index: `${i + 1}`,
+    //         department: data.data[i].name,
+    //         _id: data.data[i]._id,
+    //       });
+    //     }
+    //     this.dataSource.data = arr;
+    //     setTimeout(() => {
+    //       this.paginator.pageIndex = this.currentPage;
+    //       this.paginator.length = data.count;
+    //     });
+    //     this.isLoading = false;
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //     this.dataSource.data = [];
+    //     this.isLoading = false;
+    //   },
+    // });
   }
 
   deleteRow(data: any) {
     console.log(data);
-    this.api.deleteDepartment(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+
+    this.store.dispatch(deleteDepartmentRequest({ id: data._id }));
+    // this.api.deleteDepartment(data._id).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     setTimeout(() => {
+    //       this.loadData();
+    //     }, 1000);
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   },
+    // });
   }
 
   pageChanged(event: PageEvent) {
     console.log({ event });
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
+    this.store.dispatch(
+      addDepartmentPaginatorOptions({
+        paginator: {
+          pageSize: event.pageSize,
+          currentPage: event.pageIndex,
+          count: 0,
+        },
+      })
+    );
+    // this.pageSize = event.pageSize;
+    // this.currentPage = event.pageIndex;
     this.loadData();
   }
 
@@ -105,7 +174,7 @@ export class ViewDepartmentsTableComponent {
     dialogConfig.height = '80%';
 
     this.dialogRef = this.dialog.open(AddDepartmentsComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
 
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
@@ -137,7 +206,7 @@ export class ViewDepartmentsTableComponent {
       DialogConfirmDeptDeleteComponent,
       dialogConfig
     );
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });

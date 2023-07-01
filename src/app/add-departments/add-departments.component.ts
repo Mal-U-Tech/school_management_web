@@ -11,13 +11,15 @@ import {
 import { Router } from '@angular/router';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { postDepartmentsArrayRequest } from '../store/departments/departments.actions';
 
 @Component({
   selector: 'app-add-departments',
   templateUrl: './add-departments.component.html',
   styleUrls: ['./add-departments.component.sass'],
 })
-export class AddDepartmentsComponent implements OnInit {
+export class AddDepartmentsComponent {
   @ViewChild('departmentsDialogContent') deptDialog = {} as TemplateRef<string>;
   @Input() closeDialog: any;
   @ViewChildren('inputField') inputs!: QueryList<any>;
@@ -28,10 +30,9 @@ export class AddDepartmentsComponent implements OnInit {
   constructor(
     private _snackBar: MatSnackBar,
     public apiService: AddDepartmentsService,
-    public router: Router
+    public router: Router,
+    private store: Store
   ) {}
-
-  ngOnInit(): void {}
 
   public departmentsArray = [
     { id: this.listLength, name: '' },
@@ -55,28 +56,30 @@ export class AddDepartmentsComponent implements OnInit {
 
   submitDepartments() {
     // make api call
-    this.apiService
-      .postDepartmentsArray({ names: this.departmentsArray })
-      .subscribe({
-        next: (data: any) => {
-          this.openSnackBar('Successfully added departments.', 'Close');
-          // this.router.navigate([`/add-subjects`], {
-          //   queryParams: { departments: JSON.stringify(data.data) },
-          //   queryParamsHandling: 'merge',
-          // });
-          this.closeDepartmentDialog();
-          this.res = 1;
-        },
-        error: (error) => {
-          this.openSnackBar(error, 'Close');
-          this.closeDepartmentDialog();
-          this.res = 0;
-        },
-      });
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+    this.store.dispatch(
+      postDepartmentsArrayRequest({
+        departments: { names: this.departmentsArray },
+      })
+    );
+    this.closeDepartmentDialog();
+    // this.apiService
+    //   .postDepartmentsArray({ names: this.departmentsArray })
+    //   .subscribe({
+    //     next: (data: any) => {
+    //       this.openSnackBar('Successfully added departments.', 'Close');
+    //       // this.router.navigate([`/add-subjects`], {
+    //       //   queryParams: { departments: JSON.stringify(data.data) },
+    //       //   queryParamsHandling: 'merge',
+    //       // });
+    //       this.closeDepartmentDialog();
+    //       this.res = 1;
+    //     },
+    //     error: (error) => {
+    //       this.openSnackBar(error, 'Close');
+    //       this.closeDepartmentDialog();
+    //       this.res = 0;
+    //     },
+    //   });
   }
 
   trackByFn(index: any, el: any) {
