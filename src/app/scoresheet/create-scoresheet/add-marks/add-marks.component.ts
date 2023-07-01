@@ -44,6 +44,7 @@ export class AddMarksComponent implements OnInit {
   className = '';
   maxScoreExceeded = false;
   isUploadMarks = false;
+  isFinishClicked = false;
   public marksExcel: any;
 
   constructor(
@@ -74,6 +75,9 @@ export class AddMarksComponent implements OnInit {
 
   // function to send scoresheet marks to db
   saveScoresheetMarks() {
+    // start is finishedClicked
+    this.isFinishClicked = true;
+
     // assign subject teacher id
     const teacher = this.data.subject_teacher_id;
 
@@ -93,12 +97,15 @@ export class AddMarksComponent implements OnInit {
       this.marksService.errorToast(
         `Please add all ${this.numStudents} student marks`
       );
+      this.isFinishClicked = false;
       return;
     } else if (this.addedMarks.length > Number.parseInt(this.numStudents)) {
       console.log(this.addedMarks.length + ' ' + this.numStudents);
       this.marksService.errorToast(`Too many added marks`);
+      this.isFinishClicked = false;
     } else if (this.maxScoreExceeded) {
       this.marksService.errorToast('Some marks have exceeded max score!');
+      this.isFinishClicked = false;
     } else {
       for (let i = 0; i < this.dataSource.data.length; i++) {
         const temp = this.dataSource.data[i];
@@ -118,10 +125,11 @@ export class AddMarksComponent implements OnInit {
       this.marksService.postClassMarksArray(serverArray).subscribe({
         next: (data: any) => {
           this.marksService.successToast('Successfully added marks');
-          // this.router.navigateByUrl('/select-class');
+          this.isFinishClicked = false;
           this.location.back();
         },
         error: (error) => {
+          this.isFinishClicked = false;
           this.marksService.errorToast(error);
         },
       });
@@ -355,19 +363,18 @@ export class AddMarksComponent implements OnInit {
     this.marksExcel.readMarks(event, this.dataSource.data);
     // this.marksExcel.assignMarksToStudents(this.dataSource.data);
 
-    of([]).pipe(
-      delay(1000)
-    ).subscribe(() => {
-      console.log(this.marksExcel.res['numStudents']);
-      this.maxScore = this.marksExcel.res['maxScore'];
-      this.numStudents = this.marksExcel.res['numStudents'];
-      // this.value = this.marksExcel.res['progressValue'];
+    of([])
+      .pipe(delay(1000))
+      .subscribe(() => {
+        console.log(this.marksExcel.res['numStudents']);
+        this.maxScore = this.marksExcel.res['maxScore'];
+        this.numStudents = this.marksExcel.res['numStudents'];
+        // this.value = this.marksExcel.res['progressValue'];
 
-      this.addedMarks = this.marksExcel.res['addedMarks'];
-      console.log(this.addedMarks)
-      this.calculateAddedMarksValue();
-
-      })
+        this.addedMarks = this.marksExcel.res['addedMarks'];
+        console.log(this.addedMarks);
+        this.calculateAddedMarksValue();
+      });
     // setTimeout(() => {
     //         // this.value = Number.parseInt(this.marksExcel.res['numStudents']);
     // }, 1000);

@@ -1,7 +1,13 @@
-.add-marks-wrapper {
+@use "../../../../my-styles.scss" as var;
+div.add-marks-wrapper {
   // text-align: center;
-  width: 60%;
-  margin: auto;
+  width: 100%;
+  font-family: var.$regular;
+  // margin: auto;
+  background-color: #eee;
+  display: block;
+  flex-direction: column;
+  justify-content: center;
 }
 
 td {
@@ -14,6 +20,15 @@ td {
   width: 100%;
   background-color: yellow;
   // text-align: center;
+}
+
+.subject-info-wrapper,
+.input-fields-container,
+.upload-excel-sheet {
+  min-width: 300px;
+  max-width: 500px;
+  width: 100%;
+  margin: auto;
 }
 
 .input-fields-container {
@@ -37,14 +52,26 @@ td {
 
 .buttons-container {
   margin: 24px auto;
-  // background-color: yellow;
   text-align: center;
+}
+
+.finish-button {
+  display: flex;
+  width: 20%;
+  justify-content: center;
+  margin: auto;
+}
+
+:host ::ng-deep .finish-button-spinner circle,
+.mat-spinner circle {
+  stroke: black;
+  width: 50px;
 }
 
 .upload-excel-sheet {
   background-color: #eee;
   text-align: center;
-  margin: 12px;
+  margin: 16px auto;
   gap: 20px;
   display: flex;
   flex-direction: column;
@@ -64,7 +91,19 @@ td {
 }
 
 @media screen and (max-width: 768px) {
-  .add-marks-wrapper {
+  th {
+    display: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    padding-left: 8%;
+    font-family: var.$bold;
+  }
+
+  div.add-marks-wrapper {
     width: 100%;
   }
 
@@ -76,27 +115,62 @@ td {
     margin: auto;
   }
 
-  .students-table-wrapper {
-    background-color: green;
+  .mat-column-index {
+    width: 100% !important;
+    font-family: var.$regular;
+    text-align: right;
+  }
+
+  .mat-column-name_surname {
+    width: 100% !important;
+    font-family: var.$regular;
+    text-align: right;
+  }
+
+  .mat-column-score {
+    width: 100% !important;
+    font-family: var.$regular;
+    text-align: right;
+
+    mat-form-field {
+      height: auto;
+      margin-top: 12px;
+    }
+  }
+
+  .mat-column-percentage {
+    width: 100% !important;
+    text-align: right;
   }
 
   ::ng-deep {
-    mat-table {
-      background-color: red;
-    }
-
-    ng-container.index {
-      margin-top: 24px;
+    .mat-mdc-table .mdc-data-table__row {
+      border: 1px dashed black;
+      display: flex;
+      flex-direction: column;
+      justify-content: right;
+      margin: 25px;
+      width: auto;
+      height: auto;
+      font-family: var.$regular;
+      text-align: right;
     }
   }
 
-  td {
-    display: flex;
-    flex-direction: column;
+  table {
+    width: auto !important;
   }
 
-  th {
+  // .buttons-container {
+  //   margin: 40px;
+  // }
+
+  .upload-excel-sheet {
+    width: auto;
+    min-width: 50px;
+    padding: 7px;
+    margin: auto;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
   }
 }
