@@ -62,12 +62,12 @@ export class ViewScoresheetsComponent implements OnInit {
     // first retrieve the year that are in the serviceResult array
     for (let i = 0; i < this.serviceResult.length; i++) {
       let tempYear = '0';
-      let item = this.serviceResult[i];
+      const item = this.serviceResult[i];
 
       if (item.year == tempYear) {
         continue;
       } else if (item.year != tempYear) {
-        let found = years.find((year) => year === item.year);
+        const found = years.find((year) => year === item.year);
 
         if (found === undefined) {
           tempYear = item.year;
@@ -141,7 +141,7 @@ export class ViewScoresheetsComponent implements OnInit {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });
