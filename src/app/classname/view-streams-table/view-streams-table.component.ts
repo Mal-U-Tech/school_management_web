@@ -116,7 +116,8 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
           this.dispatchIsStreamsLoading(false);
           this.dataSource.data = [];
         },
-      });
+      })
+      .unsubscribe();
 
     // this.api.viewAllClasses(this.currentPage, this.pageSize).subscribe({
     //   next: (data: any) => {
