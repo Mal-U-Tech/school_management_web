@@ -109,6 +109,7 @@ export class DepartmentEffects {
       ),
       switchMap((res) => {
         console.log(res);
+        const result = res as any;
 
         return of(departmentsIsLoading({ departmentsIsLoading: false }));
       })
