@@ -8,6 +8,13 @@
   padding: 12px;
 }
 
+.title {
+  padding-bottom: 12px;
+  font-family: var.$bold;
+  text-decoration: underline;
+  font-size: 1.7rem;
+}
+
 .instructions {
   text-align: center;
   margin: auto;
@@ -22,9 +29,10 @@
 
 .pass-controls-added {
   display: flex;
-  width: 30%;
+  width: auto;
   height: auto;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 15px;
   margin: 24px auto;
 }
 
@@ -43,10 +51,7 @@ button.class-name {
 
 button.pass-controls-button {
   border: 1px solid var.$primary;
-}
-
-:host ::ng-deep .controls-spinner circle {
-  stroke: var.$primary;
+  width: 150px;
 }
 
 :host ::ng-deep .scoresheet-spinner circle {
