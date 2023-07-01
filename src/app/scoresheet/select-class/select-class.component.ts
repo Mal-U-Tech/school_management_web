@@ -31,6 +31,8 @@ export class SelectClassComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    // get scoresheet name
+    this.title = this.service.name + ' Scoresheet';
     this.service
       .getStreamsFromScoresheet(this.service.selectedScoresheetId)
       .subscribe({
@@ -69,6 +71,7 @@ export class SelectClassComponent implements AfterViewInit {
   passControls: IPassControls[] = [];
   isLoadingPassControls = true;
   isScoresheetLoading = false;
+  title = '';
 
   setSelectedClass(index: number) {
     this.selectedClass = index;
