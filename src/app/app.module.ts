@@ -91,6 +91,8 @@ import { streamsReducer } from './store/streams/streams.reducer';
 import { departmentsReducer } from './store/departments/departments.reducer';
 import { DepartmentEffects } from './store/departments/departments.effects';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { SubjectEffects } from './store/subjects/subjects.effects';
+import { subjectsReducer } from './store/subjects/subjects.reducer';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -244,12 +246,14 @@ const routes: Routes = [
       schoolInfo: schoolInfoReducer,
       stream: streamsReducer,
       department: departmentsReducer,
+      subject: subjectsReducer,
     }),
     EffectsModule.forRoot([
       AuthEffects,
       SchoolInfoEffects,
       StreamEffects,
       DepartmentEffects,
+      SubjectEffects,
     ]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
