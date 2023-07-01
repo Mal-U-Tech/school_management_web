@@ -8,6 +8,7 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { IDepartments } from 'src/app/shared/add-departments/add-departments.interface';
 import { AddDepartmentsService } from 'src/app/shared/add-departments/add-departments.service';
@@ -18,6 +19,7 @@ import {
   getDepartmentsError,
 } from 'src/app/store/departments/departments.actions';
 import {
+  selectDepartmentIsLoading,
   selectDepartmentsArray,
   selectDepartmentsPaginatorOptions,
 } from 'src/app/store/departments/departments.selector';
@@ -30,14 +32,13 @@ interface DEPARTMENT {
   department: string;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-view-departments-table',
   templateUrl: './view-departments-table.component.html',
   styleUrls: ['./view-departments-table.component.scss'],
 })
 export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA: DEPARTMENT[] = [];
-  isLoading = false;
   totalRows = 0;
   pageSize = 10;
   currentPage = 0;
@@ -50,6 +51,7 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
   dialogRef: any;
   departments$ = this.store.select(selectDepartmentsArray);
   paginator$ = this.store.select(selectDepartmentsPaginatorOptions);
+  departmentsIsLoading$ = this.store.select(selectDepartmentIsLoading);
 
   constructor(
     private api: AddDepartmentsService,
@@ -68,14 +70,14 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
     this.loadData();
   }
 
-  dispatchIsLoading() {
-    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
+  dispatchIsLoading(state: boolean) {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: state }));
   }
 
   loadData() {
-    this.dispatchIsLoading();
+    this.dispatchIsLoading(true);
 
-    this.departments$.subscribe({
+    this.departments$.pipe(untilDestroyed(this)).subscribe({
       next: (data: IDepartments[]) => {
         if (data != null && data.length > 0) {
           const arr: DEPARTMENT[] = [];
@@ -87,6 +89,7 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
             });
           }
           this.dataSource.data = arr;
+          this.dispatchIsLoading(false);
         }
       },
       error: (error) => {
@@ -95,7 +98,7 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
     });
 
     // set paginator options
-    this.paginator$.subscribe({
+    this.paginator$.pipe(untilDestroyed(this)).subscribe({
       next: (data) => {
         this.paginator.pageIndex = data.currentPage;
         this.paginator.length = data.count;
