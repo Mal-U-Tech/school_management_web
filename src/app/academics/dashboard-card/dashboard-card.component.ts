@@ -13,8 +13,10 @@ import { ClassStudentsComponent } from 'src/app/class-students/class-students.co
 import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
+import { IDepartments } from 'src/app/shared/add-departments/add-departments.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
+import { selectDepartmentsArray } from 'src/app/store/departments/departments.selector';
 import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
@@ -44,14 +46,24 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
   @Input() hodCount = '0';
 
   public streams$ = this.store.select(selectStreamsArray);
+  public departments$ = this.store.select(selectDepartmentsArray);
 
   ngAfterViewInit(): void {
     this.streams$.subscribe((data: IClassname[]) => {
       if (data.length) {
-        console.log(data.length);
+        // console.log(data.length);
         this.streamsCount = data.length.toString();
-        console.log('After assigning streamsCount ' + this.streamsCount);
+        // console.log('After assigning streamsCount ' + this.streamsCount);
         this.numberOfItems[1] = this.streamsCount;
+      }
+    });
+
+    this.departments$.subscribe((data: IDepartments[]) => {
+      // console.log(data);
+      if (data.length) {
+        // console.log(`Departments data: ${data.length}`);
+        this.deptCount = data.length.toString();
+        this.numberOfItems[2] = this.deptCount;
       }
     });
   }

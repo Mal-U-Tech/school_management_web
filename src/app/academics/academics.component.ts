@@ -22,6 +22,10 @@ import { selectSchoolInfo } from '../store/school-info/school-info.selector';
 import { SchoolInfoState } from '../store/school-info/school-info.reducer';
 import { selectUserData } from '../store/user/user.selector';
 import { IUser } from '../shared/user/user.interface';
+import {
+  departmentsIsLoading,
+  getDepartmentsRequest,
+} from '../store/departments/departments.actions';
 
 interface TEACHER {
   _id: string;
@@ -129,6 +133,7 @@ export class AcademicsComponent implements OnInit {
   public subjectTeachersCount = '0';
   public classTeachersCount = '0';
   public hodCount = '0';
+  public schoolId = '';
   schoolInfo$ = this.store.select(selectSchoolInfo);
   user$ = this.store.select(selectUserData);
 
@@ -144,20 +149,19 @@ export class AcademicsComponent implements OnInit {
     //   },
     // });
 
-    let schoolId = '';
     this.schoolInfo$.subscribe({
       next: (data: SchoolInfoState) => {
         console.log(data);
-        schoolId = data.schoolInfo._id || '';
+        this.schoolId = data.schoolInfo._id || '';
 
         // dispatch action to retrieve streams
-        if (schoolId != null || schoolId != '') {
+        if (this.schoolId != null || this.schoolId != '') {
           // dispatch action to start loading
           this.dispatchStreamsIsLoading();
 
           this.store.dispatch(
             getStreamsRequest({
-              schoolId: schoolId,
+              schoolId: this.schoolId,
               currentPage: 0,
               pageSize: 0,
             })
@@ -167,8 +171,18 @@ export class AcademicsComponent implements OnInit {
     });
   }
 
+  getDepartments() {
+    this.dispatchDepartmentsIsLoading();
+
+    this.store.dispatch(getDepartmentsRequest({ currentPage: 0, pageSize: 0 }));
+  }
+
   dispatchStreamsIsLoading() {
     this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
+  }
+
+  dispatchDepartmentsIsLoading() {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
   }
 
   getSubjects() {
@@ -180,18 +194,6 @@ export class AcademicsComponent implements OnInit {
       },
       error: (err) => {
         this.subjectsApi.errorToast(err.toString());
-      },
-    });
-  }
-
-  getDepartments() {
-    this.deptApi.viewAllDepartments(0, 0).subscribe({
-      next: (data: any) => {
-        this.deptCount = data.length.toString();
-        sessionStorage.setItem('departments', JSON.stringify(data));
-      },
-      error: (err) => {
-        this.deptApi.errorToast(err.toString());
       },
     });
   }
