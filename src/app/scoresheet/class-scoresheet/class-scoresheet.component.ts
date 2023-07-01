@@ -452,7 +452,7 @@ export class ClassScoresheetComponent implements OnInit {
                 [
                   this.addTableText(this.classname, 14, '', '0', [2, 15]),
                   this.addTableText(this.schoolName, 14, '', '', [2, 15]),
-                  this.addTableText(this.scoresheetYear, 14, '', '0.5', [2, 4]),
+                  this.addTableText(this.scoresheetName + ' ' + this.scoresheetYear, 14, '', '0', [2, 15]),
                 ],
               ],
             },
