@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { Scoresheet } from 'src/app/OOP/classes/scoresheet.class';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
+import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
+import { selectSubjectsArray } from 'src/app/store/subjects/subjects.selector';
 
+@UntilDestroy()
 @Component({
   selector: 'app-scoresheet-classes',
   templateUrl: './classes.component.html',
@@ -11,10 +16,13 @@ import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service'
 })
 export class ClassesComponent implements OnInit {
   public classes: any;
+  streams$ = this.store.select(selectStreamsArray);
+  subjects$ = this.store.select(selectSubjectsArray);
 
   constructor(
     public scoresheetService: ScoresheetService,
-    public router: Router
+    public router: Router,
+    private store: Store
   ) {}
 
   ngOnInit(): void {
@@ -25,14 +33,30 @@ export class ClassesComponent implements OnInit {
 
   // function to retrieve classes from sessionStorage
   getClasses() {
-    this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
+    // this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
+    this.streams$.pipe(untilDestroyed(this)).subscribe({
+      next: (data) => {
+        if (data.length) {
+          this.classes = data;
+        }
+      },
+    });
   }
 
   // function to retrieve subjects from sessionStorage
   getSubjects() {
-    this.scoresheetService.subjects = JSON.parse(
-      sessionStorage.getItem('subjects') || ''
-    );
+    // this.scoresheetService.subjects = JSON.parse(
+    //   sessionStorage.getItem('subjects') || ''
+    // );
+
+    this.subjects$.pipe(untilDestroyed(this)).subscribe({
+      next: (data) => {
+        if (data.length) {
+          this.scoresheetService.subjects = data;
+          console.log(data);
+        }
+      },
+    });
   }
 
   // function to create checked variable for the number of classes available
