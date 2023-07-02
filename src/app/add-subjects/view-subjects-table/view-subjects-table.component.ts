@@ -27,13 +27,12 @@ import { AddSubjectsComponent } from '../add-subjects.component';
 import { DialogConfirmSubjectDeleteComponent } from '../dialog-confirm-subject-delete/dialog-confirm-subject-delete.component';
 
 interface SUBJECT {
-  department_id: string;
-  department_name: string;
   subject: string;
   level: string;
   _id: string;
   index: string;
   pass_mark: number;
+  department_index: number;
 }
 
 @UntilDestroy()
@@ -50,13 +49,16 @@ export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
 
   displayedColumns: string[] = [
     'index',
-    'department',
     'subject',
     'level',
     'pass_mark',
     'actions',
   ];
   dataSource: MatTableDataSource<SUBJECT> = new MatTableDataSource();
+  public departments: {
+    label: { _id: string; name: string };
+    data: any;
+  }[] = [];
   onOpenDialog = new EventEmitter();
   dialogRef: any;
   subjects$ = this.store.select(selectSubjectsArray);
@@ -89,22 +91,62 @@ export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
     this.subjects$.subscribe((data: ISubjects[]) => {
       console.log('running from subjects subscribe');
       if (data.length) {
-
         const arr: SUBJECT[] = [];
+        const labels: { _id: string; name: string }[] = [];
 
         for (let i = 0; i < data.length; i++) {
           console.log(`This is data: ${data[i]}`);
+          const temp = data[i];
+
+          // find the index of the current dept_id
+          // console.log(labels);
+          let id = labels.findIndex(
+            (label) => label._id === temp.department_id._id!
+          );
+
+          // console.log(`This is id ${id}`);
+          if (id == -1 || labels[id] == null || labels[id] == undefined) {
+            id = labels.length;
+            labels.push({
+              _id: temp.department_id._id,
+              name: temp.department_id.name,
+            });
+          }
+          // console.log(`This is id ${id}`);
+
           arr.push({
             index: `${i + 1}`,
-            _id: data[i]._id || '',
-            subject: data[i].name,
-            level: data[i].level,
-            pass_mark: data[i].pass_mark,
-            department_id: data[i].department_id._id || '',
-            department_name: data[i].department_id.name,
+            _id: temp._id || '',
+            subject: temp.name,
+            level: temp.level,
+            pass_mark: temp.pass_mark,
+            department_index: id,
+            // department_id: data[i].department_id._id || '',
+            // department_name: data[i].department_id.name,
           });
         }
-        this.dataSource.data = arr;
+
+        for (let j = 0; j < labels.length; j++) {
+          const label = labels[j];
+          const tempArr: SUBJECT[] = [];
+
+          for (let k = 0; k < arr.length; k++) {
+            if (j == arr[k].department_index) {
+              arr[k].index = (tempArr.length + 1).toString();
+              tempArr.push(arr[k]);
+            }
+
+            console.log(this.departments.length);
+          }
+
+          this.departments.push({
+            label: label,
+            data: (new MatTableDataSource<SUBJECT>().data = tempArr),
+          });
+        }
+
+        // this.dataSource.data = arr;
+
         this.dispatchSubjectsIsLoading(false);
       }
     });
