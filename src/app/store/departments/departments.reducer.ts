@@ -124,7 +124,7 @@ export const departmentsReducer = createReducer(
   ),
   on(updateDepartmentSuccess, (state, { id, department }): DepartmentState => {
     const index = state.departments.findIndex(
-      (department) => department._id || '' !== department._id || ''
+      (dept) => dept._id || '' !== department._id || ''
     );
 
     const newArray = [...state.departments];
