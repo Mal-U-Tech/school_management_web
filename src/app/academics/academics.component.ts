@@ -179,8 +179,6 @@ export class AcademicsComponent implements OnInit {
     this.store.dispatch(getDepartmentsRequest({ currentPage: 0, pageSize: 0 }));
   }
 
-
-
   getSubjects() {
     this.dispatchSubjectsIsLoading();
     this.store.dispatch(getSubjectsRequest({currentPage: 0, pageSize: 0}));
