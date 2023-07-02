@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Scoresheet } from 'src/app/OOP/classes/scoresheet.class';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
@@ -8,7 +8,7 @@ import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service'
   templateUrl: './create-scoresheet.component.html',
   styleUrls: ['./create-scoresheet.component.scss'],
 })
-export class CreateScoresheetComponent {
+export class CreateScoresheetComponent implements OnInit, OnDestroy {
   constructor(
     public scoresheetService: ScoresheetService,
     public router: Router
