@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
 import { catchError, Observable, retry, throwError } from 'rxjs';
+import { addSubjectLevels } from 'src/app/store/subjects/subjects.actions';
 import { SharedApiConstants } from '../shared.constants';
 import { ISubjects, ISubjectsArray } from './add-subjects.interface';
 
@@ -14,7 +16,7 @@ export class AddSubjectsService extends SharedApiConstants {
   secondarySubjects: ISubjects[] = [];
   highSchoolSubjects: ISubjects[] = [];
 
-  constructor(private http: HttpClient, snackbar: MatSnackBar) {
+  constructor(private http: HttpClient, snackbar: MatSnackBar, private store: Store) {
     super(snackbar);
   }
 
@@ -118,5 +120,7 @@ export class AddSubjectsService extends SharedApiConstants {
       }
     }
 
+    // add the subjects to store
+    this.store.dispatch(addSubjectLevels({secondarySubjects: this.secondarySubjects, highSchoolSubjects: this.highSchoolSubjects}))
   }
 }
