@@ -50,6 +50,7 @@ export class SubjectEffects {
       switchMap((res) => {
         console.log(res);
         const result = res as any;
+        this.subjectsService.assignSubjectsToLevels(result.data);
 
         return of(
           subjectsIsLoading({ subjectsIsLoading: false }),

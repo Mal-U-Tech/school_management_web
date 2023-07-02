@@ -21,6 +21,11 @@ export const addSubjectsPaginatorOptions = createAction(
   }>()
 );
 
+export const addSubjectLevels = createAction(
+  '[Subjects] Adding subjects to different levels',
+  props<{ secondarySubjects: ISubjects[]; highSchoolSubjects: ISubjects[] }>()
+);
+
 // API GET function definitions
 export const getSubjectsRequest = createAction(
   '[Subjects] Get subjects request',

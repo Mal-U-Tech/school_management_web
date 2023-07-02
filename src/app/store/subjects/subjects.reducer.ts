@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import {
+  addSubjectLevels,
   addSubjectsPaginatorOptions,
   deleteSubjectError,
   deleteSubjectRequest,
@@ -26,6 +27,8 @@ export interface SubjectsState {
     pageSize: number;
     count: number;
   };
+  secondarySubjects: ISubjects[];
+  highSchoolSubjects: ISubjects[];
 }
 
 export const initialState: SubjectsState = {
@@ -37,6 +40,8 @@ export const initialState: SubjectsState = {
     pageSize: 0,
     count: 0,
   },
+  secondarySubjects: [],
+  highSchoolSubjects: [],
 };
 
 export const subjectsReducer = createReducer(
@@ -53,6 +58,14 @@ export const subjectsReducer = createReducer(
     (state, { paginator }): SubjectsState => ({
       ...state,
       paginator: paginator,
+    })
+  ),
+  on(
+    addSubjectLevels,
+    (state, { secondarySubjects, highSchoolSubjects }): SubjectsState => ({
+      ...state,
+      secondarySubjects: secondarySubjects,
+      highSchoolSubjects: highSchoolSubjects,
     })
   ),
 
