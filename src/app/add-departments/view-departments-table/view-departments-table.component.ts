@@ -93,6 +93,7 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
         }
       },
       error: (error) => {
+        this.dispatchIsLoading(false);
         this.store.dispatch(getDepartmentsError({ message: error }));
       },
     });
@@ -104,6 +105,7 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
         this.paginator.length = data.count;
       },
       error: (error) => {
+        // this.dispatchIsLoading(false);
         this.store.dispatch(getDepartmentsError({ message: error }));
       },
     });
