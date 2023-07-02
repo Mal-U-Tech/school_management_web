@@ -1,13 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
-import { IMarks } from 'src/app/shared/marks/marks.interface';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { PassControlsService } from 'src/app/shared/pass-controls/pass-controls.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
@@ -37,6 +35,7 @@ export class SelectClassComponent implements AfterViewInit {
       .getStreamsFromScoresheet(this.service.selectedScoresheetId)
       .subscribe({
         next: (data: any) => {
+          console.log(data);
           for (let i = 0; i < data[0].classes.length; i++) {
             const temp = data[0].classes[i];
 
