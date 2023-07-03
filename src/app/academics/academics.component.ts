@@ -1,4 +1,4 @@
-import { Component,  OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
@@ -25,7 +25,12 @@ import {
   getDepartmentsRequest,
 } from '../store/departments/departments.actions';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { getSubjectsRequest, subjectsIsLoading } from '../store/subjects/subjects.actions';
+import {
+  getSubjectsRequest,
+  subjectsIsLoading,
+} from '../store/subjects/subjects.actions';
+import { getTeachersRequest } from '../store/teacher/teacher.actions';
+import { selectTeacherArray } from '../store/teacher/teacher.selector';
 
 interface TEACHER {
   _id: string;
@@ -108,6 +113,15 @@ export class AcademicsComponent implements OnInit {
   ngOnInit(): void {
     this.numCols = window.innerWidth <= 768 ? 2 : 1;
 
+    // assign user data
+    this.user$.pipe(untilDestroyed(this)).subscribe({
+      next: (data: IUser) => {
+        if (data) {
+          this.user = data;
+        }
+      },
+    });
+
     this.getStreams();
     this.getSubjects();
     this.getDepartments();
@@ -135,8 +149,10 @@ export class AcademicsComponent implements OnInit {
   public classTeachersCount = '0';
   public hodCount = '0';
   public schoolId = '';
+  public user: any;
   schoolInfo$ = this.store.select(selectSchoolInfo);
   user$ = this.store.select(selectUserData);
+  teachers$ = this.store.select(selectTeacherArray);
 
   dispatchStreamsIsLoading() {
     this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
@@ -147,11 +163,15 @@ export class AcademicsComponent implements OnInit {
   }
 
   dispatchSubjectsIsLoading() {
-    this.store.dispatch(subjectsIsLoading({subjectsIsLoading: true}));
+    this.store.dispatch(subjectsIsLoading({ subjectsIsLoading: true }));
+  }
+
+  dispatchTeachersIsLoading() {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
   }
 
   getStreams() {
-   this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
+    this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
       next: (data: SchoolInfoState) => {
         console.log(data);
         this.schoolId = data.schoolInfo._id || '';
@@ -181,12 +201,12 @@ export class AcademicsComponent implements OnInit {
 
   getSubjects() {
     this.dispatchSubjectsIsLoading();
-    this.store.dispatch(getSubjectsRequest({currentPage: 0, pageSize: 0}));
+    this.store.dispatch(getSubjectsRequest({ currentPage: 0, pageSize: 0 }));
     // this.subjectsApi.getAllSubjects(0, 0).subscribe({
     //   next: (data: any) => {
     //     this.subjectCount = data.length.toString();
     //     sessionStorage.setItem('subjects', JSON.stringify(data));
-        // this.subjectsApi.assignSubjectsToLevels(data); check this one out !!!!!!!!!!!!
+    // this.subjectsApi.assignSubjectsToLevels(data); check this one out !!!!!!!!!!!!
     //   },
     //   error: (err) => {
     //     this.subjectsApi.errorToast(err.toString());
@@ -195,40 +215,42 @@ export class AcademicsComponent implements OnInit {
   }
 
   getTeachers() {
-    this.teacherApi
-      .getAllTeachers(0, 0)
-      .pipe(untilDestroyed(this))
+
+    this.dispatchTeachersIsLoading();
+    this.store.dispatch(getTeachersRequest({currentPage: 0, pageSize: 0}));
+
+    this.teachers$.pipe(untilDestroyed(this))
       .subscribe({
         next: (data: ITeacher[]) => {
           this.teacherCount = data.length.toString();
 
           // get current user
-          this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
-            // compute teacher title and store in session storage
-            sessionStorage.setItem(
-              'teachers',
-              JSON.stringify(this.assignTeacherTitles(data))
-            );
-
-            // find out if current user is a teacher
-            // console.log(data);
-            data.forEach((element: any) => {
-              if (element.user_id._id == user._id) {
-                // console.log('I am a teacher');
-                sessionStorage.setItem(
-                  'user',
-                  JSON.stringify({
-                    _id: user._id,
-                    name: user.name,
-                    surname: user.surname,
-                    contact: user.contact,
-                    email: user.email,
-                    teacher_id: element._id,
-                  })
-                );
-              }
-            });
-          });
+          // this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
+          //   // compute teacher title and store in session storage
+          //   sessionStorage.setItem(
+          //     'teachers',
+          //     JSON.stringify(this.assignTeacherTitles(data))
+          //   );
+          //
+          //   // find out if current user is a teacher
+          //   // console.log(data);
+          //   data.forEach((element: any) => {
+          //     if (element.user_id._id == user._id) {
+          //       // console.log('I am a teacher');
+          //       sessionStorage.setItem(
+          //         'user',
+          //         JSON.stringify({
+          //           _id: user._id,
+          //           name: user.name,
+          //           surname: user.surname,
+          //           contact: user.contact,
+          //           email: user.email,
+          //           teacher_id: element._id,
+          //         })
+          //       );
+          //     }
+          //   });
+          // });
         },
         error: (err) => {
           this.teacherApi.errorToast(err.toString());
@@ -243,7 +265,10 @@ export class AcademicsComponent implements OnInit {
       const temp = teachers[i];
       arr.push({
         _id: temp._id,
-        title: this.computeTeacherTitle(temp.gender, temp.marital_status),
+        title: this.subjectTeacherApi.computeTeacherTitle(
+          temp.gender,
+          temp.marital_status
+        ),
         name: temp.user_id.name,
         surname: temp.user_id.surname,
         gender: temp.gender,
@@ -253,17 +278,6 @@ export class AcademicsComponent implements OnInit {
     }
 
     return arr;
-  }
-
-  // function to compute teacher title
-  computeTeacherTitle(gender: string, maritalStatus: string): string {
-    if (gender === 'Male') {
-      return 'Mr.';
-    } else if (gender === 'Female' && maritalStatus === 'Single') {
-      return 'Ms.';
-    } else {
-      return 'Mrs.';
-    }
   }
 
   getClassStudents() {
