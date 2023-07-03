@@ -7,6 +7,7 @@ import { TeacherService } from '../shared/teacher/teacher.service';
 import { matchValidator } from '../shared/user/form.validators';
 import { UserApiService } from '../shared/user/user-api.service';
 import { selectSchoolInfoObject } from '../store/school-info/school-info.selector';
+import { postTeacherRequest } from '../store/teacher/teacher.actions';
 
 @Component({
   selector: 'app-teacher',
@@ -166,25 +167,30 @@ export class TeacherComponent implements OnInit {
             contact: this.contact,
             email: this.email.value,
             user_role: '',
-            password: this.passwordForm.get('password')!.value,
+            password: this.passwordForm.get('password')?.value,
           },
           gender: this.genderSelection,
           marital_status: this.maritalStatusSelection,
         };
 
-        this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
-          next: (data: any) => {
-            console.log(data);
-            this.closeTeacherDialog();
-            this.apiService.successToast('Successfully saved teacher');
-            this.res = 1;
-          },
-          error: (err) => {
-            this.closeTeacherDialog();
-            this.apiService.errorToast(err);
-            this.res = 0;
-          },
-        });
+        this.store.dispatch(
+          postTeacherRequest({ teacher: teacher, schoolInfoId: schoolInfo._id })
+        );
+        this.closeTeacherDialog();
+
+        // this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
+        //   next: (data: any) => {
+        //     console.log(data);
+        //     this.closeTeacherDialog();
+        //     this.apiService.successToast('Successfully saved teacher');
+        //     this.res = 1;
+        //   },
+        //   error: (err) => {
+        //     this.closeTeacherDialog();
+        //     this.apiService.errorToast(err);
+        //     this.res = 0;
+        //   },
+        // });
       }
     } else {
       teacher = {
@@ -193,18 +199,22 @@ export class TeacherComponent implements OnInit {
         marital_status: this.maritalStatusSelection,
       };
 
-      this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
-        next: (data: any) => {
-          this.closeTeacherDialog();
-          this.apiService.successToast('Successfully saved teacher');
-          this.res = 1;
-        },
-        error: (err) => {
-          this.closeTeacherDialog();
-          this.apiService.errorToast(err);
-          this.res = 0;
-        },
-      });
+      this.store.dispatch(
+        postTeacherRequest({ teacher: teacher, schoolInfoId: schoolInfo._id })
+      );
+      this.closeTeacherDialog;
+      // this.apiService.postTeacher(teacher, schoolInfo._id).subscribe({
+      //   next: (data: any) => {
+      //     this.closeTeacherDialog();
+      //     this.apiService.successToast('Successfully saved teacher');
+      //     this.res = 1;
+      //   },
+      //   error: (err) => {
+      //     this.closeTeacherDialog();
+      //     this.apiService.errorToast(err);
+      //     this.res = 0;
+      //   },
+      // });
     }
   }
 }

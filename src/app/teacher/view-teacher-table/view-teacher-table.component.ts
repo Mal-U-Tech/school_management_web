@@ -1,8 +1,28 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
+import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { TeacherService } from 'src/app/shared/teacher/teacher.service';
+import { selectSchoolInfoObject } from 'src/app/store/school-info/school-info.selector';
+import {
+  addTeacherPaginatorOptions,
+  deleteTeacherRequest,
+  teacherIsLoading,
+} from 'src/app/store/teacher/teacher.actions';
+import {
+  selectPaginatorOptions,
+  selectTeacherArray,
+  selectTeacherIsLoading,
+} from 'src/app/store/teacher/teacher.selector';
 import { DialogConfirmTeacherDeleteComponent } from '../dialog-confirm-teacher-delete/dialog-confirm-teacher-delete.component';
 import { TeacherComponent } from '../teacher.component';
 import { UpdateTeacherComponent } from '../update-teacher/update-teacher.component';
@@ -22,14 +42,13 @@ interface TEACHER {
   marital_status: string;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-view-teacher-table',
   templateUrl: './view-teacher-table.component.html',
   styleUrls: ['./view-teacher-table.component.scss'],
 })
-export class ViewTeacherTableComponent {
-  ELEMENT_DATA: TEACHER[] = [];
-  isLoading = false;
+export class ViewTeacherTableComponent implements OnInit, AfterViewInit {
   totalRows = 0;
   pageSize = 10;
   currentPage = 0;
@@ -45,8 +64,12 @@ export class ViewTeacherTableComponent {
   onOpenDialog = new EventEmitter();
   dialogRef: any;
   schoolInfo: any;
+  schoolInfo$ = this.store.select(selectSchoolInfoObject);
+  teacherIsLoading$ = this.store.select(selectTeacherIsLoading);
+  teachers$ = this.store.select(selectTeacherArray);
+  paginator$ = this.store.select(selectPaginatorOptions);
 
-  constructor(private api: TeacherService, public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private store: Store) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit(): void {
@@ -55,43 +78,48 @@ export class ViewTeacherTableComponent {
 
   ngOnInit(): void {
     this.loadData();
-    this.schoolInfo = JSON.parse(sessionStorage.getItem('school-info')!);
+    this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
+      next: (data) => {
+        if (data) {
+          this.schoolInfo = data;
+        }
+      },
+    });
+  }
+
+  dispatchTeacherIsLoading() {
+    this.store.dispatch(teacherIsLoading({ teacherIsLoading: true }));
   }
 
   loadData() {
-    this.isLoading = true;
-
-    this.api.getAllTeachers(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
+    // this.dispatchTeacherIsLoading();
+    this.teachers$.pipe(untilDestroyed(this)).subscribe({
+      next: (data: ITeacher[]) => {
         console.log(data);
 
         const arr: TEACHER[] = [];
 
-        for (let i = 0; i < data.data.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           arr.push({
-            _id: data.data[i]._id,
+            _id: data[i]._id,
             title: this.computeTeacherTitle(
-              data.data[i].gender,
-              data.data[i].marital_status
+              data[i].gender,
+              data[i].marital_status
             ),
             index: `${i + 1}`,
-            user_id: data.data[i].user_id,
-            gender: data.data[i].gender,
-            marital_status: data.data[i].marital_status,
+            user_id: data[i].user_id,
+            gender: data[i].gender,
+            marital_status: data[i].marital_status,
           });
         }
         this.dataSource.data = arr;
-
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = data.count;
-        });
-        this.isLoading = false;
       },
-      error: (err) => {
-        console.log(err);
-        this.dataSource.data = [];
-        this.isLoading = false;
+    });
+
+    this.paginator$.pipe(untilDestroyed(this)).subscribe({
+      next: (data) => {
+        this.paginator.pageIndex = data.currentPage;
+        this.paginator.length = data.count;
       },
     });
   }
@@ -109,25 +137,28 @@ export class ViewTeacherTableComponent {
   deleteRow(data: any) {
     console.log(data);
 
-    this.api
-      .deleteTeacher(data._id, this.schoolInfo._id, data.user_id._id)
-      .subscribe({
-        next: (res: any) => {
-          console.log(res);
-          setTimeout(() => {
-            this.loadData();
-          }, 1000);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    this.dispatchTeacherIsLoading();
+    this.store.dispatch(
+      deleteTeacherRequest({
+        id: data._id,
+        schoolInfoId: this.schoolInfo._id,
+        userId: data.user_id._id,
+      })
+    );
   }
 
   pageChanged(event: PageEvent) {
     console.log({ event });
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
+    this.store.dispatch(
+      addTeacherPaginatorOptions({
+        paginator: {
+          currentPage: event.pageIndex,
+          count: 0,
+          pageSize: event.pageSize,
+        },
+      })
+    );
+
     this.loadData();
   }
 
@@ -193,7 +224,7 @@ export class ViewTeacherTableComponent {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });
