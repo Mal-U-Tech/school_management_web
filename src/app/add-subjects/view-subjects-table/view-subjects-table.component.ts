@@ -1,29 +1,47 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
+import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
+import {
+  addSubjectsPaginatorOptions,
+  deleteSubjectRequest,
+  getSubjectsError,
+  subjectsIsLoading,
+} from 'src/app/store/subjects/subjects.actions';
+import {
+  selectSubjectsArray,
+  selectSubjectsIsLoading,
+  selectSubjectsPaginatorOptions,
+} from 'src/app/store/subjects/subjects.selector';
 import { AddSubjectsComponent } from '../add-subjects.component';
 import { DialogConfirmSubjectDeleteComponent } from '../dialog-confirm-subject-delete/dialog-confirm-subject-delete.component';
 
 interface SUBJECT {
-  department_id: string;
-  department_name: string;
   subject: string;
   level: string;
   _id: string;
   index: string;
   pass_mark: number;
+  department_index: number;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-view-subjects-table',
   templateUrl: './view-subjects-table.component.html',
   styleUrls: ['./view-subjects-table.component.scss'],
 })
-export class ViewSubjectsTableComponent {
-  ELEMENT_DATA: SUBJECT[] = [];
-  isLoading = false;
+export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
   totalRows = 0;
   pageSize = 10;
   currentPage = 0;
@@ -31,17 +49,27 @@ export class ViewSubjectsTableComponent {
 
   displayedColumns: string[] = [
     'index',
-    'department',
     'subject',
     'level',
     'pass_mark',
     'actions',
   ];
   dataSource: MatTableDataSource<SUBJECT> = new MatTableDataSource();
+  public departments: {
+    label: { _id: string; name: string };
+    data: any;
+  }[] = [];
   onOpenDialog = new EventEmitter();
   dialogRef: any;
+  subjects$ = this.store.select(selectSubjectsArray);
+  isLoading$ = this.store.select(selectSubjectsIsLoading);
+  paginator$ = this.store.select(selectSubjectsPaginatorOptions);
 
-  constructor(private api: AddSubjectsService, public dialog: MatDialog) {}
+  constructor(
+    private api: AddSubjectsService,
+    public dialog: MatDialog,
+    private store: Store
+  ) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -54,60 +82,116 @@ export class ViewSubjectsTableComponent {
     this.loadData();
   }
 
+  dispatchSubjectsIsLoading(state: boolean) {
+    this.store.dispatch(subjectsIsLoading({ subjectsIsLoading: state }));
+  }
+
   loadData() {
-    this.isLoading = true;
+    this.dispatchSubjectsIsLoading(true);
+    this.subjects$.pipe(untilDestroyed(this)).subscribe((data: ISubjects[]) => {
+      console.log('running from subjects subscribe');
+      if (data.length) {
+        const arr: SUBJECT[] = [];
+        const labels: { _id: string; name: string }[] = [];
 
-    this.api.getAllSubjects(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        let arr: SUBJECT[] = [];
+        for (let i = 0; i < data.length; i++) {
+          console.log(`This is data: ${data[i]}`);
+          const temp = data[i];
 
-        for (let i = 0; i < data.data.length; i++) {
+          // find the index of the current dept_id
+          // console.log(labels);
+          let id = labels.findIndex(
+            (label) => label._id === temp.department_id._id!
+          );
+
+          // console.log(`This is id ${id}`);
+          if (id == -1 || labels[id] == null || labels[id] == undefined) {
+            id = labels.length;
+            labels.push({
+              _id: temp.department_id._id,
+              name: temp.department_id.name,
+            });
+          }
+          // console.log(`This is id ${id}`);
+
           arr.push({
             index: `${i + 1}`,
-            _id: data.data[i]._id,
-            subject: data.data[i].name,
-            level: data.data[i].level,
-            pass_mark: data.data[i].pass_mark,
-            department_id: data.data[i].department_id._id,
-            department_name: data.data[i].department_id.name,
+            _id: temp._id || '',
+            subject: temp.name,
+            level: temp.level,
+            pass_mark: temp.pass_mark,
+            department_index: id,
+            // department_id: data[i].department_id._id || '',
+            // department_name: data[i].department_id.name,
           });
         }
-        this.dataSource.data = arr;
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = data.count;
-        });
 
-        this.isLoading = false;
+        for (let j = 0; j < labels.length; j++) {
+          const label = labels[j];
+          const tempArr: SUBJECT[] = [];
+
+          for (let k = 0; k < arr.length; k++) {
+            if (j == arr[k].department_index) {
+              arr[k].index = (tempArr.length + 1).toString();
+              tempArr.push(arr[k]);
+            }
+
+            console.log(this.departments.length);
+          }
+
+          this.departments.push({
+            label: label,
+            data: (new MatTableDataSource<SUBJECT>().data = tempArr),
+          });
+        }
+
+        // this.dataSource.data = arr;
+
+        this.dispatchSubjectsIsLoading(false);
+      }
+    });
+
+    this.paginator$.pipe(untilDestroyed(this)).subscribe({
+      next: (data) => {
+        this.paginator.pageIndex = data.currentPage;
+        this.paginator.length = data.count;
       },
       error: (err) => {
-        console.log(err);
-        this.dataSource.data = [];
-        this.isLoading = false;
+        this.store.dispatch(getSubjectsError({ message: err }));
       },
     });
   }
 
   deleteRow(data: any) {
     console.log(data);
-    this.api.deleteSubject(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+    this.dispatchSubjectsIsLoading(true);
+    this.store.dispatch(deleteSubjectRequest({ id: data._id }));
+    // this.api.deleteSubject(data._id).subscribe({
+    //   next: (res: any) => {
+    //     console.log(res);
+    //     setTimeout(() => {
+    //       this.loadData();
+    //     }, 1000);
+    //   },
+    //   error: (err) => {
+    //     console.log(err);
+    //   },
+    // });
   }
 
   pageChanged(event: PageEvent) {
     console.log({ event });
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
+    this.store.dispatch(
+      addSubjectsPaginatorOptions({
+        paginator: {
+          pageSize: event.pageSize,
+          currentPage: event.pageIndex,
+          count: 0,
+        },
+      })
+    );
+    // this.pageSize = event.pageSize;
+    // this.currentPage = event.pageIndex;
     this.loadData();
   }
 
@@ -121,7 +205,7 @@ export class ViewSubjectsTableComponent {
 
     if (component == 'AddSubjectComponent') {
       this.dialogRef = this.dialog.open(AddSubjectsComponent, dialogConfig);
-      let instance = this.dialogRef.componentInstance;
+      const instance = this.dialogRef.componentInstance;
 
       instance.onClose.subscribe(() => {
         this.dialogRef.close();
@@ -159,7 +243,7 @@ export class ViewSubjectsTableComponent {
       DialogConfirmSubjectDeleteComponent,
       dialogConfig
     );
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
 
     instance.onCloseDialog.subscribe(() => {
       dialog.close();

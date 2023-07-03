@@ -1,10 +1,13 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { IDepartments, IDepartmentsArray } from './add-departments.interface';
-
+import {
+  IDepartments,
+  IDepartmentsArray,
+  IDepartmentsGetResponse,
+} from './add-departments.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +37,9 @@ export class AddDepartmentsService extends SharedApiConstants {
   }
 
   // HttpClient API post() => registers new department names array
-  postDepartmentsArray(departments: IDepartmentsArray): Observable<IDepartmentsArray> {
+  postDepartmentsArray(
+    departments: IDepartmentsArray
+  ): Observable<IDepartmentsArray> {
     return this.http
       .post<IDepartmentsArray>(
         this.apiUrl + `${this.module}/register-array`,
@@ -46,10 +51,7 @@ export class AddDepartmentsService extends SharedApiConstants {
   // HttpClient API post() => register new department name
   postDepartment(department: IDepartments): Observable<IDepartments> {
     return this.http
-      .post<IDepartments>(
-        this.apiUrl + `${this.module}/create`,
-       department
-      )
+      .post<IDepartments>(this.apiUrl + `${this.module}/create`, department)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -57,16 +59,19 @@ export class AddDepartmentsService extends SharedApiConstants {
   viewAllDepartments(
     currentPage: number,
     pageSize: number
-  ): Observable<IDepartments> {
+  ): Observable<IDepartmentsGetResponse> {
     return this.http
-      .get<IDepartments>(
+      .get<IDepartmentsGetResponse>(
         this.apiUrl + `${this.module}/view-all/${currentPage}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API update() => update department
-  updateDepartment(id: string, department: IDepartments): Observable<IDepartments> {
+  updateDepartment(
+    id: string,
+    department: IDepartments
+  ): Observable<IDepartments> {
     return this.http
       .put<IDepartments>(
         this.apiUrl + `${this.module}/update/${id}`,

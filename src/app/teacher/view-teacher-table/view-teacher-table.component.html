@@ -4,7 +4,10 @@
   </button>
 </div>
 <div class="mat-elevation-z8 table-container">
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="teacherIsLoading$ | async"
+  ></mat-progress-bar>
   <table mat-table [dataSource]="dataSource">
     <!--Position Column-->
     <ng-container matColumnDef="index">

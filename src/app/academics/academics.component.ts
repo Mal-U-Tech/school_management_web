@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { ClassnameApiService } from '../shared/classname/classname-api.service';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
@@ -22,6 +20,17 @@ import { selectSchoolInfo } from '../store/school-info/school-info.selector';
 import { SchoolInfoState } from '../store/school-info/school-info.reducer';
 import { selectUserData } from '../store/user/user.selector';
 import { IUser } from '../shared/user/user.interface';
+import {
+  departmentsIsLoading,
+  getDepartmentsRequest,
+} from '../store/departments/departments.actions';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  getSubjectsRequest,
+  subjectsIsLoading,
+} from '../store/subjects/subjects.actions';
+import { getTeachersRequest } from '../store/teacher/teacher.actions';
+import { selectTeacherArray } from '../store/teacher/teacher.selector';
 
 interface TEACHER {
   _id: string;
@@ -33,6 +42,7 @@ interface TEACHER {
   marital_status: string;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-academics',
   templateUrl: './academics.component.html',
@@ -103,6 +113,15 @@ export class AcademicsComponent implements OnInit {
   ngOnInit(): void {
     this.numCols = window.innerWidth <= 768 ? 2 : 1;
 
+    // assign user data
+    this.user$.pipe(untilDestroyed(this)).subscribe({
+      next: (data: IUser) => {
+        if (data) {
+          this.user = data;
+        }
+      },
+    });
+
     this.getStreams();
     this.getSubjects();
     this.getDepartments();
@@ -129,35 +148,42 @@ export class AcademicsComponent implements OnInit {
   public subjectTeachersCount = '0';
   public classTeachersCount = '0';
   public hodCount = '0';
+  public schoolId = '';
+  public user: any;
   schoolInfo$ = this.store.select(selectSchoolInfo);
   user$ = this.store.select(selectUserData);
+  teachers$ = this.store.select(selectTeacherArray);
+
+  dispatchStreamsIsLoading() {
+    this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
+  }
+
+  dispatchDepartmentsIsLoading() {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
+  }
+
+  dispatchSubjectsIsLoading() {
+    this.store.dispatch(subjectsIsLoading({ subjectsIsLoading: true }));
+  }
+
+  dispatchTeachersIsLoading() {
+    this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
+  }
 
   getStreams() {
-    // this.api.viewAllClasses(0, 0).subscribe({
-    //   next: (data: any) => {
-    //     this.classStreams = data;
-    //     sessionStorage.setItem('streams', JSON.stringify(data));
-    //     this.streamsCount = data.length.toString();
-    //   },
-    //   error: (err) => {
-    //     this.api.errorToast(err.toString());
-    //   },
-    // });
-
-    let schoolId = '';
-    this.schoolInfo$.subscribe({
+    this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
       next: (data: SchoolInfoState) => {
         console.log(data);
-        schoolId = data.schoolInfo._id || '';
+        this.schoolId = data.schoolInfo._id || '';
 
         // dispatch action to retrieve streams
-        if (schoolId != null || schoolId != '') {
+        if (this.schoolId != null || this.schoolId != '') {
           // dispatch action to start loading
           this.dispatchStreamsIsLoading();
 
           this.store.dispatch(
             getStreamsRequest({
-              schoolId: schoolId,
+              schoolId: this.schoolId,
               currentPage: 0,
               pageSize: 0,
             })
@@ -167,72 +193,69 @@ export class AcademicsComponent implements OnInit {
     });
   }
 
-  dispatchStreamsIsLoading() {
-    this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
+  getDepartments() {
+    this.dispatchDepartmentsIsLoading();
+
+    this.store.dispatch(getDepartmentsRequest({ currentPage: 0, pageSize: 0 }));
   }
 
   getSubjects() {
-    this.subjectsApi.getAllSubjects(0, 0).subscribe({
-      next: (data: any) => {
-        this.subjectCount = data.length.toString();
-        sessionStorage.setItem('subjects', JSON.stringify(data));
-        this.subjectsApi.assignSubjectsToLevels(data);
-      },
-      error: (err) => {
-        this.subjectsApi.errorToast(err.toString());
-      },
-    });
-  }
-
-  getDepartments() {
-    this.deptApi.viewAllDepartments(0, 0).subscribe({
-      next: (data: any) => {
-        this.deptCount = data.length.toString();
-        sessionStorage.setItem('departments', JSON.stringify(data));
-      },
-      error: (err) => {
-        this.deptApi.errorToast(err.toString());
-      },
-    });
+    this.dispatchSubjectsIsLoading();
+    this.store.dispatch(getSubjectsRequest({ currentPage: 0, pageSize: 0 }));
+    // this.subjectsApi.getAllSubjects(0, 0).subscribe({
+    //   next: (data: any) => {
+    //     this.subjectCount = data.length.toString();
+    //     sessionStorage.setItem('subjects', JSON.stringify(data));
+    // this.subjectsApi.assignSubjectsToLevels(data); check this one out !!!!!!!!!!!!
+    //   },
+    //   error: (err) => {
+    //     this.subjectsApi.errorToast(err.toString());
+    //   },
+    // });
   }
 
   getTeachers() {
-    this.teacherApi.getAllTeachers(0, 0).subscribe({
-      next: (data: ITeacher[]) => {
-        this.teacherCount = data.length.toString();
 
-        // get current user
-        this.user$.subscribe((user: IUser) => {
-          // compute teacher title and store in session storage
-          sessionStorage.setItem(
-            'teachers',
-            JSON.stringify(this.assignTeacherTitles(data))
-          );
+    this.dispatchTeachersIsLoading();
+    this.store.dispatch(getTeachersRequest({currentPage: 0, pageSize: 0}));
 
-          // find out if current user is a teacher
-          // console.log(data);
-          data.forEach((element: any) => {
-            if (element.user_id._id == user._id) {
-              // console.log('I am a teacher');
-              sessionStorage.setItem(
-                'user',
-                JSON.stringify({
-                  _id: user._id,
-                  name: user.name,
-                  surname: user.surname,
-                  contact: user.contact,
-                  email: user.email,
-                  teacher_id: element._id,
-                })
-              );
-            }
-          });
-        });
-      },
-      error: (err) => {
-        this.teacherApi.errorToast(err.toString());
-      },
-    });
+    this.teachers$.pipe(untilDestroyed(this))
+      .subscribe({
+        next: (data: ITeacher[]) => {
+          this.teacherCount = data.length.toString();
+
+          // get current user
+          // this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
+          //   // compute teacher title and store in session storage
+          //   sessionStorage.setItem(
+          //     'teachers',
+          //     JSON.stringify(this.assignTeacherTitles(data))
+          //   );
+          //
+          //   // find out if current user is a teacher
+          //   // console.log(data);
+          //   data.forEach((element: any) => {
+          //     if (element.user_id._id == user._id) {
+          //       // console.log('I am a teacher');
+          //       sessionStorage.setItem(
+          //         'user',
+          //         JSON.stringify({
+          //           _id: user._id,
+          //           name: user.name,
+          //           surname: user.surname,
+          //           contact: user.contact,
+          //           email: user.email,
+          //           teacher_id: element._id,
+          //         })
+          //       );
+          //     }
+          //   });
+          // });
+        },
+        error: (err) => {
+          this.teacherApi.errorToast(err.toString());
+        },
+      });
   }
 
   // function to assign teacher title for all teachers
@@ -242,7 +265,10 @@ export class AcademicsComponent implements OnInit {
       const temp = teachers[i];
       arr.push({
         _id: temp._id,
-        title: this.computeTeacherTitle(temp.gender, temp.marital_status),
+        title: this.subjectTeacherApi.computeTeacherTitle(
+          temp.gender,
+          temp.marital_status
+        ),
         name: temp.user_id.name,
         surname: temp.user_id.surname,
         gender: temp.gender,
@@ -252,17 +278,6 @@ export class AcademicsComponent implements OnInit {
     }
 
     return arr;
-  }
-
-  // function to compute teacher title
-  computeTeacherTitle(gender: string, maritalStatus: string): string {
-    if (gender === 'Male') {
-      return 'Mr.';
-    } else if (gender === 'Female' && maritalStatus === 'Single') {
-      return 'Ms.';
-    } else {
-      return 'Mrs.';
-    }
   }
 
   getClassStudents() {

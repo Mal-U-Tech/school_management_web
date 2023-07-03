@@ -1,10 +1,14 @@
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ISubject } from '../add-subjects/models/subject.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
+import { ISubjects } from '../shared/add-subjects/add-subjects.interface';
 import { PassControlsService } from '../shared/pass-controls/pass-controls.service';
 import { ScoresheetService } from '../shared/scoresheet/scoresheet.service';
+import { selectSubjectsArray } from '../store/subjects/subjects.selector';
 import { IPassControls } from './models/pass-controls.model';
 
+@UntilDestroy()
 @Component({
   selector: 'app-pass-controls',
   templateUrl: './pass-controls.component.html',
@@ -15,7 +19,8 @@ export class PassControlsComponent {
   constructor(
     private api: PassControlsService,
     private scoresheetSerivce: ScoresheetService,
-    @Inject(MAT_DIALOG_DATA) public dialogData: IPassControls
+    @Inject(MAT_DIALOG_DATA) public dialogData: IPassControls,
+    private store: Store
   ) {
     this.loadData();
     this.scoresheetId = this.scoresheetSerivce.selectedScoresheetId;
@@ -28,10 +33,11 @@ export class PassControlsComponent {
   passControls = [];
   checked = false;
   level = '';
-  subjects: ISubject[] = [];
+  subjects: ISubjects[] = [];
   scoresheetId = '';
   title = 'Pass Controls';
   dummy?: IPassControls;
+  subjects$ = this.store.select(selectSubjectsArray);
 
   // constructor(private api: PassControlsService) {}
 
@@ -50,14 +56,23 @@ export class PassControlsComponent {
 
   // ngOnInit(): void {}
 
-  passingSubjectSelected(subject: ISubject) {
+  passingSubjectSelected(subject: ISubjects) {
     this.name = subject.name;
     this.level = subject.level;
     this.mark = subject.pass_mark;
   }
 
   loadData() {
-    const subs = JSON.parse(sessionStorage.getItem('subjects') || '');
+    let subs: ISubjects[] = []; // = JSON.parse(sessionStorage.getItem('subjects') || '');
+
+    this.subjects$.pipe(untilDestroyed(this)).subscribe({
+      next: (data: ISubjects[]) => {
+        if (data.length) {
+          subs = data;
+        }
+      },
+    });
+
     // console.log(subs);
     this.subjects = subs;
 

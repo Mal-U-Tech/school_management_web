@@ -37,14 +37,16 @@ export class ClassnameComponent {
     public router: Router,
     private store: Store
   ) {
-    this.postSuccess$.subscribe({
-      next: (data: boolean) => {
-        console.log(`This is postSuccess ${data}`)
-        if (data) {
-          this.closeStreamDialog();
-        }
-      },
-    });
+    this.postSuccess$
+      .subscribe({
+        next: (data: boolean) => {
+          console.log(`This is postSuccess ${data}`);
+          if (data) {
+            this.closeStreamDialog();
+          }
+        },
+      })
+      .unsubscribe();
   }
 
   public classNames = [{ id: this.listLength, name: '' }];
@@ -64,7 +66,7 @@ export class ClassnameComponent {
   }
 
   dispatchPostSuccessAction(state: boolean) {
-    this.store.dispatch(postSuccessAction({postSuccess: state}));
+    this.store.dispatch(postSuccessAction({ postSuccess: state }));
   }
 
   Geeks() {

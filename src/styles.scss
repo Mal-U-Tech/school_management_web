@@ -8,34 +8,34 @@
 @use "./my-styles.scss" as var;
 @use "@angular/material" as mat;
 
-// @include mat.core();
-//
-// $my-app-primary: mat.define-palette(mat.$indigo-palette);
-// $my-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-// $my-app-warn: mat.define-palette(mat.$red-palette);
-// $my-custom-level: mat.define-typography-level(
-//   $font-family: Roboto,
-//   $font-weight: 400,
-//   $font-size: 1rem,
-//   $line-height: 1,
-//   $letter-spacing: normal,
-// );
-//
-// $my-typography: mat.define-typography-config();
-// @include mat.typography-hierarchy($my-typography);
-//
-// $my-app-theme: mat.define-light-theme(
-//   (
-//     color: (
-//       primary: $my-app-primary,
-//       accent: $my-app-accent,
-//       warn: $my-app-warn,
-//     ),
-//     typography: $my-typography,
-//   )
-// );
-//
-// @include mat.all-component-themes($my-app-theme);
+@include mat.core();
+
+$my-app-primary: mat.define-palette(mat.$indigo-palette);
+$my-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-app-warn: mat.define-palette(mat.$red-palette);
+$my-custom-level: mat.define-typography-level(
+  $font-family: Roboto,
+  $font-weight: 400,
+  $font-size: 1rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$my-typography: mat.define-typography-config();
+@include mat.typography-hierarchy($my-typography);
+
+$my-app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-app-primary,
+      accent: $my-app-accent,
+      warn: $my-app-warn,
+    ),
+    typography: $my-typography,
+  )
+);
+
+@include mat.all-component-themes($my-app-theme);
 
 body {
   width: 100%;
@@ -48,6 +48,11 @@ body {
 html,
 body {
   height: 100%;
+}
+
+table {
+  width: 100%;
+  min-width: 40%;
 }
 
 /* Overwrite the styles of the mat-dialog-container element globally, but only for those

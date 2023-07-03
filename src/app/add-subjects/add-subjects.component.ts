@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   QueryList,
   ViewChildren,
@@ -9,7 +10,14 @@ import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
+import { Store } from '@ngrx/store';
+import { selectDepartmentsArray } from '../store/departments/departments.selector';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IDepartments } from '../shared/add-departments/add-departments.interface';
+import { postSubjectArrayRequest } from '../store/subjects/subjects.actions';
+import { ISubjects } from '../shared/add-subjects/add-subjects.interface';
 
+@UntilDestroy()
 @Component({
   selector: 'app-add-subjects',
   templateUrl: './add-subjects.component.html',
@@ -18,18 +26,10 @@ import { AddDepartmentsService } from '../shared/add-departments/add-departments
 export class AddSubjectsComponent implements OnInit {
   constructor(
     private apiService: AddSubjectsService,
-    private departmentsService: AddDepartmentsService,
-    private _snackBar: MatSnackBar,
-    public router: Router
+    public router: Router,
+    private store: Store
   ) {}
-  public sub: any;
-  public depts: any[] = [
-    {
-      dept_id: '',
-      dept_name: '',
-      subjects: [{ name: '', secondary: false, high_school: false }],
-    },
-  ];
+
   public elements: any[] = [];
 
   @ViewChildren('inputFieldLevel') levels!: QueryList<any>;
@@ -39,21 +39,10 @@ export class AddSubjectsComponent implements OnInit {
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
   public dialogTitle = 'Add Subjects';
+  departments$ = this.store.select(selectDepartmentsArray);
 
   public deptSubs: any[] = [];
   ngOnInit(): void {
-    // this.sub = this._Activatedroute.queryParams.subscribe((params) => {
-    //   this.depts = JSON.parse(params['departments']);
-    //   this.depts.forEach((el) => {
-    //     console.log(el);
-    //     this.elements.push({
-    //       dept_id: el._id,
-    //       dept_name: el.name,
-    //       subjects: [{ name: '', level: '' }],
-    //     });
-    //   });
-    // });
-
     this.retrieveDepartmentsService();
   }
 
@@ -66,27 +55,20 @@ export class AddSubjectsComponent implements OnInit {
   }
 
   retrieveDepartmentsService() {
-    this.departmentsService.viewAllDepartments(0, 0).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        data.forEach((el: any) => {
-          console.log(el);
-          this.elements.push({
-            dept_id: el._id,
-            dept_name: el.name,
-            subjects: [{ name: '', secondary: false, high_school: false }],
-            pass_mark: 0,
+    this.departments$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: IDepartments[]) => {
+        if (data.length) {
+          data.forEach((el: IDepartments) => {
+            this.elements.push({
+              dept_id: el._id,
+              dept_name: el.name,
+              subjects: [{ name: '', secondary: false, high_school: false }],
+              pass_mark: 0,
+            });
           });
-        });
-      },
-      error: (err) => {
-        console.log(err.toString());
-      },
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
+        }
+      });
   }
 
   addIn(num: number) {
@@ -94,7 +76,7 @@ export class AddSubjectsComponent implements OnInit {
   }
 
   addSubjects() {
-    const data: any[] = [];
+    const data: ISubjects[] = [];
 
     // remove any subjects currently stored
     this.apiService.secondarySubjects = [];
@@ -141,24 +123,9 @@ export class AddSubjectsComponent implements OnInit {
     }
 
     console.log(data);
-
-    this.apiService.postSubjects({ subjects: data }).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.closeSubjectDialog();
-        this.openSnackBar('Successfully added subjects', 'Close');
-        // this.router.navigate(['/dashboard']);
-      },
-      error: (error) => {
-        this.closeSubjectDialog();
-        this.openSnackBar(error, 'Close');
-      },
-    });
-
-    console.log({ subjects: data });
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+    this.store.dispatch(
+      postSubjectArrayRequest({ subjects: { subjects: data } })
+    );
+    this.closeSubjectDialog();
   }
 }

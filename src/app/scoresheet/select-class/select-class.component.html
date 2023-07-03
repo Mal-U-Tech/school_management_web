@@ -1,5 +1,8 @@
 <div class="add-marks-wrapper">
   <div class="instructions">
+    <div class="title">
+      <span>{{ title }}</span>
+    </div>
     Select a class and subject to add students marks
     <button
       mat-raised-button
@@ -12,11 +15,7 @@
 
   <div class="pass-controls-added">
     <div class="spinner-container">
-      <mat-spinner
-        *ngIf="isLoadingPassControls"
-        mode="indeterminate"
-        class="controls-spinner"
-      ></mat-spinner>
+      <app-spinner [isLoading]="isLoadingPassControls"></app-spinner>
     </div>
     <div *ngFor="let controls of passControls; let i = index">
       <button
@@ -56,7 +55,7 @@
 
           <mat-action-row>
             <!--View class marks button-->
-            <div class="class-marks-wrapper">
+            <div class="class-marks-wrapper" *ngIf="!isScoresheetLoading">
               <button mat-stroked-button (click)="navigateToClassMarks(class)">
                 View Marks
               </button>

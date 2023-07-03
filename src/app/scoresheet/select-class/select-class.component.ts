@@ -1,18 +1,23 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
-import { IMarks } from 'src/app/shared/marks/marks.interface';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { PassControlsService } from 'src/app/shared/pass-controls/pass-controls.service';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
+import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
+import { IUser } from 'src/app/shared/user/user.interface';
+import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
+import { selectUserData } from 'src/app/store/user/user.selector';
 
+@UntilDestroy()
 @Component({
   selector: 'app-select-class',
   templateUrl: './select-class.component.html',
@@ -27,14 +32,27 @@ export class SelectClassComponent implements AfterViewInit {
     public marksService: MarksService,
     private dialog: MatDialog,
     private passControlsService: PassControlsService,
-    private classStudentsService: ClassStudentsService
-  ) {}
+    private classStudentsService: ClassStudentsService,
+    private store: Store
+  ) {
+    this.title = this.service.name + ' Scoresheet';
+  }
+
+  teachers$ = this.store.select(selectTeacherArray);
+  user$ = this.store.select(selectUserData);
 
   ngAfterViewInit(): void {
+    // get scoresheet name
+    // try {
+    // } catch (error) {
+    //   console.log(`This is error in title`);
+    // }
+
     this.service
       .getStreamsFromScoresheet(this.service.selectedScoresheetId)
       .subscribe({
         next: (data: any) => {
+          console.log(data);
           for (let i = 0; i < data[0].classes.length; i++) {
             const temp = data[0].classes[i];
 
@@ -69,6 +87,7 @@ export class SelectClassComponent implements AfterViewInit {
   passControls: IPassControls[] = [];
   isLoadingPassControls = true;
   isScoresheetLoading = false;
+  title = '';
 
   setSelectedClass(index: number) {
     this.selectedClass = index;
@@ -83,13 +102,35 @@ export class SelectClassComponent implements AfterViewInit {
   }
 
   checkTeacher(subjectId: string, classId: string) {
-    const currentUser = JSON.parse(sessionStorage.getItem('user') || '');
+    let currentUser: any; // JSON.parse(sessionStorage.getItem('user') || '');
+    this.user$.subscribe({
+      next: (data: IUser) => {
+        console.log(data);
+        if (data) {
+          currentUser = data;
+        }
+      },
+    });
+
+    // get teacher id from teachers
+    // compare the current user's id and the user id from the teachers array for each teacher
+    let teacherId = '';
+    this.teachers$.pipe(untilDestroyed(this)).subscribe({
+      next: (data: ITeacher[]) => {
+        data.forEach((teacher: ITeacher) => {
+          if (teacher.user_id._id == currentUser._id) {
+            teacherId = teacher._id;
+          }
+        });
+      },
+    });
+
     console.log(currentUser);
     // let teacherId = '6442e23f66c6b3a6650b0f02';
     this.subjectTeacher
       .getTeacherForSubject(
         subjectId,
-        currentUser.teacher_id,
+        teacherId,
         classId,
         this.service.selectedYear
       )

@@ -1,4 +1,4 @@
-<div class="add-marks-wrapper mat-typography">
+<div class="add-marks-wrapper">
   <section class="subject-info-wrapper">
     <mat-grid-list cols="2" rowHeight="100px">
       <mat-grid-tile
@@ -51,9 +51,17 @@
 
   <section class="buttons-container">
     <div class="finish-button">
-      <button mat-raised-button color="primary" (click)="saveScoresheetMarks()">
+      <button
+        *ngIf="!isFinishClicked"
+        mat-raised-button
+        color="primary"
+        (click)="saveScoresheetMarks()"
+      >
         <mat-icon>assignment_turned_in</mat-icon> Finish
       </button>
+
+      <!-- Progress indicator for submitting marks-->
+      <app-spinner [isLoading]="isFinishClicked"></app-spinner>
     </div>
 
     <div class="upload-excel-sheet">
@@ -71,7 +79,7 @@
             (click)="exportToExcel()"
             class="get-class-marks-sheet"
           >
-            <mat-icon></mat-icon>Get Class Marks Sheet
+            <mat-icon>cloud_download</mat-icon>Download Class List
           </button>
         </div>
 
@@ -89,17 +97,19 @@
   </section>
 
   <section class="students-table-wrapper">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" fixedLayout="true">
       <!--Position Column-->
-      <ng-container class="index" matColumnDef="index">
-        <th mat-header *matHeaderCellDef>Index</th>
-        <td mat-cell *matCellDef="let element">{{ element.index }}</td>
+      <ng-container matColumnDef="index">
+        <th mat-header *matHeaderCellDef width="10%">Index</th>
+        <td data-label="Index" class="index" mat-cell *matCellDef="let element">
+          {{ element.index }}
+        </td>
       </ng-container>
 
       <!-- Student Name Surname Column -->
       <ng-container matColumnDef="name_surname">
-        <th mat-header *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header *matHeaderCellDef width="60%">Name</th>
+        <td data-label="Name" mat-cell *matCellDef="let element">
           {{ element.name }} {{ element.surname }}
         </td>
       </ng-container>
@@ -107,7 +117,7 @@
       <!-- Student Score -->
       <ng-container class="score-field" matColumnDef="score">
         <th mat-header *matHeaderCellDef>Score</th>
-        <td mat-cell *matCellDef="let element">
+        <td data-label="Score" mat-cell *matCellDef="let element">
           <mat-form-field>
             <input
               type="number"
@@ -127,13 +137,19 @@
       <!-- Percentage column -->
       <ng-container matColumnDef="percentage">
         <th mat-header *matHeaderCellDef>Percentage</th>
-        <td mat-cell *matCellDef="let element">
+        <td data-label="Percentage" mat-cell *matCellDef="let element">
           {{ element.percentage }}
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <div class="row-container">
+        <tr
+          class="row-container"
+          mat-header-row
+          *matHeaderRowDef="displayedColumns"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </div>
     </table>
   </section>
 </div>
