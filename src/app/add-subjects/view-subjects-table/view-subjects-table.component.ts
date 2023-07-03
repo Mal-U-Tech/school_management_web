@@ -88,7 +88,7 @@ export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
 
   loadData() {
     this.dispatchSubjectsIsLoading(true);
-    this.subjects$.subscribe((data: ISubjects[]) => {
+    this.subjects$.pipe(untilDestroyed(this)).subscribe((data: ISubjects[]) => {
       console.log('running from subjects subscribe');
       if (data.length) {
         const arr: SUBJECT[] = [];
