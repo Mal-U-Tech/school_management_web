@@ -31,6 +31,10 @@ import {
 } from '../store/subjects/subjects.actions';
 import { getTeachersRequest } from '../store/teacher/teacher.actions';
 import { selectTeacherArray } from '../store/teacher/teacher.selector';
+import {
+  classStudentsIsLoading,
+  getClassStudentsArrayRequest,
+} from '../store/class-students/class-students.actions';
 
 interface TEACHER {
   _id: string;
@@ -152,7 +156,7 @@ export class AcademicsComponent implements OnInit {
   public user: any;
   schoolInfo$ = this.store.select(selectSchoolInfo);
   user$ = this.store.select(selectUserData);
-  teachers$ = this.store.select(selectTeacherArray);
+  // teachers$ = this.store.select(selectTeacherArray);
 
   dispatchStreamsIsLoading() {
     this.store.dispatch(streamsIsLoading({ streamsIsLoading: true }));
@@ -168,6 +172,12 @@ export class AcademicsComponent implements OnInit {
 
   dispatchTeachersIsLoading() {
     this.store.dispatch(departmentsIsLoading({ departmentsIsLoading: true }));
+  }
+
+  dispatchClassStudentIsLoading() {
+    this.store.dispatch(
+      classStudentsIsLoading({ classStudentsIsLoading: true })
+    );
   }
 
   getStreams() {
@@ -215,47 +225,45 @@ export class AcademicsComponent implements OnInit {
   }
 
   getTeachers() {
-
     this.dispatchTeachersIsLoading();
-    this.store.dispatch(getTeachersRequest({currentPage: 0, pageSize: 0}));
+    this.store.dispatch(getTeachersRequest({ currentPage: 0, pageSize: 0 }));
 
-    this.teachers$.pipe(untilDestroyed(this))
-      .subscribe({
-        next: (data: ITeacher[]) => {
-          this.teacherCount = data.length.toString();
-
-          // get current user
-          // this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
-          //   // compute teacher title and store in session storage
-          //   sessionStorage.setItem(
-          //     'teachers',
-          //     JSON.stringify(this.assignTeacherTitles(data))
-          //   );
-          //
-          //   // find out if current user is a teacher
-          //   // console.log(data);
-          //   data.forEach((element: any) => {
-          //     if (element.user_id._id == user._id) {
-          //       // console.log('I am a teacher');
-          //       sessionStorage.setItem(
-          //         'user',
-          //         JSON.stringify({
-          //           _id: user._id,
-          //           name: user.name,
-          //           surname: user.surname,
-          //           contact: user.contact,
-          //           email: user.email,
-          //           teacher_id: element._id,
-          //         })
-          //       );
-          //     }
-          //   });
-          // });
-        },
-        error: (err) => {
-          this.teacherApi.errorToast(err.toString());
-        },
-      });
+    // this.teachers$.pipe(untilDestroyed(this)).subscribe({
+    //   next: (data: ITeacher[]) => {
+    //     this.teacherCount = data.length.toString();
+    //
+    //     // get current user
+    //     // this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
+    //     //   // compute teacher title and store in session storage
+    //     //   sessionStorage.setItem(
+    //     //     'teachers',
+    //     //     JSON.stringify(this.assignTeacherTitles(data))
+    //     //   );
+    //     //
+    //     //   // find out if current user is a teacher
+    //     //   // console.log(data);
+    //     //   data.forEach((element: any) => {
+    //     //     if (element.user_id._id == user._id) {
+    //     //       // console.log('I am a teacher');
+    //     //       sessionStorage.setItem(
+    //     //         'user',
+    //     //         JSON.stringify({
+    //     //           _id: user._id,
+    //     //           name: user.name,
+    //     //           surname: user.surname,
+    //     //           contact: user.contact,
+    //     //           email: user.email,
+    //     //           teacher_id: element._id,
+    //     //         })
+    //     //       );
+    //     //     }
+    //     //   });
+    //     // });
+    //   },
+    //   error: (err) => {
+    //     this.teacherApi.errorToast(err.toString());
+    //   },
+    // });
   }
 
   // function to assign teacher title for all teachers
@@ -281,14 +289,18 @@ export class AcademicsComponent implements OnInit {
   }
 
   getClassStudents() {
-    this.clasStudentsApi.getAllLearners(0, 0).subscribe({
-      next: (data: any) => {
-        this.classStudentsCount = data.length.toString();
-      },
-      error: (error) => {
-        this.clasStudentsApi.errorToast(error.toString());
-      },
-    });
+    this.dispatchClassStudentIsLoading();
+    this.store.dispatch(
+      getClassStudentsArrayRequest({ currentPage: 0, pageSize: 0 })
+    );
+    // this.clasStudentsApi.getAllLearners(0, 0).subscribe({
+    //   next: (data: any) => {
+    //     this.classStudentsCount = data.length.toString();
+    //   },
+    //   error: (error) => {
+    //     this.clasStudentsApi.errorToast(error.toString());
+    //   },
+    // });
   }
 
   getSubjectTeachers() {
