@@ -1,7 +1,12 @@
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
+import {
+  classStudentsIsLoading,
+  updateClassStudentObjectRequest,
+} from 'src/app/store/class-students/class-students.actions';
 
 @Component({
   selector: 'app-update-class-student',
@@ -11,7 +16,8 @@ import { ClassStudentsService } from 'src/app/shared/class-students/class-studen
 export class UpdateClassStudentComponent {
   constructor(
     private apiService: ClassStudentsService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private store: Store
   ) {
     const student = data.student;
     this._id = student._id;
@@ -64,8 +70,17 @@ export class UpdateClassStudentComponent {
     this.onLoadData.emit();
   }
 
+  dispatchClassStudentsIsLoading(state: boolean) {
+    this.store.dispatch(
+      classStudentsIsLoading({ classStudentsIsLoading: state })
+    );
+  }
+
   // method to update class student in database
   updateClassStudent() {
+    // start loading progress indicator.
+    this.dispatchClassStudentsIsLoading(true);
+
     const student: IClassStudent = {
       _id: this._id,
       name: this.name,
@@ -76,19 +91,24 @@ export class UpdateClassStudentComponent {
       class_id: this.classSelection._id,
     };
 
-    this.apiService.updateStudent(this._id, student).subscribe({
-      next: (data: IClassStudent) => {
-        console.log(data);
-        setTimeout(() => {
-          this.onLoadDataClicked();
-        }, 1000);
-        this.apiService.successToast('Successfully updated class student');
-        this.onCloseClicked();
-      },
-      error: (error) => {
-        this.apiService.errorToast(error);
-        this.onCloseClicked();
-      },
-    });
+    // dispatch action to update class student in effect
+    this.store.dispatch(
+      updateClassStudentObjectRequest({ id: this._id, classStudent: student })
+    );
+    this.onCloseClicked();
+    // this.apiService.updateStudent(this._id, student).subscribe({
+    //   next: (data: IClassStudent) => {
+    //     console.log(data);
+    //     setTimeout(() => {
+    //       this.onLoadDataClicked();
+    //     }, 1000);
+    //     this.apiService.successToast('Successfully updated class student');
+    //     this.onCloseClicked();
+    //   },
+    //   error: (error) => {
+    //     this.apiService.errorToast(error);
+    //     this.onCloseClicked();
+    //   },
+    // });
   }
 }

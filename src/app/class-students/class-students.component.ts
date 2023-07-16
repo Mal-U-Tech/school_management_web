@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Inject, Input } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { IClassStudent } from '../shared/class-students/class-students.interface';
 import { ClassStudentsService } from '../shared/class-students/class-students.service';
-
-export interface StreamDialogData {
-  _id: string;
-  name: string;
-}
+import { IClassname } from '../shared/classname/classname.interface';
+import { postClassStudentObjectRequest } from '../store/class-students/class-students.actions';
 
 @Component({
   selector: 'app-class-students',
@@ -15,9 +13,11 @@ export interface StreamDialogData {
 })
 export class ClassStudentsComponent {
   constructor(
-    private apiService: ClassStudentsService,
-    @Inject(MAT_DIALOG_DATA) public data: StreamDialogData[]
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: IClassname[],
+    private store: Store
+  ) {
+    console.log(data);
+  }
 
   // dialog title
   public title = 'Add Student';
@@ -71,7 +71,7 @@ export class ClassStudentsComponent {
 
   // method to submit class studnet to database via api
   saveClassStudent() {
-    const student = {
+    const student: IClassStudent = {
       name: this.name,
       surname: this.surname,
       student_contact: this.student_contact,
@@ -80,18 +80,23 @@ export class ClassStudentsComponent {
       class_id: this.classSelection._id,
     };
 
-    this.apiService.postStudent(student).subscribe({
-      next: (data: IClassStudent) => {
-        console.log(data);
-        this.closeClassStudentDialog();
-        this.apiService.successToast('Successfully added student');
-        this.res = 1;
-      },
-      error: (error) => {
-        this.closeClassStudentDialog();
-        this.apiService.errorToast(error);
-        this.res = 0;
-      },
-    });
+    this.store.dispatch(
+      postClassStudentObjectRequest({ classStudent: student })
+    );
+    this.closeClassStudentDialog();
+
+    // this.apiService.postStudent(student).subscribe({
+    //   next: (data: IClassStudent) => {
+    //     console.log(data);
+    //     this.closeClassStudentDialog();
+    //     this.apiService.successToast('Successfully added student');
+    //     this.res = 1;
+    //   },
+    //   error: (error) => {
+    //     this.closeClassStudentDialog();
+    //     this.apiService.errorToast(error);
+    //     this.res = 0;
+    //   },
+    // });
   }
 }

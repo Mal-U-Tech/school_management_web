@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -14,7 +15,21 @@ import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { ClassStudentsComponent } from '../class-students.component';
 import { DialogConfirmClassStudentDeleteComponent } from '../dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
 import { UpdateClassStudentComponent } from '../update-class-student/update-class-student.component';
-import { map } from 'rxjs';
+import { delay, map, of, takeWhile, tap } from 'rxjs';
+import {
+  classStudentsIsLoading,
+  classStudentsPaginatorOptions,
+  deleteClassStudentObjectRequest,
+  getClassStudentsArrayError,
+} from 'src/app/store/class-students/class-students.actions';
+import {
+  selectClassStudentArray,
+  selectClassStudentIsLoading,
+  selectClassStudentPaginatorOptions,
+} from 'src/app/store/class-students/class-students.selectors';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
+import { IClassname } from 'src/app/shared/classname/classname.interface';
 
 interface CLASS_STUDENT {
   _id: string;
@@ -27,13 +42,16 @@ interface CLASS_STUDENT {
   gender: string;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-view-class-students-table',
   templateUrl: './view-class-students-table.component.html',
   styleUrls: ['./view-class-students-table.component.scss'],
 })
-export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA: CLASS_STUDENT[] = [];
+export class ViewClassStudentsTableComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  alive = true;
   isLoading = false;
   totalRows = 0;
   pageSize = 10;
@@ -52,7 +70,13 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<CLASS_STUDENT> = new MatTableDataSource();
   onOpenDialog = new EventEmitter();
   dialogRef: any;
+  streams: IClassname[] = [];
   streams$ = this.store.select(selectStreamsArray);
+  classStudents$ = this.store.select(selectClassStudentArray);
+  paginator$ = this.store.select(selectClassStudentPaginatorOptions);
+  classStudentsLoadingIndicator$ = this.store.select(
+    selectClassStudentIsLoading
+  );
 
   constructor(
     private api: ClassStudentsService,
@@ -70,69 +94,70 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
     this.loadData();
   }
 
-  loadData() {
-    this.isLoading = true;
-
-    this.api.getAllLearners(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
-        console.log(data);
-
-        const arr: CLASS_STUDENT[] = [];
-        let tempArray: any;
-        let stream: any;
-        // if (sessionStorage.getItem('streams') != null) {
-        //   tempArray = JSON.parse(sessionStorage.getItem('streams')!);
-        // }
-        this.streams$.pipe(map((data) => (tempArray = data)));
-
-        for (let i = 0; i < data.data.length; i++) {
-          const temp = data.data[i];
-
-          tempArray.forEach((element: any) => {
-            console.log(`This is the index ${element}`);
-            // const stream = temp[i];
-
-            if (element._id == temp.class_id) {
-              stream = element.name;
-            }
-            console.log(element.name);
-          });
-
-          arr.push({
-            _id: temp._id,
-            class: { _id: temp.class_id, name: stream },
-            index: `${i + 1}`,
-            name: temp.name,
-            surname: temp.surname,
-            student_contact: temp.student_contact,
-            year: temp.year,
-            gender: temp.gender,
-          });
-        }
-        this.dataSource.data = arr;
-
-        setTimeout(() => {
-          this.paginator.pageIndex = this.currentPage;
-          this.paginator.length = data.count;
-        }, 1000);
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.log(err);
-        this.dataSource.data = [];
-        this.isLoading = false;
-      },
-    });
+  ngOnDestroy(): void {
+    this.alive = false;
   }
 
-  deleteRow(data: any) {
-    console.log(data);
-    this.api.deleteStudent(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
+  dispatchClassStudentsIsLoading(state: boolean) {
+    this.store.dispatch(
+      classStudentsIsLoading({ classStudentsIsLoading: state })
+    );
+  }
+
+  loadData() {
+    this.dispatchClassStudentsIsLoading(true);
+
+    this.classStudents$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (classStudents: IClassStudent[]) => {
+        if (classStudents.length) {
+          const arr: CLASS_STUDENT[] = [];
+
+          let stream: any;
+
+          this.streams$.pipe(takeWhile(() => this.alive)).subscribe({
+            next: (data) => {
+              if (data.length) {
+                this.streams = data;
+              }
+            },
+          });
+
+          for (let i = 0; i < classStudents.length; i++) {
+            const temp = classStudents[i];
+
+            this.streams.forEach((element: any) => {
+              if (element._id == temp.class_id) {
+                stream = element.name;
+              }
+            });
+
+            arr.push({
+              _id: temp._id || '',
+              class: { _id: temp.class_id, name: stream },
+              index: `${i + 1}`,
+              name: temp.name,
+              surname: temp.surname,
+              student_contact: temp.student_contact,
+              year: temp.year,
+              gender: temp.gender,
+            });
+          }
+          this.dispatchClassStudentsIsLoading(false);
+          this.dataSource.data = arr;
+        }
+      },
+      error: (error) => {
+        this.dispatchClassStudentsIsLoading(false);
+        this.store.dispatch(getClassStudentsArrayError({ message: error }));
+      },
+    });
+
+    this.paginator$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data) => {
+        if (data) {
+          this.paginator.pageIndex = data.currentPage;
+          this.paginator.length = data.count;
+        }
       },
       error: (error) => {
         console.log(error);
@@ -140,10 +165,21 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
     });
   }
 
+  deleteRow(data: any) {
+    console.log(data);
+    this.store.dispatch(deleteClassStudentObjectRequest({ id: data._id }));
+  }
+
   pageChanged(event: PageEvent) {
-    console.log({ event });
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
+    this.store.dispatch(
+      classStudentsPaginatorOptions({
+        paginator: {
+          currentPage: event.pageIndex,
+          pageSize: event.pageSize,
+          count: 0,
+        },
+      })
+    );
     this.loadData();
   }
 
@@ -154,7 +190,7 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
     dialogConfig.closeOnNavigation = true;
     dialogConfig.width = '45%';
     dialogConfig.height = '80%';
-    dialogConfig.data = JSON.parse(sessionStorage.getItem('streams') || ''); // TODO: make this guy work
+    dialogConfig.data = this.streams; // TODO: make this guy work
 
     this.dialogRef = this.dialog.open(ClassStudentsComponent, dialogConfig);
     const instance = this.dialogRef.componentInstance;
@@ -165,9 +201,7 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
 
     instance.onSubmit.subscribe(() => {
       instance.saveClassStudent();
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
+      this.dialogRef.close();
     });
   }
 
@@ -178,7 +212,7 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
     dialogConfig.autoFocus = false;
     dialogConfig.disableClose = false;
     dialogConfig.data = {
-      streams: JSON.parse(sessionStorage.getItem('streams') || ''),
+      streams: this.streams,
       student: student,
     };
 
@@ -194,6 +228,7 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
 
     instance.onSubmit.subscribe(() => {
       instance.updateClassStudent();
+      this.dialogRef.close();
     });
 
     instance.onLoadData.subscribe(() => {
@@ -204,24 +239,17 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
   openDeleteClassStudentDialog(student: any) {
     console.log(student);
 
-    // get stream from session storage
-    // console.log(sessionStorage.getItem('streams'));
-    let temp: any;
     let currentStream: any;
 
-    if (sessionStorage.getItem('streams') != null) {
-      console.log(`This is where I'm at`);
-      temp = JSON.parse(sessionStorage.getItem('streams')!);
-      console.log(`This is temp ${typeof temp[0].name}`);
-
-      temp.forEach((element: any) => {
-        console.log(`This is the index ${element}`);
-        // const stream = temp[i];
-
-        if (element._id == student.class_id) {
+    if (this.streams != null) {
+      this.streams.forEach((element: any) => {
+        console.table(student);
+        console.table(element);
+        if (element._id == student.class._id) {
+          console.log('I am here.');
           currentStream = element.name;
         }
-        console.log(element.name);
+        console.log(currentStream);
       });
 
       console.log(`After the for loop ${currentStream}`);
@@ -242,7 +270,7 @@ export class ViewClassStudentsTableComponent implements OnInit, AfterViewInit {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });
