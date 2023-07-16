@@ -16,11 +16,15 @@ import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
 import { IDepartments } from 'src/app/shared/add-departments/add-departments.interface';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
+import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
+import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
+import { selectClassStudentArray } from 'src/app/store/class-students/class-students.selectors';
 import { selectDepartmentsArray } from 'src/app/store/departments/departments.selector';
 import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { selectSubjectsArray } from 'src/app/store/subjects/subjects.selector';
+import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
 import { SubjectTeacherComponent } from 'src/app/subject-teacher/subject-teacher.component';
 import { TeacherComponent } from 'src/app/teacher/teacher.component';
 
@@ -44,7 +48,6 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
   @Input() deptCount = '0';
   @Input() teacherCount = '0';
   @Input() classStudentsCount = '0';
-  @Input() classStreams: any[] = [];
   @Input() subjectTeachersCount = '0';
   @Input() classTeachersCount = '0';
   @Input() hodCount = '0';
@@ -52,14 +55,17 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
   public streams$ = this.store.select(selectStreamsArray);
   public departments$ = this.store.select(selectDepartmentsArray);
   public subjects$ = this.store.select(selectSubjectsArray);
+  public teachers$ = this.store.select(selectTeacherArray);
+  public classStudents$ = this.store.select(selectClassStudentArray);
+
+  // streams variable to add in class students component
+  streams: IClassname[] = [];
 
   ngAfterViewInit(): void {
     this.streams$.pipe(untilDestroyed(this)).subscribe((data: IClassname[]) => {
       if (data.length) {
-        console.log(data.length);
-        this.streamsCount = data.length.toString();
-        // console.log('After assigning streamsCount ' + this.streamsCount);
-        this.numberOfItems[1] = this.streamsCount;
+        this.numberOfItems[1] = data.length.toString();
+        this.streams = data;
       }
     });
 
@@ -68,19 +74,32 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
       .subscribe((data: IDepartments[]) => {
         console.log(data);
         if (data.length) {
-          // console.log(`Departments data: ${data.length}`);
-          this.deptCount = data.length.toString();
-          this.numberOfItems[2] = this.deptCount;
+          this.numberOfItems[2] = data.length.toString();
         }
       });
 
     this.subjects$.pipe(untilDestroyed(this)).subscribe((data: ISubjects[]) => {
       if (data.length) {
         console.log(`Subjects data: ${data.length}`);
-        this.subjectCount = data.length.toString();
-        this.numberOfItems[3] = this.subjectCount;
+        this.numberOfItems[3] = data.length.toString();
       }
     });
+
+    this.teachers$.pipe(untilDestroyed(this)).subscribe((data: ITeacher[]) => {
+      if (data.length) {
+        console.log(`Teachers data: ${data.length}`);
+        this.numberOfItems[4] = data.length.toString();
+      }
+    });
+
+    this.classStudents$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: IClassStudent[]) => {
+        if (data.length) {
+          console.log(`Class Students data: ${data.length}`);
+          this.numberOfItems[5] = data.length.toString();
+        }
+      });
   }
 
   dialogRef: any;
@@ -117,12 +136,6 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
 
       this.instance.onSubmit.subscribe(() => {
         this.instance.Geeks();
-        setTimeout(() => {
-          if (this.instance.res === 1)
-            this.numberOfItems[1] = (
-              Number(this.numberOfItems[1]) + 1
-            ).toString();
-        }, 1000);
       });
     } else if (component == 'AddSubjectsComponent') {
       this.dialogRef = this.dialog.open(AddSubjectsComponent, dialogConfig);
@@ -134,13 +147,6 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
 
       this.instance.onSubmit.subscribe(() => {
         this.instance.addSubjects();
-        setTimeout(() => {
-          if (this.instance.res == 1) {
-            this.numberOfItems[2] = (
-              Number(this.numberOfItems[2]) + 1
-            ).toString();
-          }
-        }, 1000);
       });
     } else if (component == 'AddDepartmentsComponent') {
       this.dialogRef = this.dialog.open(AddDepartmentsComponent, dialogConfig);
@@ -152,13 +158,6 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
 
       this.instance.onSubmit.subscribe(() => {
         this.instance.submitDepartments();
-        setTimeout(() => {
-          if (this.instance.res == 1) {
-            this.numberOfItems[3] = (
-              Number(this.numberOfItems[3]) + 1
-            ).toString();
-          }
-        }, 1000);
       });
     } else if (component == 'AddTeacherComponent') {
       this.buildAddTeacherDialog(dialogConfig);
@@ -184,20 +183,14 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
 
     this.instance.onSubmit.subscribe(() => {
       this.instance.saveTeacher();
-      setTimeout(() => {
-        if (this.instance.res == 1) {
-          this.numberOfItems[4] = (
-            Number(this.numberOfItems[4]) + 1
-          ).toString();
-        }
-      }, 1000);
     });
   }
 
   // function to build add class students dialog
   buidAddClassStudentsDialog(dialogConfig: MatDialogConfig) {
-    dialogConfig.data = this.classStreams;
+    dialogConfig.data = this.streams;
     this.dialogRef = this.dialog.open(ClassStudentsComponent, dialogConfig);
+
     this.instance = this.dialogRef.componentInstance;
 
     this.instance.onClose.subscribe(() => {
@@ -206,13 +199,6 @@ export class DashboardCardComponent implements AfterViewInit, OnChanges {
 
     this.instance.onSubmit.subscribe(() => {
       this.instance.saveClassStudent();
-      setTimeout(() => {
-        if (this.instance.res == 1) {
-          this.numberOfItems[5] = (
-            Number(this.numberOfItems[5]) + 1
-          ).toString();
-        }
-      }, 1000);
     });
 
     this.instance.onConfirmAddByExcel.subscribe(() => {
