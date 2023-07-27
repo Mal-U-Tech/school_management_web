@@ -4,6 +4,9 @@ import { Store } from '@ngrx/store';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
 import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
+import { subjectTeacherIsLoading, updateSubjectTeacherRequest } from 'src/app/store/subject-teachers/subject-teachers.actions';
+import { selectSubjectsArray } from 'src/app/store/subjects/subjects.selector';
+import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
 
 @Component({
   selector: 'app-update-subject-teacher',
@@ -38,7 +41,7 @@ export class UpdateSubjectTeacherComponent {
 
     this.year = subjectTeacher.year.toString();
 
-    this.loadData();
+    // this.loadData();
   }
 
   _id = '';
@@ -72,6 +75,8 @@ export class UpdateSubjectTeacherComponent {
   onLoadData = new EventEmitter();
 
   streams$ = this.store.select(selectStreamsArray);
+  subjects$ = this.store.select(selectSubjectsArray);
+  teachers$ = this.store.select(selectTeacherArray);
 
   onCloseClicked() {
     this.onClose.emit();
@@ -97,26 +102,33 @@ export class UpdateSubjectTeacherComponent {
   }
 
   selectTeacher(teacher: any) {
-    this.teacherSelection.title = teacher.title;
+    this.teacherSelection.title = this.apiService.computeTeacherTitle(
+      teacher.gender,
+      teacher.marital_status
+    );
     this.teacherSelection._id = teacher._id;
-    this.teacherSelection.name = teacher.name;
-    this.teacherSelection.surname = teacher.surname;
+    this.teacherSelection.name = teacher.user_id.name;
+    this.teacherSelection.surname = teacher.user_id.surname;
     console.log(this.teacherSelection);
   }
 
-  loadData() {
-    // this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
-    this.streams$.subscribe({
-      next: (data: IClassname[]) => {
-        if (data != null) {
-          this.classes = data;
-        }
-      },
-    });
+  // loadData() {
+  //   // this.classes = JSON.parse(sessionStorage.getItem('streams') || '');
+  //   this.streams$.subscribe({
+  //     next: (data: IClassname[]) => {
+  //       if (data != null) {
+  //         this.classes = data;
+  //       }
+  //     },
+  //   });
+  //
+  //   this.subjects = JSON.parse(sessionStorage.getItem('subjects') || '');
+  //
+  //   this.teachers = JSON.parse(sessionStorage.getItem('teachers') || '');
+  // }
 
-    this.subjects = JSON.parse(sessionStorage.getItem('subjects') || '');
-
-    this.teachers = JSON.parse(sessionStorage.getItem('teachers') || '');
+  dispatchSubjectTeacherIsLoading(){
+    this.store.dispatch(subjectTeacherIsLoading({subjectTeacherIsLoading: true}));
   }
 
   updateSubjectTeacher() {
@@ -127,21 +139,24 @@ export class UpdateSubjectTeacherComponent {
       subject_id: this.subjectSelection._id,
       year: this.year,
     };
-    console.log(teacher);
 
-    this.apiService.updateSubjectTeacher(this._id, teacher).subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.apiService.successToast('Successfully updated subject teachers.');
-        setTimeout(() => {
-          this.onLoadDataClicked();
-        }, 1000);
-        this.onCloseClicked();
-      },
-      error: (error) => {
-        this.apiService.errorToast(error);
-        this.onCloseClicked();
-      },
-    });
+    this.store.dispatch(
+      updateSubjectTeacherRequest({ id: this._id, subjectTeacher: teacher })
+    );
+
+    // this.apiService.updateSubjectTeacher(this._id, teacher).subscribe({
+    //   next: (data: any) => {
+    //     console.log(data);
+    //     this.apiService.successToast('Successfully updated subject teachers.');
+    //     setTimeout(() => {
+    //       this.onLoadDataClicked();
+    //     }, 1000);
+    //     this.onCloseClicked();
+    //   },
+    //   error: (error) => {
+    //     this.apiService.errorToast(error);
+    //     this.onCloseClicked();
+    //   },
+    // });
   }
 }

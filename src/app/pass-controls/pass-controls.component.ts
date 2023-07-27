@@ -1,29 +1,32 @@
-import { Component, EventEmitter, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { takeWhile } from 'rxjs';
 import { ISubjects } from '../shared/add-subjects/add-subjects.interface';
 import { PassControlsService } from '../shared/pass-controls/pass-controls.service';
+import { IScoresheet } from '../shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from '../shared/scoresheet/scoresheet.service';
+import {
+  postPassControlsRequest,
+  updatePassControlsRequest,
+} from '../store/pass-controls/pass-control.action';
+import { selectChosenScoresheet } from '../store/scoresheet/scoresheet.selector';
 import { selectSubjectsArray } from '../store/subjects/subjects.selector';
 import { IPassControls } from './models/pass-controls.model';
 
-@UntilDestroy()
 @Component({
   selector: 'app-pass-controls',
   templateUrl: './pass-controls.component.html',
   styleUrls: ['./pass-controls.component.scss'],
-  // providers: [PassControlStore],
 })
-export class PassControlsComponent {
+export class PassControlsComponent implements OnDestroy {
   constructor(
     private api: PassControlsService,
     private scoresheetSerivce: ScoresheetService,
     @Inject(MAT_DIALOG_DATA) public dialogData: IPassControls,
-    private store: Store
+    private store: Store,
   ) {
     this.loadData();
-    this.scoresheetId = this.scoresheetSerivce.selectedScoresheetId;
   }
   name = 'Add Passing Subject';
   mark = 0;
@@ -38,6 +41,8 @@ export class PassControlsComponent {
   title = 'Pass Controls';
   dummy?: IPassControls;
   subjects$ = this.store.select(selectSubjectsArray);
+  scoresheet$ = this.store.select(selectChosenScoresheet);
+  alive = true;
 
   // constructor(private api: PassControlsService) {}
 
@@ -54,7 +59,9 @@ export class PassControlsComponent {
     this.onCloseDialog.emit(value || null);
   }
 
-  // ngOnInit(): void {}
+  ngOnDestroy(): void {
+    this.alive = false;
+  }
 
   passingSubjectSelected(subject: ISubjects) {
     this.name = subject.name;
@@ -63,9 +70,17 @@ export class PassControlsComponent {
   }
 
   loadData() {
-    let subs: ISubjects[] = []; // = JSON.parse(sessionStorage.getItem('subjects') || '');
+    let subs: ISubjects[] = [];
+    // set scoresheet id
+    this.scoresheet$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: IScoresheet) => {
+        if (data) {
+          this.scoresheetId = data._id || '';
+        }
+      },
+    });
 
-    this.subjects$.pipe(untilDestroyed(this)).subscribe({
+    this.subjects$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: ISubjects[]) => {
         if (data.length) {
           subs = data;
@@ -102,26 +117,16 @@ export class PassControlsComponent {
     };
 
     if (this.dialogData !== null) {
-      this.api.patchPassControl(this.dialogData._id || '', controls).subscribe({
-        next: (data) => {
-          this.closeDialog(data);
-          this.api.updatePassControl = data;
-        },
-        error: (error) => {
-          this.api.errorToast(error);
-        },
-      });
+      this.store.dispatch(
+        updatePassControlsRequest({
+          id: this.dialogData._id || '',
+          passControls: controls,
+        }),
+      );
+
     } else {
-      this.api.postPassControls(controls).subscribe({
-        next: (data) => {
-          this.closeDialog(data);
-          this.api.appendPassControls = data;
-        },
-        error: (error) => {
-          console.log(error);
-          this.api.errorToast(error);
-        },
-      });
+      this.store.dispatch(postPassControlsRequest({ passControls: controls }));
+
     }
   }
 }

@@ -2,14 +2,24 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
+import {
+  getScoresheetRequest,
+  resetSelectedScoresheet,
+  scoresheetIsLoading,
+  setSelectedScoresheet,
+} from 'src/app/store/scoresheet/scoresheet.action';
+import { selectAllScoresheetsSortedByYear } from 'src/app/store/scoresheet/scoresheet.selector';
 import { DialogConfirmScoresheetDeleteComponent } from './dialog-confirm-scoresheet-delete/dialog-confirm-scoresheet-delete.component';
 
-interface SCORESHEET {
+export interface SCORESHEET {
   _id: string;
   index: string;
   name: string;
   year: string;
+  classes: IClassname[];
 }
 
 @Component({
@@ -21,104 +31,28 @@ export class ViewScoresheetsComponent implements OnInit {
   constructor(
     public service: ScoresheetService,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    private store: Store,
   ) {}
 
-  ELEMENT_DATA: SCORESHEET[] = [];
   isLoading = false;
-  displayedColumns: string[] = ['index', 'name', 'year', 'actions'];
-  dataSource: MatTableDataSource<SCORESHEET> = new MatTableDataSource();
+  displayedColumns: string[] = ['index', 'name', 'actions'];
   scoresheets: any[] = [];
   serviceResult: any[] = [];
+  sortedScoresheets$ = this.store.select(selectAllScoresheetsSortedByYear);
+
+  dispatchScoresheetIsLoading(state: boolean) {
+    this.store.dispatch(scoresheetIsLoading({ isLoading: state }));
+  }
 
   ngOnInit(): void {
-    this.loadData();
-  }
-
-  loadData() {
-    this.isLoading = true;
-
-    this.service.getAllScoresheets().subscribe({
-      next: (data: any) => {
-        console.log(data);
-        this.serviceResult = data;
-
-        this.assignScoresheetsToYears();
-
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.log(error);
-        // this.dataSource.data = [];
-        this.isLoading = false;
-      },
-    });
-  }
-
-  assignScoresheetsToYears() {
-    this.scoresheets = [];
-    let years: string[] = [];
-
-    // first retrieve the year that are in the serviceResult array
-    for (let i = 0; i < this.serviceResult.length; i++) {
-      let tempYear = '0';
-      const item = this.serviceResult[i];
-
-      if (item.year == tempYear) {
-        continue;
-      } else if (item.year != tempYear) {
-        const found = years.find((year) => year === item.year);
-
-        if (found === undefined) {
-          tempYear = item.year;
-          years.push(item.year);
-        }
-      }
-    }
-
-    years = years.sort((n1, n2) => Number.parseInt(n2) - Number.parseInt(n1));
-    years.forEach((year) => {
-      const tempSheets: SCORESHEET[] = [];
-      let j = 1;
-      this.serviceResult.forEach((res) => {
-        if (res.year == year.toString()) {
-          tempSheets.push({
-            _id: res._id,
-            index: j.toString(),
-            name: res.name,
-            year: res.year,
-          });
-
-          j++;
-        }
-      });
-      this.scoresheets.push({
-        year: year.toString(),
-        scoresheets: tempSheets,
-      });
-    });
-
-    if (!this.scoresheets.length) {
-      // handle when scores when there are no scoresheets
-      this.scoresheets.push({
-        year: new Date().getFullYear().toString(),
-        scoresheets: [],
-      });
-    }
+    console.log(`Inside init`);
+    // reset the data in the selected scoresheet variable
+    this.dispatchResetSelectedScoresheet();
   }
 
   deleteRow(data: any) {
     console.log(data);
-    this.service.deleteScoresheet(data._id).subscribe({
-      next: (data: any) => {
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
   }
 
   openUpdateScoresheetDialog(scoresheet: SCORESHEET) {
@@ -138,7 +72,7 @@ export class ViewScoresheetsComponent implements OnInit {
 
     const dialog = this.dialog.open(
       DialogConfirmScoresheetDeleteComponent,
-      dialogConfig
+      dialogConfig,
     );
 
     const instance = dialog.componentInstance;
@@ -154,9 +88,15 @@ export class ViewScoresheetsComponent implements OnInit {
 
   selectScoresheet(selection: any) {
     console.log(selection);
-    this.service.selectedScoresheetId = selection._id;
-    this.service.selectedYear = selection.year;
-    this.service.name = selection.name;
+
+        // assign selected scoresheet
+    this.store.dispatch(
+      setSelectedScoresheet({ selectedScoresheet: selection }),
+    );
     this.router.navigateByUrl('select-class');
+  }
+
+  dispatchResetSelectedScoresheet() {
+    this.store.dispatch(resetSelectedScoresheet());
   }
 }

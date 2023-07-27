@@ -1,13 +1,16 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { delay, of } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { delay, of, takeWhile } from 'rxjs';
 import { ClassMarksExcel } from 'src/app/OOP/classes/class-marks-excel';
 import { MarksService } from 'src/app/shared/marks/marks.service';
+import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
+import { selectChosenScoresheet } from 'src/app/store/scoresheet/scoresheet.selector';
 
 export interface STUDENT {
   index: string;
@@ -25,7 +28,7 @@ export interface STUDENT {
   templateUrl: './add-marks.component.html',
   styleUrls: ['./add-marks.component.scss'],
 })
-export class AddMarksComponent implements OnInit {
+export class AddMarksComponent implements OnInit, OnDestroy {
   color: ThemePalette = 'primary';
   mode: ProgressBarMode = 'determinate';
   value = 0;
@@ -46,12 +49,17 @@ export class AddMarksComponent implements OnInit {
   isUploadMarks = false;
   isFinishClicked = false;
   public marksExcel: any;
+  alive = true;
+  scoresheetId = '';
+
+  selectedScoresheet$ = this.store.select(selectChosenScoresheet);
 
   constructor(
     private scoresheetService: ScoresheetService,
     private marksService: MarksService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private store: Store,
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +81,10 @@ export class AddMarksComponent implements OnInit {
     );
   }
 
+  ngOnDestroy(): void {
+      this.alive = false;
+  }
+
   // function to send scoresheet marks to db
   saveScoresheetMarks() {
     // start is finishedClicked
@@ -85,7 +97,7 @@ export class AddMarksComponent implements OnInit {
     const subjectId = this.data.subject._id;
 
     // assign scoresheet id
-    const scoresheetId = this.scoresheetService.selectedScoresheetId;
+    // const scoresheetId = this.scoresheetService.selectedScoresheetId;
 
     // assing year
     const year = this.data.year;
@@ -112,7 +124,7 @@ export class AddMarksComponent implements OnInit {
         console.log(temp.score);
         serverArray.push({
           year: year,
-          scoresheet_id: scoresheetId,
+          scoresheet_id: this.scoresheetId,
           subject_id: subjectId,
           subject_teacher_id: teacher,
           mark: temp.score == null ? '' : temp.score.toString(),
@@ -126,6 +138,7 @@ export class AddMarksComponent implements OnInit {
         next: (data: any) => {
           this.marksService.successToast('Successfully added marks');
           this.isFinishClicked = false;
+          sessionStorage.removeItem('selected-class-scoresheet');
           this.location.back();
         },
         error: (error) => {
@@ -223,7 +236,7 @@ export class AddMarksComponent implements OnInit {
   }
 
   // function to check if marks have been added for a class subject scoresheet
-  // the function will call the get controller from the controller
+  // the function will call the get controller from the server
   checkClassSubjectMarks() {
     // assign subject teacher id
     const teacher = this.data.subject_teacher_id;
@@ -232,7 +245,15 @@ export class AddMarksComponent implements OnInit {
     const subjectId = this.data.subject._id;
 
     // assign scoresheet id
-    const scoresheetId = this.scoresheetService.selectedScoresheetId;
+    // const scoresheetId = this.scoresheetService.selectedScoresheetId;
+    this.selectedScoresheet$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: IScoresheet) => {
+        if(data) {
+          this.scoresheetId = data._id || '';
+        }
+      }
+    })
+
 
     // assing year
     const year = this.data.year;
@@ -243,7 +264,7 @@ export class AddMarksComponent implements OnInit {
         subject_teacher_id: teacher,
         subject_id: subjectId,
         year: year,
-        scoresheet_id: scoresheetId,
+        scoresheet_id: this.scoresheetId,
         mark: '',
         max_score: 0,
         num_students: 0,

@@ -1,8 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { takeWhile } from 'rxjs';
 import { ClassTeacherService } from 'src/app/shared/class-teacher/class-teacher.service';
+import {
+  classTeacherIsLoading,
+  deleteClassTeacherRequest,
+} from 'src/app/store/class-teacher/class-teacher.actions';
+import { selectClassTeacherIsLoading, selectClassTeachersArray } from 'src/app/store/class-teacher/class-teacher.selector';
 import { ClassTeacherComponent } from '../class-teacher.component';
 import { DialogConfirmClassTeacherDeleteComponent } from '../dialog-confirm-class-teacher-delete/dialog-confirm-class-teacher-delete.component';
 
@@ -20,18 +27,26 @@ interface CLASS_TEACHER {
   templateUrl: './view-class-teacher-table.component.html',
   styleUrls: ['./view-class-teacher-table.component.scss'],
 })
-export class ViewClassTeacherTableComponent {
+export class ViewClassTeacherTableComponent implements AfterViewInit, OnInit {
   ELEMENT_DATA: CLASS_TEACHER[] = [];
-  isLoading = false;
   totalRows = 0;
-  pageSize = 10;
+  pageSize = 100;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
   displayedColumns: string[] = ['index', 'teacher', 'class', 'year', 'actions'];
   dataSource: MatTableDataSource<CLASS_TEACHER> = new MatTableDataSource();
   dialogRef: any;
+  private alive = true;
 
-  constructor(private api: ClassTeacherService, public dialog: MatDialog) {}
+  // store variables
+  classTeachers$ = this.store.select(selectClassTeachersArray);
+  isLoading$ = this.store.select(selectClassTeacherIsLoading);
+
+  constructor(
+    private api: ClassTeacherService,
+    public dialog: MatDialog,
+    private store: Store
+  ) {}
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit(): void {
@@ -42,17 +57,23 @@ export class ViewClassTeacherTableComponent {
     this.loadData();
   }
 
+  dispatchClassTeacherIsLoading(state: boolean) {
+    this.store.dispatch(
+      classTeacherIsLoading({ classTeacherIsLoading: state })
+    );
+  }
+
   loadData() {
-    this.isLoading = true;
+    this.dispatchClassTeacherIsLoading(true);
 
-    this.api.getAllClassTeachers(this.currentPage, this.pageSize).subscribe({
+    this.classTeachers$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: any) => {
-        console.log(data.data);
+        console.log(data);
 
-        let arr: CLASS_TEACHER[] = [];
+        const arr: CLASS_TEACHER[] = [];
 
-        for (let i = 0; i < data.data.length; i++) {
-          const temp = data.data[i];
+        for (let i = 0; i < data.length; i++) {
+          const temp = data[i];
 
           arr.push({
             _id: temp._id,
@@ -76,12 +97,14 @@ export class ViewClassTeacherTableComponent {
         setTimeout(() => {
           this.paginator.pageIndex = this.currentPage;
           this.paginator.length = data.count;
-        });
-        this.isLoading = false;
+        }, 1000);
+
+        this.dispatchClassTeacherIsLoading(false);
       },
       error: (error) => {
-        this.isLoading = false;
+        this.dispatchClassTeacherIsLoading(false);
         this.dataSource.data = [];
+        this.api.errorToast(error);
       },
     });
   }
@@ -98,20 +121,9 @@ export class ViewClassTeacherTableComponent {
 
   deleteRow(data: any) {
     console.log(data);
-    this.isLoading = true;
-    this.api.deleteClassTeacher(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.log(error.toString());
-      },
-    });
+
+    this.dispatchClassTeacherIsLoading(true);
+    this.store.dispatch(deleteClassTeacherRequest({ id: data._id }));
   }
 
   pageChanged(event: PageEvent) {
@@ -128,16 +140,15 @@ export class ViewClassTeacherTableComponent {
     dialogConfig.closeOnNavigation = true;
 
     this.dialogRef = this.dialog.open(ClassTeacherComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
     });
 
     instance.onSubmit.subscribe(() => {
       instance.saveClassTeacher();
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
+      this.dialogRef.close();
+      this.loadData();
     });
   }
 
@@ -163,7 +174,7 @@ export class ViewClassTeacherTableComponent {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });

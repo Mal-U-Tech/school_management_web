@@ -13,8 +13,7 @@ td {
 }
 
 .table-container {
-  background-color: blue;
-  // width: 70%;
+  // background-color: blue;
   margin: auto;
 }
 div.buttons-container > button {
@@ -32,4 +31,10 @@ button.add {
 button.reload {
   background-color: var.$light;
   color: black;
+}
+
+.no-data {
+  padding: 24px;
+  font-size: 1.4rem;
+  font-weight: bold;
 }

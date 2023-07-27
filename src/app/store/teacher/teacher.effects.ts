@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, from, mergeMap, of } from 'rxjs';
+import {
+  ITeacher,
+  ITeacherGetResponse,
+} from 'src/app/shared/teacher/teacher.interface';
 import { TeacherService } from 'src/app/shared/teacher/teacher.service';
 import {
   deleteTeacherError,
@@ -44,7 +48,11 @@ export class TeacherEffects {
       ),
       mergeMap((res) => {
         console.log(res);
-        const result = res as any;
+        const result = res as ITeacher;
+        result.title = this.teacherService.computeTeacherTitle(
+          result.gender,
+          result.marital_status
+        );
 
         return of(
           teacherIsLoading({ teacherIsLoading: false }),
@@ -71,7 +79,15 @@ export class TeacherEffects {
       ),
       mergeMap((res) => {
         console.log(res);
-        const result = res as any;
+        const result = res as ITeacherGetResponse;
+
+        // add title to every teacher in array
+        result.data.forEach((teacher) =>
+          teacher.title = this.teacherService.computeTeacherTitle(
+            teacher.gender,
+            teacher.marital_status
+          )
+        );
 
         return of(
           teacherIsLoading({ teacherIsLoading: false }),

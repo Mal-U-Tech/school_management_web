@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { ITeacher } from './teacher.interface';
+import { ITeacher, ITeacherGetResponse } from './teacher.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -29,15 +29,9 @@ export class TeacherService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register a teacher
-  postTeacher(
-    teacher: ITeacher,
-    schoolInfoId: string
-  ): Observable<ITeacher> {
+  postTeacher(teacher: ITeacher, schoolInfoId: string): Observable<ITeacher> {
     return this.http
-      .post<ITeacher>(
-        this.apiUrl + `teacher/register/${schoolInfoId}`,
-        teacher
-      )
+      .post<ITeacher>(this.apiUrl + `teacher/register/${schoolInfoId}`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -45,9 +39,9 @@ export class TeacherService extends SharedApiConstants {
   getAllTeachers(
     pageNo: number,
     pageSize: number
-  ): Observable<ITeacher[]> {
+  ): Observable<ITeacherGetResponse> {
     return this.http
-      .get<ITeacher[]>(
+      .get<ITeacherGetResponse>(
         this.apiUrl + `teacher/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -56,19 +50,24 @@ export class TeacherService extends SharedApiConstants {
   // HttpClient API update() => update teacher
   updateTeacher(id: string, teacher: ITeacher): Observable<ITeacher> {
     return this.http
-      .put<ITeacher>(
-        this.apiUrl + `teacher/update/${id}`,
-        teacher
-      )
+      .put<ITeacher>(this.apiUrl + `teacher/update/${id}`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API delete() => delete teacher
   deleteTeacher(id: string, schoolInfoId: string, userId: string) {
     return this.http
-      .delete(
-        this.apiUrl + `teacher/delete/${id}/${schoolInfoId}/${userId}`,
-      )
+      .delete(this.apiUrl + `teacher/delete/${id}/${schoolInfoId}/${userId}`)
       .pipe(retry(1), catchError(this.handleError));
+  }
+
+  computeTeacherTitle(gender: string, maritalStatus: string): string {
+    if (gender === 'Male') {
+      return 'Mr.';
+    } else if (gender === 'Female' && maritalStatus === 'Single') {
+      return 'Ms.';
+    } else {
+      return 'Mrs.';
+    }
   }
 }

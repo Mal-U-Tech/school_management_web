@@ -1,1 +1,10 @@
+@use "../../my-styles.scss" as var;
 
+body,
+h1 {
+  font-family: "Tmes New Roman";
+}
+
+h1.dialog-title {
+  font-family: var.$bold;
+}

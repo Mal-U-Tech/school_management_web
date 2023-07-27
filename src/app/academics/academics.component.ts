@@ -1,16 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ClassnameApiService } from '../shared/classname/classname-api.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
-import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
-import { TeacherService } from '../shared/teacher/teacher.service';
-import { ClassStudentsService } from '../shared/class-students/class-students.service';
 import { SubjectTeacherService } from '../shared/subject-teacher/subject-teacher.service';
 import { ClassTeacherService } from '../shared/class-teacher/class-teacher.service';
 import { HodService } from '../shared/hod/hod.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmScoresheetModulesCreatedComponent } from '../scoresheet/confirm-scoresheet-modules-created/confirm-scoresheet-modules-created.component';
-import { ITeacher } from '../shared/teacher/teacher.interface';
 import { Store } from '@ngrx/store';
 import {
   getStreamsRequest,
@@ -24,17 +18,29 @@ import {
   departmentsIsLoading,
   getDepartmentsRequest,
 } from '../store/departments/departments.actions';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   getSubjectsRequest,
   subjectsIsLoading,
 } from '../store/subjects/subjects.actions';
 import { getTeachersRequest } from '../store/teacher/teacher.actions';
-import { selectTeacherArray } from '../store/teacher/teacher.selector';
 import {
   classStudentsIsLoading,
   getClassStudentsArrayRequest,
 } from '../store/class-students/class-students.actions';
+import {
+  getSubjectTeachersRequest,
+  subjectTeacherIsLoading,
+} from '../store/subject-teachers/subject-teachers.actions';
+import {
+  classTeacherIsLoading,
+  getClassTeachersRequest,
+} from '../store/class-teacher/class-teacher.actions';
+import { takeWhile } from 'rxjs';
+import { getHodRequest, hodIsLoading } from '../store/hod/hod.actions';
+import {
+  getScoresheetRequest,
+  scoresheetIsLoading,
+} from '../store/scoresheet/scoresheet.action';
 
 interface TEACHER {
   _id: string;
@@ -46,13 +52,12 @@ interface TEACHER {
   marital_status: string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-academics',
   templateUrl: './academics.component.html',
   styleUrls: ['./academics.component.scss'],
 })
-export class AcademicsComponent implements OnInit {
+export class AcademicsComponent implements OnInit, OnDestroy {
   /** Based on the screen size, switch from standard to one column per row */
   // cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
   //   map(({ matches }) => {
@@ -99,13 +104,9 @@ export class AcademicsComponent implements OnInit {
     { title: 'Head of Departments', cols: 1, rows: 1 },
     { title: 'Committees', cols: 1, rows: 1 },
   ];
+  private alive = true;
 
   constructor(
-    private api: ClassnameApiService,
-    private subjectsApi: AddSubjectsService,
-    private deptApi: AddDepartmentsService,
-    private teacherApi: TeacherService,
-    private clasStudentsApi: ClassStudentsService,
     private subjectTeacherApi: SubjectTeacherService,
     private classTeacherApi: ClassTeacherService,
     private hodApi: HodService,
@@ -118,7 +119,7 @@ export class AcademicsComponent implements OnInit {
     this.numCols = window.innerWidth <= 768 ? 2 : 1;
 
     // assign user data
-    this.user$.pipe(untilDestroyed(this)).subscribe({
+    this.user$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: IUser) => {
         if (data) {
           this.user = data;
@@ -134,6 +135,11 @@ export class AcademicsComponent implements OnInit {
     this.getSubjectTeachers();
     this.getClassTeachers();
     this.getHOD();
+    this.getScoresheet();
+  }
+
+  ngOnDestroy(): void {
+    this.alive = false;
   }
 
   onResize(event: any) {
@@ -180,14 +186,40 @@ export class AcademicsComponent implements OnInit {
     );
   }
 
+  dispatchSubjectTeacherIsLoading() {
+    this.store.dispatch(
+      subjectTeacherIsLoading({ subjectTeacherIsLoading: true })
+    );
+  }
+
+  dispatchClassTeacherIsLoading() {
+    this.store.dispatch(classTeacherIsLoading({ classTeacherIsLoading: true }));
+  }
+
+  dispatchHodIsLoading() {
+    this.store.dispatch(hodIsLoading({ hodIsLoading: true }));
+  }
+
+  dispatchScoresheetIsLoading() {
+    this.store.dispatch(scoresheetIsLoading({ isLoading: true }));
+  }
+
   getStreams() {
-    this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
+    this.schoolInfo$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: SchoolInfoState) => {
         console.log(data);
-        this.schoolId = data.schoolInfo._id || '';
+        try {
+          this.schoolId = data.schoolInfo._id || '';
+        } catch (error) {
+          console.log(error);
+        }
 
         // dispatch action to retrieve streams
-        if (this.schoolId != null || this.schoolId != '') {
+        if (
+          this.schoolId != null &&
+          this.schoolId != '' &&
+          this.schoolId != undefined
+        ) {
           // dispatch action to start loading
           this.dispatchStreamsIsLoading();
 
@@ -198,6 +230,8 @@ export class AcademicsComponent implements OnInit {
               pageSize: 0,
             })
           );
+        } else {
+          console.log('There is no school id');
         }
       },
     });
@@ -212,58 +246,11 @@ export class AcademicsComponent implements OnInit {
   getSubjects() {
     this.dispatchSubjectsIsLoading();
     this.store.dispatch(getSubjectsRequest({ currentPage: 0, pageSize: 0 }));
-    // this.subjectsApi.getAllSubjects(0, 0).subscribe({
-    //   next: (data: any) => {
-    //     this.subjectCount = data.length.toString();
-    //     sessionStorage.setItem('subjects', JSON.stringify(data));
-    // this.subjectsApi.assignSubjectsToLevels(data); check this one out !!!!!!!!!!!!
-    //   },
-    //   error: (err) => {
-    //     this.subjectsApi.errorToast(err.toString());
-    //   },
-    // });
   }
 
   getTeachers() {
     this.dispatchTeachersIsLoading();
     this.store.dispatch(getTeachersRequest({ currentPage: 0, pageSize: 0 }));
-
-    // this.teachers$.pipe(untilDestroyed(this)).subscribe({
-    //   next: (data: ITeacher[]) => {
-    //     this.teacherCount = data.length.toString();
-    //
-    //     // get current user
-    //     // this.user$.pipe(untilDestroyed(this)).subscribe((user: IUser) => {
-    //     //   // compute teacher title and store in session storage
-    //     //   sessionStorage.setItem(
-    //     //     'teachers',
-    //     //     JSON.stringify(this.assignTeacherTitles(data))
-    //     //   );
-    //     //
-    //     //   // find out if current user is a teacher
-    //     //   // console.log(data);
-    //     //   data.forEach((element: any) => {
-    //     //     if (element.user_id._id == user._id) {
-    //     //       // console.log('I am a teacher');
-    //     //       sessionStorage.setItem(
-    //     //         'user',
-    //     //         JSON.stringify({
-    //     //           _id: user._id,
-    //     //           name: user.name,
-    //     //           surname: user.surname,
-    //     //           contact: user.contact,
-    //     //           email: user.email,
-    //     //           teacher_id: element._id,
-    //     //         })
-    //     //       );
-    //     //     }
-    //     //   });
-    //     // });
-    //   },
-    //   error: (err) => {
-    //     this.teacherApi.errorToast(err.toString());
-    //   },
-    // });
   }
 
   // function to assign teacher title for all teachers
@@ -293,47 +280,30 @@ export class AcademicsComponent implements OnInit {
     this.store.dispatch(
       getClassStudentsArrayRequest({ currentPage: 0, pageSize: 0 })
     );
-    // this.clasStudentsApi.getAllLearners(0, 0).subscribe({
-    //   next: (data: any) => {
-    //     this.classStudentsCount = data.length.toString();
-    //   },
-    //   error: (error) => {
-    //     this.clasStudentsApi.errorToast(error.toString());
-    //   },
-    // });
   }
 
   getSubjectTeachers() {
-    this.subjectTeacherApi.getAllSubjectTeachers(0, 0).subscribe({
-      next: (data: any) => {
-        this.subjectTeachersCount = data.length.toString();
-      },
-      error: (error) => {
-        this.subjectTeacherApi.errorToast(error.toString());
-      },
-    });
+    this.dispatchSubjectTeacherIsLoading();
+    this.store.dispatch(
+      getSubjectTeachersRequest({ currentPage: 0, pageSize: 0 })
+    );
   }
 
   getClassTeachers() {
-    this.classTeacherApi.getAllClassTeachers(0, 0).subscribe({
-      next: (data: any) => {
-        this.classTeachersCount = data.length.toString();
-      },
-      error: (error) => {
-        this.classTeacherApi.errorToast(error.toString());
-      },
-    });
+    this.dispatchClassTeacherIsLoading();
+    this.store.dispatch(
+      getClassTeachersRequest({ currentPage: 0, pageSize: 0 })
+    );
   }
 
   getHOD() {
-    this.hodApi.getAllHODs(0, 0).subscribe({
-      next: (data: any) => {
-        this.hodCount = data.length.toString();
-      },
-      error: (error) => {
-        this.hodApi.errorToast(error.toString());
-      },
-    });
+    this.dispatchHodIsLoading();
+    this.store.dispatch(getHodRequest({ currentPage: 0, pageSize: 0 }));
+  }
+
+  getScoresheet() {
+    this.dispatchScoresheetIsLoading();
+    this.store.dispatch(getScoresheetRequest());
   }
 
   // function to navigate to add streams component

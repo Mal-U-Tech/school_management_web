@@ -33,10 +33,7 @@ export class ClassTeacherService extends SharedApiConstants {
   // HttpClient API post() => register new class teacher
   postClassTeacher(teacher: IClassTeacher): Observable<IClassTeacher> {
     return this.http
-      .post<IClassTeacher>(
-        this.apiUrl + `${this.module}/register`,
-        teacher
-      )
+      .post<IClassTeacher>(this.apiUrl + `${this.module}/register`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -85,10 +82,7 @@ export class ClassTeacherService extends SharedApiConstants {
     teacher: IClassTeacher
   ): Observable<IClassTeacher> {
     return this.http
-      .put<IClassTeacher>(
-        this.apiUrl + `${this.module}/update/${id}`,
-        teacher
-      )
+      .put<IClassTeacher>(this.apiUrl + `${this.module}/update/${id}`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 
@@ -97,5 +91,15 @@ export class ClassTeacherService extends SharedApiConstants {
     return this.http
       .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
+  }
+
+  computeTeacherTitle(gender: string, maritalStatus: string): string {
+    if (gender === 'Male') {
+      return 'Mr.';
+    } else if (gender === 'Female' && maritalStatus === 'Single') {
+      return 'Ms.';
+    } else {
+      return 'Mrs.';
+    }
   }
 }

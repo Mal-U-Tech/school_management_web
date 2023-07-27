@@ -1,7 +1,12 @@
-import { Component, EventEmitter } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { IHOD } from '../shared/hod/hod.interface';
+import { Component, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { IDepartments } from '../shared/add-departments/add-departments.interface';
+import { IHodPost } from '../shared/hod/hod.interface';
 import { HodService } from '../shared/hod/hod.service';
+import { ITeacher } from '../shared/teacher/teacher.interface';
+import { selectDepartmentsArray } from '../store/departments/departments.selector';
+import { hodIsLoading, postHodRequest } from '../store/hod/hod.actions';
+import { selectTeacherArray } from '../store/teacher/teacher.selector';
 
 @Component({
   selector: 'app-head-of-depts',
@@ -9,45 +14,30 @@ import { HodService } from '../shared/hod/hod.service';
   styleUrls: ['./head-of-depts.component.scss'],
 })
 export class HeadOfDeptsComponent {
-  constructor(private apiService: HodService, private _snackBar: MatSnackBar) {}
+  constructor(private api: HodService, private store: Store) {}
 
-  // variables for teachers and department
-  public teachers: any;
-  public departments: any;
-
-  ngOnInit(): void {
-    this.teachers = JSON.parse(sessionStorage.getItem('teachers')!);
-    this.departments = JSON.parse(sessionStorage.getItem('departments')!);
-  }
+  // store variables
+  teachers$ = this.store.select(selectTeacherArray);
+  departments$ = this.store.select(selectDepartmentsArray);
 
   // dialog title
   public title = 'Add Head Of Department';
-  public res = 0;
 
-  public teacherSelection = {
-    _id: '',
-    name: 'Select Teacher',
-    surname: '',
-    title: '',
-  };
-
-  public departmentSelection = {
-    _id: '',
-    name: 'Select Department',
-  };
-  public year: string = '';
+  public departmentSelection?: IDepartments = undefined;
+  public teacherSelection?: ITeacher = undefined;
+  public year = new Date().getFullYear().toString();
 
   // event emitters
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
 
   // teacher selection method
-  selectTeacher(selection: any) {
+  selectTeacher(selection: ITeacher) {
     this.teacherSelection = selection;
   }
 
   // department selection methods
-  selectDepartment(selection: any) {
+  selectDepartment(selection: IDepartments) {
     this.departmentSelection = selection;
   }
 
@@ -61,39 +51,28 @@ export class HeadOfDeptsComponent {
     this.onSubmit.emit();
   }
 
-  // api method to save head of department to database
-  saveHOD() {
-    const teacher: IHOD = {
-      teacher_id: this.teacherSelection._id,
-      department_id: this.departmentSelection._id,
-      year: this.year,
-    };
-
-    this.apiService.postHOD(teacher).subscribe({
-      next: (data: any) => {
-        console.log(data);
-
-        this.closeHODDialog();
-        this.openSnackBar(
-          `Successfully add the teacher ${
-            this.teacherSelection.title
-          } ${this.teacherSelection.name.substring(0, 1)}. ${
-            this.teacherSelection.surname
-          } to be the Head of the ${this.departmentSelection.name} department!`,
-          'Close'
-        );
-        this.res = 1;
-      },
-      error: (error) => {
-        this.closeHODDialog();
-        this.openSnackBar(error.toString(), 'Close');
-        this.res = 0;
-      },
-    });
+  // function to dispatch hodIsLoading
+  dispatchHodIsLoading(state: boolean) {
+    this.store.dispatch(hodIsLoading({ hodIsLoading: state }));
   }
 
-  // show snack bar
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+  // api method to save head of department to database
+  saveHOD() {
+    let teacher: IHodPost;
+    if (
+      this.teacherSelection !== undefined &&
+      this.departmentSelection !== undefined
+    ) {
+      teacher = {
+        teacher_id: this.teacherSelection?._id || '',
+        department_id: this.departmentSelection?._id || '',
+        year: this.year,
+      };
+
+      this.dispatchHodIsLoading(true);
+      this.store.dispatch(postHodRequest({ hod: teacher }));
+    } else {
+      this.api.errorToast('Please select teacher and department!');
+    }
   }
 }

@@ -15,7 +15,7 @@ import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { ClassStudentsComponent } from '../class-students.component';
 import { DialogConfirmClassStudentDeleteComponent } from '../dialog-confirm-class-student-delete/dialog-confirm-class-student-delete.component';
 import { UpdateClassStudentComponent } from '../update-class-student/update-class-student.component';
-import { delay, map, of, takeWhile, tap } from 'rxjs';
+import {  takeWhile } from 'rxjs';
 import {
   classStudentsIsLoading,
   classStudentsPaginatorOptions,
@@ -27,7 +27,6 @@ import {
   selectClassStudentIsLoading,
   selectClassStudentPaginatorOptions,
 } from 'src/app/store/class-students/class-students.selectors';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
 
@@ -42,7 +41,6 @@ interface CLASS_STUDENT {
   gender: string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-view-class-students-table',
   templateUrl: './view-class-students-table.component.html',

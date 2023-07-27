@@ -8,23 +8,40 @@
       <form id="input-container" class="form">
         <div class="form-field teacher">
           <button mat-raised-button [matMenuTriggerFor]="teacher">
-            {{ teacherSelection.title }} {{ teacherSelection.name }}
-            {{ teacherSelection.surname }}
+            {{
+              teacherSelection === undefined
+                ? "Select Teacher"
+                : teacherSelection.title +
+                  " " +
+                  teacherSelection.user_id.name +
+                  " " +
+                  teacherSelection.user_id.surname
+            }}
           </button>
           <mat-menu #teacher="matMenu">
-            <div *ngFor="let teach of teachers; let i = index">
+            <div *ngFor="let teach of teachers$ | async; let i = index">
               <button mat-menu-item (click)="selectTeacher(teach)">
-                {{ teach.title }} {{ teach.name }} {{ teach.surname }}
+                {{
+                  apiService.computeTeacherTitle(
+                    teach.gender,
+                    teach.marital_status
+                  )
+                }}
+                {{ teach.user_id.name }} {{ teach.user_id.surname }}
               </button>
             </div>
           </mat-menu>
         </div>
         <div class="form-field class">
           <button mat-raised-button [matMenuTriggerFor]="class">
-            {{ classSelection.name }}
+            {{
+              classSelection === undefined
+                ? "Select grade and stream"
+                : classSelection.name
+            }}
           </button>
           <mat-menu #class="matMenu">
-            <div *ngFor="let stream of classes; let i = index">
+            <div *ngFor="let stream of streams$ | async; let i = index">
               <button mat-menu-item (click)="selectClass(stream)">
                 {{ stream.name }}
               </button>

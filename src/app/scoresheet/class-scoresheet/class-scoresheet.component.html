@@ -14,7 +14,7 @@
     <!-- </mat-grid-list> -->
 
     <div class="pass-controls-added">
-      <div *ngFor="let controls of passControls; let i = index">
+      <div *ngFor="let controls of passControls$ | async; let i = index">
         <button
           mat-stroked-button
           color="primary"

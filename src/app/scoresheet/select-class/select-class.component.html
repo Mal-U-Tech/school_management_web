@@ -11,13 +11,17 @@
     >
       Add Pass Controls
     </button>
+    <div class="no-pass-controls">
+      <div *ngIf="!(passControls$ | async)?.length">No pass controls added</div>
+    </div>
   </div>
 
   <div class="pass-controls-added">
     <div class="spinner-container">
-      <app-spinner [isLoading]="isLoadingPassControls"></app-spinner>
+      <app-spinner [isLoading]="passControlsIsLoading$ | async"></app-spinner>
     </div>
-    <div *ngFor="let controls of passControls; let i = index">
+
+    <div *ngFor="let controls of passControls$ | async; let i = index">
       <button
         mat-stroked-button
         class="pass-controls-button"
@@ -30,7 +34,7 @@
 
   <div class="classes-accordion-wrapper">
     <mat-accordion class="scoresheets-wrapper">
-      <div *ngFor="let class of classes; let i = index">
+      <div *ngFor="let class of scoresheetStreams$ | async; let i = index">
         <mat-expansion-panel
           [expanded]="selectedClass === i"
           (opened)="setSelectedClass(i)"
@@ -45,7 +49,7 @@
             >
               <button
                 mat-raised-button
-                (click)="checkTeacher(subject._id, class.class_id)"
+                (click)="checkTeacher(subject._id || '', class.class_id)"
                 class="class-name"
               >
                 {{ subject.name }}

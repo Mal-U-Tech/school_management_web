@@ -97,6 +97,17 @@ import { TeacherEffects } from './store/teacher/teacher.effects';
 import { teacherReducer } from './store/teacher/teacher.reducer';
 import { ClassStudentEffects } from './store/class-students/class-students.effects';
 import { classStudentsReducer } from './store/class-students/class-students.reducer';
+import { ProgressLoaderComponent } from './components/progress-loader/progress-loader.component';
+import { SubjectTeacherEffects } from './store/subject-teachers/subject-teachers.effects';
+import { subjectTeacherReducer } from './store/subject-teachers/subject-teachers.reducer';
+import { ClassTeacherEffects } from './store/class-teacher/class-teacher.effects';
+import { classTeacherReducer } from './store/class-teacher/class-teacher.reducer';
+import { HodEffects } from './store/hod/hod.effects';
+import { hodReducer } from './store/hod/hod.reducer';
+import { ScoresheetEffects } from './store/scoresheet/scoresheet.effects';
+import { scoresheetReducer } from './store/scoresheet/scoresheet.reducer';
+import { PassControlsEffects } from './store/pass-controls/pass-control.effects';
+import { passControlsReduer } from './store/pass-controls/pass-control.reducer';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -213,6 +224,7 @@ const routes: Routes = [
     ClassMarksComponent,
     DeleteDialogComponent,
     SpinnerComponent,
+    ProgressLoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -253,6 +265,11 @@ const routes: Routes = [
       subject: subjectsReducer,
       teacher: teacherReducer,
       classStudent: classStudentsReducer,
+      subjectTeacher: subjectTeacherReducer,
+      classTeacher: classTeacherReducer,
+      hod: hodReducer,
+      scoresheet: scoresheetReducer,
+      passControls: passControlsReduer,
     }),
     EffectsModule.forRoot([
       AuthEffects,
@@ -262,6 +279,11 @@ const routes: Routes = [
       SubjectEffects,
       TeacherEffects,
       ClassStudentEffects,
+      SubjectTeacherEffects,
+      ClassTeacherEffects,
+      HodEffects,
+      ScoresheetEffects,
+      PassControlsEffects,
     ]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],

@@ -22,7 +22,7 @@ import {
 } from './streams.actions';
 
 export interface StreamState {
-  streams: Array<IClassname>;
+  streams: IClassname[];
   streamIsLoading: boolean;
   errorMessage: string;
   paginator: {

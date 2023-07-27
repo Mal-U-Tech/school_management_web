@@ -1,8 +1,8 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { takeWhile } from 'rxjs';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
@@ -10,20 +10,34 @@ import { IClassStudent } from 'src/app/shared/class-students/class-students.inte
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
 import { MarksService } from 'src/app/shared/marks/marks.service';
 import { PassControlsService } from 'src/app/shared/pass-controls/pass-controls.service';
+import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { IUser } from 'src/app/shared/user/user.interface';
+import {
+  getPassControlsByScoresheetRequest,
+  passControlsIsLoading,
+  resetPassControls,
+} from 'src/app/store/pass-controls/pass-control.action';
+import {
+  selectPassControlIsLoading,
+  selectPassControlsArray,
+} from 'src/app/store/pass-controls/pass-control.selectors';
+import {
+  selectChosenScoresheet,
+  selectScoresheetIsLoading,
+  selectStreamsForScoresheet,
+} from 'src/app/store/scoresheet/scoresheet.selector';
 import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
 import { selectUserData } from 'src/app/store/user/user.selector';
 
-@UntilDestroy()
 @Component({
   selector: 'app-select-class',
   templateUrl: './select-class.component.html',
   styleUrls: ['./select-class.component.scss'],
 })
-export class SelectClassComponent implements AfterViewInit {
+export class SelectClassComponent implements OnDestroy {
   constructor(
     public service: ScoresheetService,
     public subjects: AddSubjectsService,
@@ -33,61 +47,35 @@ export class SelectClassComponent implements AfterViewInit {
     private dialog: MatDialog,
     private passControlsService: PassControlsService,
     private classStudentsService: ClassStudentsService,
-    private store: Store
+    private store: Store,
   ) {
     this.title = this.service.name + ' Scoresheet';
+    this.loadPassControls();
   }
 
   teachers$ = this.store.select(selectTeacherArray);
   user$ = this.store.select(selectUserData);
+  scoresheetStreams$ = this.store.select(selectStreamsForScoresheet);
+  passControlsIsLoading$ = this.store.select(selectPassControlIsLoading);
+  scoresheetIsLoading$ = this.store.select(selectScoresheetIsLoading);
+  passControls$ = this.store.select(selectPassControlsArray);
+  selectedScoresheetId$ = this.store.select(selectChosenScoresheet);
 
-  ngAfterViewInit(): void {
-    // get scoresheet name
-    // try {
-    // } catch (error) {
-    //   console.log(`This is error in title`);
-    // }
-
-    this.service
-      .getStreamsFromScoresheet(this.service.selectedScoresheetId)
-      .subscribe({
-        next: (data: any) => {
-          console.log(data);
-          for (let i = 0; i < data[0].classes.length; i++) {
-            const temp = data[0].classes[i];
-
-            if (this.secondaryRegEx.test(temp.name)) {
-              this.classes.push({
-                class_id: temp._id,
-                name: temp.name,
-                subjects: this.subjects.secondarySubjects,
-              });
-            }
-            if (this.highSchoolRegEx.test(temp.name)) {
-              this.classes.push({
-                class_id: temp._id,
-                name: temp.name,
-                subjects: this.subjects.highSchoolSubjects,
-              });
-            }
-          }
-          console.log(this.classes);
-        },
-      });
-
-    setTimeout(() => {
-      this.loadPassControls();
-    }, 2000);
+  ngOnDestroy(): void {
+    this.alive = false;
   }
+
+  // ngAfterViewInit(): void {}
 
   secondaryRegEx = new RegExp('^Form [1-3].');
   highSchoolRegEx = new RegExp('^Form [4-5].');
   classes: any[] = [];
   selectedClass = 0;
   passControls: IPassControls[] = [];
-  isLoadingPassControls = true;
+  // isLoadingPassControls = true;
   isScoresheetLoading = false;
   title = '';
+  alive = true;
 
   setSelectedClass(index: number) {
     this.selectedClass = index;
@@ -103,7 +91,8 @@ export class SelectClassComponent implements AfterViewInit {
 
   checkTeacher(subjectId: string, classId: string) {
     let currentUser: any; // JSON.parse(sessionStorage.getItem('user') || '');
-    this.user$.subscribe({
+    let selectedYear = '';
+    this.user$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: IUser) => {
         console.log(data);
         if (data) {
@@ -115,7 +104,7 @@ export class SelectClassComponent implements AfterViewInit {
     // get teacher id from teachers
     // compare the current user's id and the user id from the teachers array for each teacher
     let teacherId = '';
-    this.teachers$.pipe(untilDestroyed(this)).subscribe({
+    this.teachers$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: ITeacher[]) => {
         data.forEach((teacher: ITeacher) => {
           if (teacher.user_id._id == currentUser._id) {
@@ -126,29 +115,29 @@ export class SelectClassComponent implements AfterViewInit {
     });
 
     console.log(currentUser);
-    // let teacherId = '6442e23f66c6b3a6650b0f02';
+
+    // assign year from selected scoresheet
+    this.selectedScoresheetId$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: IScoresheet) => {
+        selectedYear = data.year;
+      },
+    });
+
     this.subjectTeacher
-      .getTeacherForSubject(
-        subjectId,
-        teacherId,
-        classId,
-        this.service.selectedYear
-      )
+      .getTeacherForSubject(subjectId, teacherId, classId, selectedYear)
       .subscribe({
         next: (data: any) => {
-          console.log(data);
           sessionStorage.setItem(
             'selected-class-scoresheet',
-            JSON.stringify(data)
+            JSON.stringify(data),
           );
 
           this.subjectTeacher.successToast('Successfully retrieved students');
           this.router.navigateByUrl('add-marks');
         },
         error: (error) => {
-          console.log(error);
           this.subjectTeacher.errorToast(
-            'Please correctly choose the class you teach'
+            'Please correctly choose the class you teach',
           );
         },
       });
@@ -157,7 +146,7 @@ export class SelectClassComponent implements AfterViewInit {
   // function to take user to the full scoresheet view of the class
   viewScoresheet(stream: any) {
     console.log(stream);
-    const selectedStream = this.classes[this.selectedClass];
+    // const selectedStream = this.classes[this.selectedClass];
 
     this.isScoresheetLoading = true;
     // first get the class students
@@ -165,7 +154,6 @@ export class SelectClassComponent implements AfterViewInit {
       .getAllLearnersByClassYear(stream.class_id, '2023', 0, 0)
       .subscribe({
         next: (data: IClassStudent[]) => {
-          console.log(data);
           sessionStorage.setItem('scoresheet-students', JSON.stringify(data));
         },
         error: (error) => {
@@ -177,99 +165,91 @@ export class SelectClassComponent implements AfterViewInit {
     const finalSubjectsArray: any[] = [];
 
     const allSubMarks: any[] = [];
-    // console.log('I am about to get marks now');
-    // get subjects marks
-    this.marksService
-      .getSubjectMarksWithArray(
-        this.service.selectedYear,
-        this.service.selectedScoresheetId,
-        selectedStream.subjects,
-        0,
-        7
-      )
-      .subscribe({
-        next: (data) => {
-          // console.log('I have retrieved marks');
-          console.log(data);
-          data.forEach((dat) => {
-            allSubMarks.push(dat);
-          });
 
-          // get the rest of the marks here
+    // set selected scoresheet
+    // get subjects marks
+    this.selectedScoresheetId$.subscribe({
+      next: (data: IScoresheet) => {
+        if (data) {
+          console.log(`Selected scoresheet:`);
+          console.table(data);
+          console.table(stream);
           this.marksService
             .getSubjectMarksWithArray(
-              this.service.selectedYear,
-              this.service.selectedScoresheetId,
-              selectedStream.subjects,
+              data.year,
+              data._id || '',
+              stream.subjects,
+              0,
               7,
-              selectedStream.subjects.length
             )
             .subscribe({
-              next: (data) => {
-                console.log(data);
-                this.isScoresheetLoading = false;
-                data.forEach((dat) => {
+              next: (res1) => {
+                // console.log('I have retrieved marks');
+                console.log(res1);
+                res1.forEach((dat) => {
                   allSubMarks.push(dat);
                 });
 
-                for (let i = 0; i < allSubMarks.length; i++) {
-                  const temp = allSubMarks[i];
-                  const subjects: any = [];
-                  if (temp.length != 0) {
-                    temp.forEach((mark: any) => {
-                      // console.log(mark);
-                      // console.log('I am from api + '' +mark.class_student_id.class_id)
-                      // console.log(selectedStream);
-                      // console.log(mark.subject_teacher_id);
-                      if (mark.subject_teacher_id.class_id == null) {
-                        console.log('i am null');
-                      }
+                // get the rest of the marks here
+                this.marksService
+                  .getSubjectMarksWithArray(
+                    data.year,
+                    data._id || '',
+                    stream.subjects,
+                    7,
+                    stream.subjects.length,
+                  )
+                  .subscribe({
+                    next: (res2) => {
+                      console.log(res2);
+                      this.isScoresheetLoading = false;
+                      res2.forEach((dat) => {
+                        allSubMarks.push(dat);
+                      });
 
-                      if (selectedStream.class_id == null) {
-                        console.log('i am null too');
-                      }
-                      if (
-                        mark.subject_teacher_id.class_id ==
-                        selectedStream.class_id
-                      ) {
-                        // console.log(
-                        //   selectedStream.name + ' ' + selectedStream.class_id
-                        // );
-                        // console.log(mark.subject_teacher_id.class_id);
-                        subjects.push(mark);
-                      }
-                    });
-                  }
+                      for (let i = 0; i < allSubMarks.length; i++) {
+                        const temp = allSubMarks[i];
+                        const subjects: any = [];
+                        if (temp.length != 0) {
+                          temp.forEach((mark: any) => {
+                            if (
+                              mark.subject_teacher_id.class_id ==
+                              stream.class_id
+                            ) {
+                              subjects.push(mark);
+                            }
+                          });
+                        }
 
-                  const subObj: any = {};
-                  subObj[selectedStream.subjects[i].name] = subjects;
-                  finalSubjectsArray.push(subObj);
-                }
-                console.log(finalSubjectsArray);
-                sessionStorage.setItem(
-                  'scoresheet-subjects',
-                  JSON.stringify(finalSubjectsArray)
-                );
-                this.service.className = stream.name;
-                this.marksService.selectedClass = {
-                  class_id: stream.class_id,
-                  name: stream.name,
-                };
-                this.router.navigateByUrl('class-scoresheet');
+                        const subObj: any = {};
+                        subObj[stream.subjects[i].name] = subjects;
+                        finalSubjectsArray.push(subObj);
+                      }
+                      // console.log(finalSubjectsArray);
+                      sessionStorage.setItem(
+                        'scoresheet-subjects',
+                        JSON.stringify(finalSubjectsArray),
+                      );
+                      this.service.className = stream.name;
+                      this.marksService.selectedClass = {
+                        class_id: stream.class_id,
+                        name: stream.name,
+                      };
+                      this.router.navigateByUrl('class-scoresheet');
+                    },
+                    error: (error) => {
+                      this.marksService.errorToast(error);
+                    },
+                  });
               },
               error: (error) => {
-                this.marksService.errorToast(error);
+                this.isScoresheetLoading = false;
+                // console.log(error);
               },
             });
-          // this.isScoresheetLoading = false;
-
-          // // try {
-        },
-        error: (error) => {
-          this.isScoresheetLoading = false;
-          console.log(error);
-        },
-      });
+        }
+      },
+    });
   }
 
   // function navigate to pass controls
@@ -292,33 +272,26 @@ export class SelectClassComponent implements AfterViewInit {
           this.passControls[i] = value;
         }
       }
-      console.log(this.passControls);
     });
     instance.onConfirmControls.subscribe(() => {
       instance.submitPassControls();
+      dialog.close();
     });
   }
 
   // function to retrieve pass controls for the current scoresheet
   private loadPassControls() {
-    this.isLoadingPassControls = true;
-    console.log(`This is scoresheet id: ${this.service.selectedScoresheetId}`);
-    this.passControlsService
-      .getControlsByScoresheet(this.service.selectedScoresheetId)
-      .subscribe({
-        next: (data: IPassControls[]) => {
-          this.passControls = data;
-          console.log(data);
-          this.isLoadingPassControls = false;
+    this.resetPassControls();
+    this.dispatchPassControlsIsLoading(true);
 
-          // setting pass controls in PassControls service
-          this.passControlsService.setPassControls = data;
-        },
-        error: (error) => {
-          this.isLoadingPassControls = false;
-          this.passControlsService.errorToast(error);
-        },
-      });
+    this.selectedScoresheetId$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: IScoresheet) => {
+        this.title = data.name + ' Scoresheet';
+        this.store.dispatch(
+          getPassControlsByScoresheetRequest({ id: data._id || '' }),
+        );
+      },
+    });
   }
 
   // function to navigate to class marks
@@ -334,7 +307,7 @@ export class SelectClassComponent implements AfterViewInit {
         this.service.selectedScoresheetId,
         stream.subjects,
         0,
-        7
+        7,
       )
       .subscribe({
         next: (data) => {
@@ -351,7 +324,7 @@ export class SelectClassComponent implements AfterViewInit {
               this.service.selectedScoresheetId,
               stream.subjects,
               7,
-              stream.subjects.length
+              stream.subjects.length,
             )
             .subscribe({
               next: (data) => {
@@ -363,7 +336,7 @@ export class SelectClassComponent implements AfterViewInit {
 
                 const finalArray = this.getClassStudentsAndMarks(
                   allSubMarks,
-                  stream
+                  stream,
                 );
                 console.log(finalArray);
                 this.service.className = stream.name;
@@ -374,7 +347,7 @@ export class SelectClassComponent implements AfterViewInit {
 
                 sessionStorage.setItem(
                   'class-marks',
-                  JSON.stringify(finalArray)
+                  JSON.stringify(finalArray),
                 );
                 this.router.navigateByUrl('class-marks');
               },
@@ -397,22 +370,7 @@ export class SelectClassComponent implements AfterViewInit {
       const subjects: any = [];
       if (temp.length != 0) {
         temp.forEach((mark: any) => {
-          // console.log(mark);
-          // console.log('I am from api + '' +mark.class_student_id.class_id)
-          // console.log(selectedStream);
-          // console.log(mark.subject_teacher_id);
-          if (mark.subject_teacher_id.class_id == null) {
-            console.log('i am null');
-          }
-
-          if (selectedStream.class_id == null) {
-            console.log('i am null too');
-          }
           if (mark.subject_teacher_id.class_id == selectedStream.class_id) {
-            // console.log(
-            //   selectedStream.name + ' ' + selectedStream.class_id
-            // );
-            // console.log(mark.subject_teacher_id.class_id);
             subjects.push(mark);
           }
         });
@@ -424,5 +382,15 @@ export class SelectClassComponent implements AfterViewInit {
     }
 
     return finalSubjectsArray;
+  }
+
+  // function to reset pass controls
+  resetPassControls() {
+    this.store.dispatch(resetPassControls());
+  }
+
+  // function to dispacth loading pass controls
+  dispatchPassControlsIsLoading(state: boolean) {
+    this.store.dispatch(passControlsIsLoading({ isLoading: state }));
   }
 }

@@ -1,6 +1,6 @@
 <app-add-dialog [dialogTitle]="title">
   <div class="dialogContent">
-    <div class="mat-typography instructions">
+    <div class="instructions">
       The form below contains input elements for assigning subject teachers.
     </div>
 
@@ -8,10 +8,12 @@
       <form id="input-container" class="form">
         <div class="form-field stream">
           <button mat-raised-button [matMenuTriggerFor]="classStream">
-            {{ streamSelection.name }}
+            {{
+              streamSelection == null ? "Select Grade" : streamSelection.name
+            }}
           </button>
           <mat-menu #classStream="matMenu">
-            <div *ngFor="let class of streams; let i = index">
+            <div *ngFor="let class of streams$ | async; let i = index">
               <button mat-menu-item (click)="selectStream(class)">
                 {{ class.name }}
               </button>
@@ -20,11 +22,14 @@
         </div>
         <div class="form-field subject">
           <button mat-raised-button [matMenuTriggerFor]="classSubject">
-            {{ subjectSelection.name }} (<b>{{ subjectSelection.level }}</b
-            >)
+            {{
+              subjectSelection === null
+                ? "Select subject"
+                : subjectSelection.name + " (" + subjectSelection.level + ")"
+            }}
           </button>
           <mat-menu #classSubject="matMenu">
-            <div *ngFor="let subject of subjects; let i = index">
+            <div *ngFor="let subject of subjects$ | async; let i = index">
               <button mat-menu-item (click)="selectSubject(subject)">
                 {{ subject.name }} (<b>{{ subject.level }}</b
                 >)
@@ -34,14 +39,26 @@
         </div>
         <div class="form-field teacher">
           <button mat-raised-button [matMenuTriggerFor]="subjectTeacher">
-            {{ teacherSelection.title }}
-            {{ teacherSelection.name }}
-            {{ teacherSelection.surname }}
+            {{
+              teacherSelection === null
+                ? "Select teacher"
+                : teacherSelection.title +
+                  " " +
+                  teacherSelection.user_id.name +
+                  " " +
+                  teacherSelection.user_id.surname
+            }}
           </button>
           <mat-menu #subjectTeacher="matMenu">
-            <div *ngFor="let teacher of teachers; let i = index">
+            <div *ngFor="let teacher of teachers$ | async; let i = index">
               <button mat-menu-item (click)="selectTeacher(teacher)">
-                {{ teacher.title }} {{ teacher.name }} {{ teacher.surname }}
+                {{
+                  apiService.computeTeacherTitle(
+                    teacher.gender,
+                    teacher.marital_status
+                  )
+                }}
+                {{ teacher.user_id.name }} {{ teacher.user_id.surname }}
               </button>
             </div>
           </mat-menu>

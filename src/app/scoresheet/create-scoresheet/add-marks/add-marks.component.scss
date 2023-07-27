@@ -17,8 +17,10 @@ td {
 }
 
 .students-table-wrapper {
-  width: 100%;
-  background-color: yellow;
+  width: 70%;
+  padding: 7px;
+  background-color: #f3f3f3;
+  margin: auto;
   // text-align: center;
 }
 
@@ -159,6 +161,14 @@ td {
 
   table {
     width: auto !important;
+  }
+
+  .students-table-wrapper {
+    width: 100%;
+    padding: 7px;
+    background-color: #f3f3f3;
+    margin: auto;
+    // text-align: center;
   }
 
   // .buttons-container {

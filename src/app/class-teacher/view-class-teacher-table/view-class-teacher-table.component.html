@@ -1,10 +1,13 @@
-<div class="buttons-container mat-typography">
+<div class="buttons-container">
   <button mat-raised-button color="primary" (click)="openDialog()">
     <mat-icon>add</mat-icon> Add
   </button>
 </div>
 <div class="mat-elevation-z8 table-container">
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="isLoading$ | async"
+  ></mat-progress-bar>
   <table mat-table [dataSource]="dataSource">
     <!-- Position Column -->
     <ng-container matColumnDef="index">
