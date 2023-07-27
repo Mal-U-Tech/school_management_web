@@ -1,0 +1,14 @@
+@use "../../../my-styles.scss" as var;
+
+button.confirmed {
+  background-color: var.$primary;
+  color: white;
+}
+
+.fira-code {
+  font-family: var.$regular;
+}
+
+.fira-code-bold {
+  font-family: var.$bold;
+}

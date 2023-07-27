@@ -6,7 +6,7 @@
           {{ streamSelection.name }}
         </button>
         <mat-menu #streams="matMenu">
-          <div *ngFor="let stream of classes; let i = index">
+          <div *ngFor="let stream of streams$ | async; let i = index">
             <button mat-menu-item (click)="selectStream(stream)">
               {{ stream["name"] }}
             </button>
@@ -23,7 +23,7 @@
           {{ subjectSelection.name }} ({{ subjectSelection.level }})
         </button>
         <mat-menu #classSubjects="matMenu">
-          <div *ngFor="let subject of subjects; let i = index">
+          <div *ngFor="let subject of subjects$ | async; let i = index">
             <button mat-menu-item (click)="selectSubject(subject)">
               {{ subject["name"] }} ({{ subject["level"] }})
             </button>
@@ -41,10 +41,16 @@
           {{ teacherSelection.surname }}
         </button>
         <mat-menu #subjectTeachers="matMenu">
-          <div *ngFor="let teacher of teachers; let i = index">
+          <div *ngFor="let teacher of teachers$ | async; let i = index">
             <button mat-menu-item (click)="selectTeacher(teacher)">
-              {{ teacher["title"] }} {{ teacher["name"] }}
-              {{ teacher["surname"] }}
+              {{
+                apiService.computeTeacherTitle(
+                  teacher.gender,
+                  teacher.marital_status
+                )
+              }}
+              {{ teacher.user_id.name }}
+              {{ teacher.user_id.surname }}
             </button>
           </div>
         </mat-menu>

@@ -1,8 +1,18 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { delay, of, takeWhile } from 'rxjs';
+import { ISubjectTeacher } from 'src/app/shared/subject-teacher/subject-teacher.interface';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
+import {
+  deleteSubjectTeacherRequest,
+  subjectTeacherIsLoading,
+} from 'src/app/store/subject-teachers/subject-teachers.actions';
+import {
+  selectSubjectTeacherIsLoading,
+  selectSubjectTeachersArray,
+} from 'src/app/store/subject-teachers/subject-teachers.selectors';
 import { DialogConfirmSubTeacherDeleteComponent } from '../dialog-confirm-sub-teacher-delete/dialog-confirm-sub-teacher-delete.component';
 import { SubjectTeacherComponent } from '../subject-teacher.component';
 import { UpdateSubjectTeacherComponent } from '../update-subject-teacher/update-subject-teacher.component';
@@ -17,26 +27,27 @@ interface SUBJECT_TEACHER {
   year: string;
 }
 
-interface TAB_GROUP_OBJECT {
-  name: string; // classname
-  data: {
-    index: string;
-    _id: string;
-    subject_id: object;
-    teacher_id: object;
-    title: string;
-    year: string;
-  };
-}
+// interface TAB_GROUP_OBJECT {
+//   name: string; // classname
+//   data: {
+//     index: string;
+//     _id: string;
+//     subject_id: object;
+//     teacher_id: object;
+//     title: string;
+//     year: string;
+//   };
+// }
 
 @Component({
   selector: 'app-view-sub-teacher-table',
   templateUrl: './view-sub-teacher-table.component.html',
   styleUrls: ['./view-sub-teacher-table.component.scss'],
 })
-export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
-  ELEMENT_DATA: SUBJECT_TEACHER[] = [];
+export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
+  // ELEMENT_DATA: SUBJECT_TEACHER[] = [];
   isLoading = false;
+  alive = true;
   totalRows = 0;
   pageSize = 10;
   currentPage = 0;
@@ -52,12 +63,24 @@ export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
   dialogRef: any;
   public streams: any = [];
 
-  constructor(private api: SubjectTeacherService, public dialog: MatDialog) {}
-  // @ViewChild(MatPaginator) paginator!: MatPaginator;
+  // store variables
+  isLoading$ = this.store.select(selectSubjectTeacherIsLoading);
+  subjectTeachers$ = this.store.select(selectSubjectTeachersArray);
 
-  ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
-    console.log('Inside after view init');
+  constructor(
+    private api: SubjectTeacherService,
+    public dialog: MatDialog,
+    private store: Store
+  ) {}
+
+  dispatchSubjectTeacherIsLoading(state: boolean) {
+    this.store.dispatch(
+      subjectTeacherIsLoading({ subjectTeacherIsLoading: state })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.alive = false;
   }
 
   ngOnInit(): void {
@@ -65,153 +88,109 @@ export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
   }
 
   loadData() {
-    this.isLoading = true;
+    this.dispatchSubjectTeacherIsLoading(true);
+    this.streams = [];
 
-    this.api.getAllSubjectTeachers(0, 0).subscribe({
-      next: (data: any) => {
-        console.log(data);
+    this.subjectTeachers$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: ISubjectTeacher[]) => {
+        if (data) {
+          const labels: string[] = [];
+          const teacherData: SUBJECT_TEACHER[][] = [[]];
 
-        const arr: TAB_GROUP_OBJECT[] = [];
-        const labels: string[] = [];
-        const teacherData: SUBJECT_TEACHER[][] = [[]];
+          for (let i = 0; i < data.length; i++) {
+            const temp = data[i];
+            // console.log(temp.teacher_id.user_id.name);
 
-        for (let i = 0; i < data.length; i++) {
-          const temp = data[i];
-          // console.log(temp.teacher_id.user_id.name);
+            let index = labels.findIndex(
+              (label) => label === temp.class_id.name
+            );
 
-          let index = labels.findIndex((label) => label === temp.class_id.name);
+            // add classname to labels array
+            if (index === null || index === undefined || index < 0) {
+              if (index < 0 && labels.length === 0) {
+                index = 0;
+              } else {
+                index = labels.length;
+                console.log(`Index is ${index}`);
+              }
 
-          // add classname to labels array
-          if (index === null || index === undefined || index < 0) {
-
-
-            if (index < 0 && labels.length === 0) {
-              index = 0;
-            } else {
-              index = labels.length;
-              console.log(`Index is ${index}`);
+              // add new class to labels array
+              labels.push(temp.class_id.name);
             }
 
-            // add new class to labels array
-            labels.push(temp.class_id.name);
-          }
-          //
+            // check if index exits for the teacher data array
+            if (
+              teacherData[index] === null ||
+              teacherData[index] === undefined
+            ) {
+              teacherData.push([]);
+              console.log(teacherData[index]);
+              // append current data to correct teacherData index
+              teacherData[index].push({
+                _id: temp._id || '',
+                index: (teacherData[index].length + 1).toString(),
+                subject_id: temp.subject_id,
+                teacher_id: {
+                  _id: temp.teacher_id._id,
+                  name: temp.teacher_id.user_id.name,
+                  surname: temp.teacher_id.user_id.surname,
+                  contact: temp.teacher_id.user_id.contact,
+                },
+                title: this.api.computeTeacherTitle(
+                  temp.teacher_id.gender,
+                  temp.teacher_id.marital_status
+                ),
+                class_id: temp.class_id,
+                year: temp.year,
+              });
+            } else {
+              // append current data to correct teacherData index
+              teacherData[index].push({
+                _id: temp._id || '',
+                index: (teacherData[index].length + 1).toString(),
+                subject_id: temp.subject_id,
+                teacher_id: {
+                  _id: temp.teacher_id._id,
+                  name: temp.teacher_id.user_id.name,
+                  surname: temp.teacher_id.user_id.surname,
+                  contact: temp.teacher_id.user_id.contact,
+                },
+                title: this.api.computeTeacherTitle(
+                  temp.teacher_id.gender,
+                  temp.teacher_id.marital_status
+                ),
+                class_id: temp.class_id,
+                year: temp.year,
+              });
+            } // end if else statement
+          } // end for loop
 
-          // console.log(labels);
+          this.streams = [];
 
-          // check if index exits for the teacher data array
-          if (teacherData[index] === null || teacherData[index] === undefined) {
-            teacherData.push([]);
-            console.log(teacherData[index]);
-            // append current data to correct teacherData index
-            teacherData[index].push({
-              _id: temp._id,
-              index: (teacherData[index].length + 1).toString(),
-              subject_id: temp.subject_id,
-              teacher_id: {
-                _id: temp.teacher_id._id,
-                name: temp.teacher_id.user_id.name,
-                surname: temp.teacher_id.user_id.surname,
-                contact: temp.teacher_id.user_id.contact,
-              },
-              title: this.api.computeTeacherTitle(
-                temp.teacher_id.gender,
-                temp.teacher_id.marital_status
-              ),
-              class_id: temp.class_id,
-              year: temp.year,
+          for (let i = 0; i < teacherData.length; i++) {
+            this.streams.push({
+              label: labels[i],
+              data: (new MatTableDataSource<SUBJECT_TEACHER>().data =
+                teacherData[i]),
             });
-          } else {
-            // append current data to correct teacherData index
-            teacherData[index].push({
-              _id: temp._id,
-              index: (teacherData[index].length + 1).toString(),
-              subject_id: temp.subject_id,
-              teacher_id: {
-                _id: temp.teacher_id._id,
-                name: temp.teacher_id.user_id.name,
-                surname: temp.teacher_id.user_id.surname,
-                contact: temp.teacher_id.user_id.contact,
-              },
-              title: this.api.computeTeacherTitle(
-                temp.teacher_id.gender,
-                temp.teacher_id.marital_status
-              ),
-              class_id: temp.class_id,
-              year: temp.year,
-            });
-          }
+          } // end for loop
 
-          // arr.push({
-          //   _id: temp._id,
-          //   subject_id: temp.subject_id,
-          //   teacher_id: {
-          //     _id: temp.teacher_id._id,
-          //     name: temp.teacher_id.user_id.name,
-          //     surname: temp.teacher_id.user_id.surname,
-          //     contact: temp.teacher_id.user_id.contact,
-          //   },
-          //   class_id: temp.class_id,
-          //   index: `${i + 1}`,
-          //   title: this.api.computeTeacherTitle(
-          //     temp.teacher_id.gender,
-          //     temp.teacher_id.marital_status
-          //   ),
-          //   year: temp.year,
-          // });
+          this.dispatchSubjectTeacherIsLoading(false);
         }
-
-        console.log(labels);
-        console.log(teacherData);
-         this.streams = [];
-
-        for (let i = 0; i < teacherData.length; i++) {
-
-          this.streams.push({
-            label: labels[i],
-            data: (new MatTableDataSource<SUBJECT_TEACHER>().data =
-              teacherData[i]),
-          });
-        }
-        // this.dataSource.data = arr;
-
-        // setTimeout(() => {
-        //   this.paginator.pageIndex = this.currentPage;
-        //   this.paginator.length = data.count;
-        // });
-        this.isLoading = false;
       },
       error: (error) => {
-        console.log(error.toString());
+        console.log(error);
         this.streams = [];
-        this.isLoading = false;
       },
     });
+    console.log(`This is after the load data function`);
   }
 
   deleteRow(data: any) {
     console.log(data);
-    this.isLoading = true;
-    this.api.deleteSubjectTeachere(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.log(error.toString());
-      },
-    });
-  }
 
-  pageChanged(event: PageEvent) {
-    console.log({ event });
-    this.pageSize = event.pageSize;
-    this.currentPage = event.pageIndex;
-    this.loadData();
+    this.dispatchSubjectTeacherIsLoading(true);
+    this.store.dispatch(deleteSubjectTeacherRequest({ id: data._id }));
   }
 
   openDialog(): void {
@@ -229,9 +208,8 @@ export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
 
     instance.onSubmit.subscribe(() => {
       instance.saveSubjectTeacher();
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
+      this.dialogRef.close();
+
     });
   }
 
@@ -253,6 +231,8 @@ export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
 
     instance.onSubmit.subscribe(() => {
       instance.updateSubjectTeacher();
+      this.dialogRef.close();
+
     });
 
     instance.onLoadData.subscribe(() => {
@@ -287,6 +267,7 @@ export class ViewSubTeacherTableComponent implements OnInit, AfterViewInit {
     instance.onConfirmDelete.subscribe(() => {
       this.deleteRow(teacher);
       dialog.close();
+
     });
   }
 }

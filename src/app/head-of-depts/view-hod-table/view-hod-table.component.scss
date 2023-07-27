@@ -1,3 +1,5 @@
+@use "../../../my-styles.scss" as var;
+
 .full-width-table {
   width: 60%;
 }
@@ -27,4 +29,21 @@ div.buttons-container > button {
   font-size: 1.4rem;
   font-weight: bold;
   padding: 24px;
+}
+
+button.add-button {
+  background-color: var.$primary;
+  color: white;
+}
+
+.fira-code {
+  font-family: var.$regular;
+}
+
+.mdc-data-table__pagination-total,
+.mdc-data-table__pagination-rows-per-page-label,
+.mdc-data-table__cell,
+.mat-mdc-select-value,
+.mat-mdc-paginator {
+  font-family: var.$regular;
 }

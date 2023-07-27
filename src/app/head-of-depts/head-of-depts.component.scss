@@ -1,4 +1,6 @@
 // material styles
+@use "../../my-styles.scss" as var;
+
 .container {
   width: 100%;
 }
@@ -19,6 +21,7 @@
   margin: auto;
   text-align: center;
   font-size: 1.2rem;
+  font-family: var.$regular;
 }
 
 .form-container {
@@ -47,4 +50,23 @@
 .menu {
   margin: 7px auto;
   text-align: center;
+}
+
+button.submit {
+  background-color: var.$primary;
+  color: white;
+  font-family: var.$regular;
+}
+
+::ng-deep .fira-code {
+  font-family: var.$regular;
+}
+
+.mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  font-family: var.$regular;
+}
+
+.mat-mdc-menu-item.menu-options {
+  background-color: purple;
+  font-family: var.$regular;
 }

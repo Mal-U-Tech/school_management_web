@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
 import { SharedApiConstants } from '../shared.constants';
-import { IHOD } from './hod.interface';
+import { IHOD, IHodGetResponse, IHodPost } from './hod.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,19 +30,16 @@ export class HodService extends SharedApiConstants {
   }
 
   // HttpClient API post() => register HOD
-  postHOD(teacher: IHOD): Observable<IHOD> {
+  postHOD(teacher: IHodPost): Observable<IHOD> {
     return this.http
-      .post<IHOD>(
-        this.apiUrl + `${this.module}/register`,
-        teacher
-      )
+      .post<IHOD>(this.apiUrl + `${this.module}/register`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   // HttpClient API get() => get all HOD's
-  getAllHODs(pageNo: number, pageSize: number): Observable<IHOD[]> {
+  getAllHODs(pageNo: number, pageSize: number): Observable<IHodGetResponse> {
     return this.http
-      .get<IHOD[]>(
+      .get<IHodGetResponse>(
         this.apiUrl + `${this.module}/view-all/${pageNo}/${pageSize}`
       )
       .pipe(retry(1), catchError(this.handleError));
@@ -56,12 +53,9 @@ export class HodService extends SharedApiConstants {
   }
 
   // HttpClient API put() => update HOD
-  updateHOD(id: string, teacher: IHOD): Observable<IHOD> {
+  updateHOD(id: string, teacher: IHodPost): Observable<IHOD> {
     return this.http
-      .put<IHOD>(
-        this.apiUrl + `${this.module}/update/${id}`,
-        teacher
-      )
+      .put<IHOD>(this.apiUrl + `${this.module}/update/${id}`, teacher)
       .pipe(retry(1), catchError(this.handleError));
   }
 

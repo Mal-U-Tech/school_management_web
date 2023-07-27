@@ -1,0 +1,26 @@
+@use "../../../my-styles.scss" as var;
+
+div.global-spinner-container {
+  width: 30%;
+  height: 15%;
+  background-color: #eee;
+  padding: 12px;
+  z-index: 10px;
+  margin: auto;
+  border-radius: 12px;
+}
+
+::ng-deep mat-spinner.global-spinner {
+  margin: auto;
+}
+
+div.spinner-text {
+  text-align: center;
+  font-family: var.$regular;
+  font-weight: bold;
+  padding: 12px;
+  margin: auto;
+}
+
+div.wrapper {
+}

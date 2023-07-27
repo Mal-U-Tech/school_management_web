@@ -69,6 +69,10 @@ export class SubjectTeacherService extends SharedApiConstants {
     class_id: string,
     year: string
   ) {
+    console.log(`Subject: ${subject_id}`);
+    console.log(`Teacher: ${teacher_id}`);
+    console.log(`Class: ${class_id}`);
+    console.log(`Year: ${year}`);
     return this.http
       .get(
         this.apiUrl +
@@ -91,14 +95,13 @@ export class SubjectTeacherService extends SharedApiConstants {
   }
 
   // HttpClient API delete() => delete subject teacher in db
-  deleteSubjectTeachere(id: string) {
+  deleteSubjectTeacher(id: string) {
     return this.http
       .delete(this.apiUrl + `${this.module}/delete/${id}`)
       .pipe(retry(1), catchError(this.handleError));
   }
 
   computeTeacherTitle(gender: string, maritalStatus: string): string {
-
     if (gender === 'Male') {
       return 'Mr.';
     } else if (gender === 'Female' && maritalStatus === 'Single') {

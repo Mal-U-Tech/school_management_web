@@ -187,9 +187,9 @@ export class ViewDepartmentsTableComponent implements OnInit, AfterViewInit {
 
     instance.onSubmit.subscribe(() => {
       instance.submitDepartments();
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
+      // setTimeout(() => {
+      //   this.loadData();
+      // }, 1000);
     });
   }
 

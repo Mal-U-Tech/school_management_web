@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -9,7 +10,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Store } from '@ngrx/store';
-import { map, tap } from 'rxjs';
+import { map, takeWhile, tap } from 'rxjs';
 import { ClassnameApiService } from 'src/app/shared/classname/classname-api.service';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
 import {
@@ -34,7 +35,7 @@ interface STREAM {
   templateUrl: './view-streams-table.component.html',
   styleUrls: ['./view-streams-table.component.scss'],
 })
-export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
+export class ViewStreamsTableComponent implements OnInit, AfterViewInit, OnDestroy {
   ELEMENT_DATA: STREAM[] = [];
 
   totalRows = 0;
@@ -47,6 +48,7 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
   onOpenDialog = new EventEmitter();
   dialogRef: any;
   totalPages = 0;
+  alive = true;
 
   // store variables
   streams$ = this.store.select(selectStreamsArray);
@@ -69,6 +71,10 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
     this.loadData();
   }
 
+  ngOnDestroy(): void {
+      this.alive = false;
+  }
+
   dispatchIsStreamsLoading(state: boolean) {
     this.store.dispatch(streamsIsLoading({ streamsIsLoading: state }));
   }
@@ -77,6 +83,7 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
     this.dispatchIsStreamsLoading(true);
 
     this.streams$
+      .pipe(takeWhile(() => this.alive))
       .pipe(
         tap((streams: IClassname[]) => {
           this.totalPages = streams.length;
@@ -116,50 +123,12 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
           this.dispatchIsStreamsLoading(false);
           this.dataSource.data = [];
         },
-      })
-      .unsubscribe();
-
-    // this.api.viewAllClasses(this.currentPage, this.pageSize).subscribe({
-    //   next: (data: any) => {
-    //     console.log(data);
-    //     const arr: STREAM[] = [];
-    //
-    //     for (let i = 0; i < data.data.length; i++) {
-    //       arr.push({
-    //         index: `${i + 1}`,
-    //         _id: data.data[i]._id,
-    //         name: data.data[i].name,
-    //       });
-    //     }
-    //     this.dataSource.data = arr;
-    //     setTimeout(() => {
-    //       this.paginator.pageIndex = this.currentPage;
-    //       this.paginator.length = data.count;
-    //     });
-    //     this.isLoading = false;
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //     this.isLoading = false;
-    //     this.dataSource.data = [];
-    //   },
-    // });
+      });
   }
 
   deleteRow(data: any) {
-    console.log(data);
     this.store.dispatch(deleteStreamRequest({ id: data._id }));
-    // this.api.deleteClassname(data._id).subscribe({
-    //   next: (res: any) => {
-    //     console.log(res);
-    //     setTimeout(() => {
-    //       this.loadData();
-    //     }, 1000);
-    //   },
-    //   error: (err) => {
-    //     console.log(err);
-    //   },
-    // });
+
   }
 
   pageChanged(event: PageEvent) {
@@ -188,9 +157,7 @@ export class ViewStreamsTableComponent implements OnInit, AfterViewInit {
 
       instance.onSubmit.subscribe(() => {
         instance.Geeks();
-        setTimeout(() => {
-          this.loadData();
-        }, 100);
+        this.dialogRef.close();
       });
 
       this.dialogRef.afterClosed().subscribe(() => {

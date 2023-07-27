@@ -1,3 +1,4 @@
+@use "../../../my-styles.scss" as var;
 .full-width-table {
   width: 60%;
 }
@@ -27,4 +28,13 @@ div.buttons-container > button {
   padding: 24px;
   font-size: 1.4rem;
   font-weight: bold;
+}
+
+button.add {
+  background-color: var.$primary;
+  color: white;
+}
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: #3d7c98;
 }

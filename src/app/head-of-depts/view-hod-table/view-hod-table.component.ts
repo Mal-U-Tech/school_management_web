@@ -1,8 +1,16 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { map, Observable } from 'rxjs';
+import { IHOD } from 'src/app/shared/hod/hod.interface';
 import { HodService } from 'src/app/shared/hod/hod.service';
+import { deleteHodRequest, hodIsLoading } from 'src/app/store/hod/hod.actions';
+import {
+  selectHodIsLoading,
+  selectHodsArray,
+} from 'src/app/store/hod/hod.selectors';
 import { DialogConfirmHODDeleteComponent } from '../dialog-confirm-hod-delete/dialog-confirm-hod-delete.component';
 import { HeadOfDeptsComponent } from '../head-of-depts.component';
 
@@ -20,24 +28,26 @@ interface HOD {
   templateUrl: './view-hod-table.component.html',
   styleUrls: ['./view-hod-table.component.scss'],
 })
-export class ViewHodTableComponent {
+export class ViewHodTableComponent implements OnInit, AfterViewInit {
   ELEMENT_DATA: HOD[] = [];
-  isLoading = false;
   totalRows = 0;
   pageSize = 10;
   currentPage = 0;
   pageSizeOptions: number[] = [1, 5, 10, 25, 100];
   displayColumns: string[] = [
-    'index',
+    // 'index',
     'teacher',
     'department',
     'year',
     'actions',
   ];
-  dataSource: MatTableDataSource<HOD> = new MatTableDataSource();
+  dataSource: MatTableDataSource<IHOD> = new MatTableDataSource<IHOD>();
+  hodsObservableDatasource$: Observable<MatTableDataSource<IHOD>> = null as any;
   dialogRef: any;
+  hods$ = this.store.select(selectHodsArray);
+  isLoading$ = this.store.select(selectHodIsLoading);
 
-  constructor(private api: HodService, public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private store: Store) {}
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -49,79 +59,29 @@ export class ViewHodTableComponent {
     this.loadData();
   }
 
-  loadData() {
-    this.isLoading = true;
-
-    this.api.getAllHODs(this.currentPage, this.pageSize).subscribe({
-      next: (data: any) => {
-        console.log(data.data);
-
-        let arr: HOD[] = [];
-
-        for (let i = 0; i < data.data.length; i++) {
-          const temp = data.data[i];
-
-          arr.push({
-            _id: temp._id,
-            teacher: {
-              name: temp.teacher_id.user_id.name,
-              surname: temp.teacher_id.user_id.surname,
-              contact: temp.teacher_id.user_id.contact,
-            },
-            department: temp.department_id,
-            index: `${i + 1}`,
-            title: this.computeTeacherTitle(
-              temp.teacher_id.gender,
-              temp.teacher_id.marital_status
-            ),
-            year: temp.year,
-          });
-
-          console.log(arr);
-        }
-
-        this.dataSource.data = arr;
-
-        setTimeout(() => {
-          this.paginator.pageIndex = data.pageNo;
-          this.paginator.length = data.count;
-        });
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.log(error.toString());
-        this.dataSource.data = [];
-        this.isLoading = false;
-      },
-    });
+  dispatchHodIsLoading(state: boolean) {
+    this.store.dispatch(hodIsLoading({ hodIsLoading: state }));
   }
 
-  computeTeacherTitle(gender: string, maritalStatus: string): string {
-    if (gender === 'Male') {
-      return 'Mr.';
-    } else if (gender === 'Female' && maritalStatus === 'Single') {
-      return 'Ms.';
-    } else {
-      return 'Mrs.';
-    }
+  loadData() {
+    this.dispatchHodIsLoading(true);
+    this.hods$.subscribe({
+      next: (items: IHOD[]) => {
+        this.dataSource.data = items;
+        this.dispatchHodIsLoading(false);
+      },
+    });
+
+    console.log(this.dataSource.data);
+
+
   }
 
   deleteRow(data: any) {
     console.log(data);
-    this.isLoading = true;
-    this.api.deleteHOD(data._id).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        setTimeout(() => {
-          this.loadData();
-        }, 1000);
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.log(error.toString());
-      },
-    });
+
+    this.dispatchHodIsLoading(true);
+    this.store.dispatch(deleteHodRequest({ id: data._id }));
   }
 
   pageChanged(event: PageEvent) {
@@ -138,7 +98,7 @@ export class ViewHodTableComponent {
     dialogConfig.closeOnNavigation = true;
 
     this.dialogRef = this.dialog.open(HeadOfDeptsComponent, dialogConfig);
-    let instance = this.dialogRef.componentInstance;
+    const instance = this.dialogRef.componentInstance;
 
     instance.onClose.subscribe(() => {
       this.dialogRef.close();
@@ -146,9 +106,7 @@ export class ViewHodTableComponent {
 
     instance.onSubmit.subscribe(() => {
       instance.saveHOD();
-      setTimeout(() => {
-        this.loadData();
-      }, 1000);
+      this.dialogRef.close();
     });
   }
 
@@ -156,17 +114,17 @@ export class ViewHodTableComponent {
     console.log(teacher);
   }
 
-  openDeleteHODDialog(teacher: any) {
+  openDeleteHODDialog(teacher: IHOD) {
     console.log(teacher);
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
       title: 'Confirm HOD deletion',
-      name: teacher.teacher.name,
-      surname: teacher.teacher.surname,
-      teacher_title: teacher.title,
-      department: teacher.department.name,
+      name: teacher.teacher_id.user_id.name,
+      surname: teacher.teacher_id.user_id.surname,
+      teacher_title: teacher.teacher_id.title,
+      department: teacher.department_id.name,
     };
 
     const dialog = this.dialog.open(
@@ -174,7 +132,7 @@ export class ViewHodTableComponent {
       dialogConfig
     );
 
-    let instance = dialog.componentInstance;
+    const instance = dialog.componentInstance;
     instance.onCloseDialog.subscribe(() => {
       dialog.close();
     });

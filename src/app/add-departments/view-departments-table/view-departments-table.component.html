@@ -1,10 +1,11 @@
 <div class="buttons-container mat-typography">
-  <button mat-raised-button color="primary" (click)="openDialog()">
+  <button mat-raised-button class="add" (click)="openDialog()">
     <mat-icon>add</mat-icon>Add
   </button>
 </div>
 <div class="mat-elevation-z8 table-container">
   <mat-progress-bar
+    class="progress-bar"
     mode="indeterminate"
     *ngIf="departmentsIsLoading$ | async"
   ></mat-progress-bar>
