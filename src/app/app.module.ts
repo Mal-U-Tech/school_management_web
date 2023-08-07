@@ -108,6 +108,15 @@ import { ScoresheetEffects } from './store/scoresheet/scoresheet.effects';
 import { scoresheetReducer } from './store/scoresheet/scoresheet.reducer';
 import { PassControlsEffects } from './store/pass-controls/pass-control.effects';
 import { passControlsReduer } from './store/pass-controls/pass-control.reducer';
+import { MatTabTableComponent } from './components/mat-tab-table/mat-tab-table.component';
+import { ViewReportsComponent } from './pages/view-reports/view-reports.component';
+import { reportReducer } from './store/reports/reports.reducer';
+import { ReportEffects } from './store/reports/reports.effects';
+import { AddReportsDialogComponent } from './components/add-reports-dialog/add-reports-dialog.component';
+import { GenerateReportsComponent } from './pages/generate-reports/generate-reports.component';
+import { ViewClassesConductComponent } from './pages/view-classes-conduct/view-classes-conduct.component';
+import { AddClassConductComponent } from './pages/add-class-conduct/add-class-conduct.component';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes: Routes = [
   { path: '', redirectTo: '/splash', pathMatch: 'full' },
@@ -166,6 +175,10 @@ const routes: Routes = [
   { path: 'class-scoresheet', component: ClassScoresheetComponent },
   { path: 'pass-controls', component: PassControlsComponent },
   { path: 'class-marks', component: ClassMarksComponent },
+  { path: 'view-reports', component: ViewReportsComponent },
+  { path: 'generate-reports', component: GenerateReportsComponent },
+  { path: 'view-attendance-conduct', component: ViewClassesConductComponent },
+  { path: 'add-attendance-conduct', component: AddClassConductComponent },
 ];
 
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
@@ -225,6 +238,12 @@ const routes: Routes = [
     DeleteDialogComponent,
     SpinnerComponent,
     ProgressLoaderComponent,
+    MatTabTableComponent,
+    ViewReportsComponent,
+    AddReportsDialogComponent,
+    GenerateReportsComponent,
+    ViewClassesConductComponent,
+    AddClassConductComponent,
   ],
   imports: [
     BrowserModule,
@@ -257,6 +276,7 @@ const routes: Routes = [
     MatTabsModule,
     MatExpansionModule,
     MatFormFieldModule,
+    MatSelectModule,
     StoreModule.forRoot({
       auth: authReducer,
       schoolInfo: schoolInfoReducer,
@@ -270,6 +290,7 @@ const routes: Routes = [
       hod: hodReducer,
       scoresheet: scoresheetReducer,
       passControls: passControlsReduer,
+      reports: reportReducer,
     }),
     EffectsModule.forRoot([
       AuthEffects,
@@ -284,6 +305,7 @@ const routes: Routes = [
       HodEffects,
       ScoresheetEffects,
       PassControlsEffects,
+      ReportEffects,
     ]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],

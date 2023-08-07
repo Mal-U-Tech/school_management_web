@@ -2,6 +2,7 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { SCORESHEET } from 'src/app/scoresheet/view-scoresheets/view-scoresheets.component';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
+import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { SubjectsState } from '../subjects/subjects.reducer';
 import { selectSubject } from '../subjects/subjects.selector';
 import { ScoresheetState } from './scoresheet.reducer';
@@ -128,3 +129,18 @@ export const selectChosenScoresheet = createSelector(
   selectScoresheet,
   (state: ScoresheetState) => state.selectedScoresheet,
 );
+
+// export const selectScoresheetsByYear = createSelector(selectScoresheet, (state: ScoresheetState) => {
+//     const scoresheets: IScoresheet[] = [];
+//
+//     console.log(state.scoresheets);
+//
+//     state.scoresheets.forEach((sheet) => {
+//       if (sheet.year == year) {
+//         scoresheets.push(sheet);
+//       }
+//     });
+//
+//     console.log(scoresheets);
+//     return scoresheets;
+//   });

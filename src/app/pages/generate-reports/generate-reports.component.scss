@@ -1,0 +1,120 @@
+@use "../../../my-styles.scss" as var;
+
+.generate-reports-wrapper {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var.$regular;
+}
+
+.buttons-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background-color: var.$light;
+  width: 100%;
+  margin: auto;
+
+  div {
+    margin: 12px 36px;
+  }
+}
+
+.mdc-button--raised {
+  background-color: var.$secondary;
+  font-family: var.$regular;
+  color: white;
+}
+
+.reports-information-wrapper {
+  margin: 24px auto;
+  width: 75%;
+  background-color: #eee;
+  border-radius: 12px;
+  text-align: center;
+  padding: 25px;
+
+  .title {
+    font-family: var.$bold;
+    text-decoration: underline;
+    font-size: 1.5rem;
+  }
+
+  .scoresheets-container {
+    background-color: grey;
+    padding: 12px;
+    width: 80%;
+    margin: 14px auto;
+    border-radius: 12px;
+
+    .scoresheet-title {
+      font-size: 1.3rem;
+      font-family: var.$semi-bold;
+      text-decoration: underline;
+    }
+
+    .scoresheet-titles {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      font-family: var.$bold;
+      margin: 12px 12px;
+    }
+
+    .ng-for-scoresheet {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+    }
+  }
+}
+
+.scoresheet-name {
+  width: 15%;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+.scoresheet-year {
+  width: 15%;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+.scoresheet-percentage {
+  width: 15%;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.classes-container {
+  width: 80%;
+  margin: auto;
+
+  .classes-title {
+    font-family: var.$semi-bold;
+    text-decoration: underline;
+    font-size: 1.3rem;
+  }
+}
+
+.streams {
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+  div.stream {
+    display: flex;
+    width: 10%;
+    float: left;
+    padding: 12px;
+    margin: 5px;
+  }
+}

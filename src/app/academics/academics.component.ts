@@ -41,6 +41,7 @@ import {
   getScoresheetRequest,
   scoresheetIsLoading,
 } from '../store/scoresheet/scoresheet.action';
+import { getReportsRequest, reportsIsLoading } from '../store/reports/reports.actions';
 
 interface TEACHER {
   _id: string;
@@ -136,6 +137,7 @@ export class AcademicsComponent implements OnInit, OnDestroy {
     this.getClassTeachers();
     this.getHOD();
     this.getScoresheet();
+    this.getReports();
   }
 
   ngOnDestroy(): void {
@@ -202,6 +204,10 @@ export class AcademicsComponent implements OnInit, OnDestroy {
 
   dispatchScoresheetIsLoading() {
     this.store.dispatch(scoresheetIsLoading({ isLoading: true }));
+  }
+
+  dispatchReportsIsLoading() {
+    this.store.dispatch(reportsIsLoading({isLoading: true}));
   }
 
   getStreams() {
@@ -306,6 +312,11 @@ export class AcademicsComponent implements OnInit, OnDestroy {
     this.store.dispatch(getScoresheetRequest());
   }
 
+  getReports() {
+    this.dispatchReportsIsLoading();
+    this.store.dispatch(getReportsRequest());
+  }
+
   // function to navigate to add streams component
   navigate = (path: string): void => {
     this.router.navigate([path]);
@@ -324,5 +335,9 @@ export class AcademicsComponent implements OnInit, OnDestroy {
 
   navigateToViewScoresheets() {
     this.navigate('view-scoresheets');
+  }
+
+  navigateToViewReports(){
+    this.navigate('view-reports');
   }
 }

@@ -45,12 +45,19 @@ export class SelectClassComponent implements OnDestroy {
     public router: Router,
     public marksService: MarksService,
     private dialog: MatDialog,
-    private passControlsService: PassControlsService,
     private classStudentsService: ClassStudentsService,
     private store: Store,
   ) {
     this.title = this.service.name + ' Scoresheet';
     this.loadPassControls();
+
+    // assign year from selected scoresheet
+    this.selectedScoresheetId$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: IScoresheet) => {
+        this.globalSelectedYear = data.year;
+        this.globalSelectedScoresheetId = data._id || '';
+      },
+    });
   }
 
   teachers$ = this.store.select(selectTeacherArray);
@@ -76,6 +83,9 @@ export class SelectClassComponent implements OnDestroy {
   isScoresheetLoading = false;
   title = '';
   alive = true;
+
+  globalSelectedYear = '';
+  globalSelectedScoresheetId = '';
 
   setSelectedClass(index: number) {
     this.selectedClass = index;
@@ -120,6 +130,8 @@ export class SelectClassComponent implements OnDestroy {
     this.selectedScoresheetId$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: IScoresheet) => {
         selectedYear = data.year;
+        this.globalSelectedYear = data.year;
+        this.globalSelectedYear = data._id || '';
       },
     });
 
@@ -303,8 +315,8 @@ export class SelectClassComponent implements OnDestroy {
     // get subjects marks
     this.marksService
       .getSubjectMarksWithArray(
-        this.service.selectedYear,
-        this.service.selectedScoresheetId,
+        this.globalSelectedYear,
+        this.globalSelectedScoresheetId,
         stream.subjects,
         0,
         7,
@@ -320,8 +332,8 @@ export class SelectClassComponent implements OnDestroy {
           // get the rest of the marks here
           this.marksService
             .getSubjectMarksWithArray(
-              this.service.selectedYear,
-              this.service.selectedScoresheetId,
+              this.globalSelectedYear,
+              this.globalSelectedScoresheetId,
               stream.subjects,
               7,
               stream.subjects.length,

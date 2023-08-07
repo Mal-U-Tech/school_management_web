@@ -11,7 +11,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
-import { TeacherService } from 'src/app/shared/teacher/teacher.service';
 import { selectSchoolInfoObject } from 'src/app/store/school-info/school-info.selector';
 import {
   addTeacherPaginatorOptions,
