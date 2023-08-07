@@ -43,9 +43,6 @@
         </mat-form-field>
 
         <div class="buttons-container">
-          <button class="register button" (click)="navToRegister()" mat-button>
-            Register instead
-          </button>
           <button
             *ngIf="!(isLoading$ | async)"
             class="login button"
@@ -61,6 +58,11 @@
               mode="indeterminate"
             ></mat-progress-spinner>
           </div>
+          <br />
+
+          <button class="register button" (click)="navToRegister()" mat-button>
+            Register instead
+          </button>
         </div>
       </form>
     </div>

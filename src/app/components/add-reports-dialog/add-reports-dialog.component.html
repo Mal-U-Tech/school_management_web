@@ -1,0 +1,198 @@
+<div class="add-reports-dialog-wrapper">
+  <section class="header-wrapper">
+    <section>
+      <span class="title"> Create New Reports Instance </span>
+
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="onCloseClicked()"
+        class="close button"
+      >
+        <mat-icon>clear</mat-icon>
+      </button>
+    </section>
+
+    <section class="progress-bar-wrapper">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="process_progress"
+      ></mat-progress-bar>
+    </section>
+  </section>
+
+  <section class="steps-container">
+    <!--Step 1: Name and year-->
+    <div
+      class="data-collector"
+      [ngStyle]="dataStyles"
+      *ngIf="process_progress === 50"
+    >
+      <form class="form-container" [ngStyle]="dataStyles">
+        <mat-form-field class="field input name">
+          <mat-label>Report Name</mat-label>
+          <input
+            matInput
+            placeholder="e.g. Term 1"
+            name="name"
+            [formControl]="reportName"
+          />
+          <mat-error *ngIf="reportName.hasError('required')">
+            Report name is <strong>required!</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="field input year">
+          <mat-label>Year</mat-label>
+          <input
+            matInput
+            placeholder="e.g. 2023"
+            name="year"
+            [formControl]="year"
+          />
+          <mat-error *ngIf="year.hasError('required')">
+            The year is <strong>required!</strong>
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+
+    <!--Selecting classes for reports-->
+    <!-- <div class="data-classes" *ngIf="process_progress === 66"> -->
+    <!--   <div class="select-classes title">Select Classes</div> -->
+    <!--   <div *ngFor="let class of classes$ | async; let i = index"> -->
+    <!--     <mat-checkbox -->
+    <!--       class="class-name checkbox" -->
+    <!--       [(ngModel)]="selectedClasses[i]" -->
+    <!--     > -->
+    <!--       {{ class.name }} -->
+    <!--     </mat-checkbox> -->
+    <!--   </div> -->
+    <!-- </div> -->
+
+    <!-- Step 3: Add criteria for calculations-->
+    <div class="criteria-wrapper" *ngIf="process_progress === 100">
+      <div class="data-selector">
+        <button mat-button [matMenuTriggerFor]="scoresheetSelector">
+          {{ scoresheetSelection.name }} {{ scoresheetSelection.year }}
+        </button>
+        <mat-menu #scoresheetSelector="matMenu">
+          <div
+            *ngFor="let scoresheet of allScoresheets$ | async; let i = index"
+          >
+            <button mat-menu-item (click)="selectScoresheet(scoresheet)">
+              {{ scoresheet.name + " " + scoresheet.year }}
+            </button>
+          </div>
+        </mat-menu>
+        <br />
+        <div class="criteria-list-wrapper">
+          <button mat-button [matMenuTriggerFor]="criteriaList">
+            {{ reportInfo.criteria.length }} instance(s)
+          </button>
+          <mat-menu #criteriaList="matMenu">
+            <div *ngFor="let crit of reportInfo.criteria; let i = index">
+              <button mat-menu-item (click)="selectAndShowCriteria(crit)">
+                Criteria {{ i + 1 }}
+              </button>
+            </div>
+          </mat-menu>
+        </div>
+        <br />
+
+        <div class="criteria-classes line-height">
+          {{ reportsCriteria.classes.length }} classes
+          <button
+            mat-stroked-button
+            class="add-criteria-classes"
+            [matMenuTriggerFor]="addClassCriteria"
+          >
+            <mat-icon>add</mat-icon> Add Classes
+          </button>
+          <mat-menu #addClassCriteria="matMenu">
+            <div *ngFor="let class of classes$ | async; let m = index">
+              <mat-checkbox
+                class="mat-menu-item"
+                [checked]="selectedClasses[m]"
+                [(ngModel)]="selectedClasses[m]"
+                (change)="classAdded(class, m)"
+              >
+                {{ class.name }}
+              </mat-checkbox>
+            </div>
+          </mat-menu>
+          <mat-checkbox
+            [checked]="selectAllClasses"
+            [(ngModel)]="selectAllClasses"
+            (change)="selectAllClassesClicked(classes$)"
+          >
+            Select All Classes
+          </mat-checkbox>
+        </div>
+
+        <br />
+
+        <div class="report-criteria-wrapper">
+          <div
+            class="report-criteria"
+            *ngFor="let scores of reportsCriteria.scoresheets; let j = index"
+          >
+            <div class="scores-index line-height">{{ j }}</div>
+
+            <div class="criteria-scoresheet-name line-height">
+              {{ scores.name }}
+            </div>
+            <div class="criteria-scoresheet-year line-height">
+              {{ scores.year }}
+            </div>
+            <div class="criteria-weight line-height">
+              <mat-form-field>
+                <mat-label>Percentage (%)</mat-label>
+                <input
+                  matInput
+                  name="weight"
+                  [(ngModel)]="reportsCriteria.percentages[j]"
+                  placeholder="e.g. 20"
+                  type="text"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="buttons-container">
+    <div class="navigation-buttons">
+      <button mat-stroked-button (click)="onBackClicked()" class="back-button">
+        <mat-icon>navigate_before</mat-icon> Back
+      </button>
+
+      <button
+        mat-stroked-button
+        (click)="onNextClicked()"
+        class="first-step-next next-button"
+        *ngIf="process_progress !== 100"
+      >
+        <mat-icon>navigate_next</mat-icon> Next
+      </button>
+
+      <button
+        mat-stroked-button
+        (click)="addNewCriteria()"
+        class="add-new-criteria button"
+        *ngIf="process_progress === 100"
+      >
+        <mat-icon>plus_one</mat-icon>Add new criteria
+      </button>
+    </div>
+
+    <button
+      mat-raised-button
+      (click)="onFinishClicked()"
+      *ngIf="process_progress === 100"
+      class="finished-button"
+    >
+      <mat-icon class="mat-icon">check_circle</mat-icon> Finish
+    </button>
+  </div>
+</div>

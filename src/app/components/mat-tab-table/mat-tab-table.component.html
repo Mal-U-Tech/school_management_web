@@ -1,0 +1,11 @@
+<div class="mat-tab-table-wrapper">
+  <mat-tab-group *ngIf="(reports$ | async)!.length > 0">
+    <div *ngFor="let item of reports$ | async; let i = index">
+      <mat-tab [label]="item.label">
+        <table mat-table [dataSource]="item.datasource">
+          <ng-content select=".data-table"></ng-content>
+        </table>
+      </mat-tab>
+    </div>
+  </mat-tab-group>
+</div>

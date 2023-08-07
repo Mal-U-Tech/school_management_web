@@ -45,6 +45,12 @@ button {
   }
 }
 
+.school-reports {
+  background-color: var.$light;
+  max-width: 240px;
+  width: 70%;
+}
+
 @media screen and (max-width: 768px) {
   h1.title {
     font-size: 1.8rem;
