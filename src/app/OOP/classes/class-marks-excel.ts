@@ -21,7 +21,7 @@ export class ClassMarksExcel {
     maxStudents: string,
     students: STUDENT[],
     maxMark: string,
-    className: string
+    className: string,
   ) {
     this.subTeacher = teacher;
     this.subject = subject;
@@ -101,7 +101,7 @@ export class ClassMarksExcel {
         workbook.Sheets[workbook.SheetNames[0]],
         {
           raw: true,
-        }
+        },
       );
 
       this.assignMarksToStudents(subs);
@@ -132,14 +132,14 @@ export class ClassMarksExcel {
               // assign score
               subjects[i].score = this.marks[i + 4]['__EMPTY'];
               this.addedMarks.push(
-                Number.parseInt(this.marks[i + 4]['__EMPTY'])
+                Number.parseInt(this.marks[i + 4]['__EMPTY']),
               );
 
               // calculate and assign percentage
               subjects[i].percentage = Math.round(
                 (Number.parseInt(subjects[i].score) /
                   Number.parseInt(this.marks[2][this.subTeacher])) *
-                  100
+                  100,
               );
             }
           }

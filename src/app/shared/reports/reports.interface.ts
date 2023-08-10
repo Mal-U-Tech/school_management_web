@@ -34,9 +34,21 @@ export interface IReportsData {
     reportInfo: IReportMetaData;
     subjects: {
       name: ISubjects;
-      marks: any;
+      marks: IReportMarks;
     }[];
   }[];
+}
+
+export interface IReportMarks {
+  first: string;
+  second: string;
+  third: string;
+  fourth: string;
+  final_mark: number;
+  position: number;
+  category: string;
+  comments: string;
+  teacher: string;
 }
 
 export interface IReportMetaData {
