@@ -2,7 +2,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
 import { ISubject } from 'src/app/add-subjects/models/subject.model';
+import { ReportExcel } from 'src/app/OOP/classes/report-excel';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
+import { IAttendanceConduct } from 'src/app/shared/attendance-conduct/attendance-conduct.interface';
+import { AttendanceConductService } from 'src/app/shared/attendance-conduct/attendance-conduct.service';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { IClassTeacher } from 'src/app/shared/class-teacher/class-teacher.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
@@ -14,6 +17,9 @@ import {
   IReportsData,
 } from 'src/app/shared/reports/reports.interface';
 import { ISubjectTeacher } from 'src/app/shared/subject-teacher/subject-teacher.interface';
+import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
+import { TeacherService } from 'src/app/shared/teacher/teacher.service';
+import { IUser } from 'src/app/shared/user/user.interface';
 import { selectClassStudentArray } from 'src/app/store/class-students/class-students.selectors';
 import { selectClassTeachersArray } from 'src/app/store/class-teacher/class-teacher.selector';
 import { selectChosenReport } from 'src/app/store/reports/reports.selector';
@@ -32,10 +38,13 @@ export class GenerateReportsComponent implements OnDestroy {
   constructor(
     private store: Store,
     private marksApi: MarksService,
+    private teacherService: TeacherService,
+    private attendanceApi: AttendanceConductService,
   ) {}
 
   private secondaryRegEx = new RegExp('^Form [1-3].');
   private highSchoolRegEx = new RegExp('^Form [4-5].');
+  classTeachers: string[] = [];
   alive = true;
   report$ = this.store.select(selectChosenReport);
   classStudents$ = this.store.select(selectClassStudentArray);
@@ -96,6 +105,9 @@ export class GenerateReportsComponent implements OnDestroy {
 
         // set learners for each class
         learners = this.getClassLearners(temp);
+
+        console.log(this.getClassTeacher(temp));
+        this.classTeachers.push(this.getClassTeacher(temp));
         learners.forEach((learner) => {
           this.allClassesReports[i].learners.push({
             reportInfo: {
@@ -131,7 +143,7 @@ export class GenerateReportsComponent implements OnDestroy {
     });
 
     // assing subjects to students
-    this.assignSubjectsToLearners();
+    await this.assignSubjectsToLearners();
 
     // get scoresheet and assign learners marks
     await this.getLearnersMarks(report);
@@ -156,7 +168,42 @@ export class GenerateReportsComponent implements OnDestroy {
 
     // TODO: get conduct
 
-    // TODO:
+    // const reportExcel = new ReportExcel(report.name, );
+    // console.log(this.allClassesReports);
+    console.log(this.classTeachers);
+    let j = 0;
+    setTimeout(() => {
+      this.allClassesReports.forEach((stream) => {
+        const teacher = this.classTeachers[j];
+
+        // get attendance and conduct for the class
+        this.attendanceApi
+          .getAttendanceReportClass(report._id!, stream.classname._id!)
+          .pipe(takeWhile(() => this.alive))
+          .subscribe({
+            next: (classAttendance: IAttendanceConduct[]) => {
+              if (classAttendance?.length) {
+                // console.log(this.classTeachers[j]);
+
+                const reportExcel = new ReportExcel(
+                  report.name,
+                  stream.classname.name,
+                  stream.learners,
+                  report.year,
+                  teacher,
+                  classAttendance,
+                  report.criteria[0],
+                );
+
+                reportExcel.formulateData();
+                reportExcel.createExcel();
+              }
+            },
+          });
+
+        j++;
+      });
+    }, 5000);
   }
 
   // function to get class learners
@@ -181,20 +228,35 @@ export class GenerateReportsComponent implements OnDestroy {
 
   // function to get class teacher
   getClassTeacher(stream: IClassname) {
-    let teach = null as any;
+    let teach: IClassTeacher = null as any;
     this.classTeachers$.pipe(takeWhile(() => this.alive)).subscribe({
       next: (data: IClassTeacher[]) => {
         if (data?.length) {
           data.forEach((teacher) => {
-            if (teacher.class_id === stream._id || '') {
+            if (
+              (teacher.class_id as IClassname)._id ||
+              '' === stream._id ||
+              ''
+            ) {
               teach = teacher;
             }
           });
         }
       },
     });
+    // console.log(teach);
 
-    return teach;
+    const user = (teach.teacher_id as ITeacher).user_id as IUser;
+    return (
+      this.teacherService.computeTeacherTitle(
+        (teach.teacher_id as ITeacher).gender,
+        (teach.teacher_id as ITeacher).marital_status,
+      ) +
+      ' ' +
+      user.name.substring(0, 1) +
+      '. ' +
+      user.surname
+    );
   }
 
   // function to get learners marks from scoresheets
@@ -263,19 +325,36 @@ export class GenerateReportsComponent implements OnDestroy {
                                 // the mark belongs to this subject
                                 // check if the first scoresheet mark has been added
                                 // if not, add the mark
-                                if (sub.marks.first === null) {
+                                if (sub.marks.first === '') {
                                   sub.marks.first = mark.mark;
-                                } else if (sub.marks.second === null) {
+                                } else if (sub.marks.second === '') {
                                   sub.marks.second = mark.mark;
-                                } else if (sub.marks.third === null) {
+                                } else if (sub.marks.third === '') {
                                   sub.marks.third = mark.mark;
                                 } else {
                                   sub.marks.fourth = mark.mark;
                                 }
-                                console.log(mark);
+                                // console.log(mark);
                                 // sub.marks.first = mark.mark;
-
                                 // console.log(learner);
+
+                                // add subject teacher
+                                const tempUser: IUser = (
+                                  (mark.subject_teacher_id as ISubjectTeacher)
+                                    .teacher_id as ITeacher
+                                ).user_id as IUser;
+                                const tempTeacher: ITeacher = (
+                                  mark.subject_teacher_id as ISubjectTeacher
+                                ).teacher_id as ITeacher;
+                                sub.marks.teacher =
+                                  this.teacherService.computeTeacherTitle(
+                                    tempTeacher.gender,
+                                    tempTeacher.marital_status,
+                                  ) +
+                                  ' ' +
+                                  tempUser.name +
+                                  ' ' +
+                                  tempUser.surname;
                               }
                             });
                           }
@@ -300,7 +379,7 @@ export class GenerateReportsComponent implements OnDestroy {
   }
 
   // assing subjects to learners
-  assignSubjectsToLearners() {
+  async assignSubjectsToLearners() {
     this.allClassesReports.forEach((stream) => {
       // console.log(stream);
 
@@ -322,10 +401,10 @@ export class GenerateReportsComponent implements OnDestroy {
                   learner.subjects.push({
                     name: subject,
                     marks: {
-                      first: null as any,
-                      second: null as any,
-                      third: null as any,
-                      fourth: null as any,
+                      first: '',
+                      second: '',
+                      third: '',
+                      fourth: '',
                       final_mark: 0,
                       position: 0,
                       category: '',
@@ -353,10 +432,10 @@ export class GenerateReportsComponent implements OnDestroy {
                   learner.subjects.push({
                     name: subject,
                     marks: {
-                      first: null as any,
-                      second: null as any,
-                      third: null as any,
-                      fourth: null as any,
+                      first: '',
+                      second: '',
+                      third: '',
+                      fourth: '',
                       final_mark: 0,
                       position: 0,
                       category: '',
