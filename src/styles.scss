@@ -1,11 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-
-// @font-face
-//   font-family: "Love Me"
-//   src: url("../src/assets/KgDoYouLoveMeRegular-1V4e.ttf")
-
 // material theming
-@use "./my-styles.scss" as var;
+@use "./theme.scss" as var;
 @use "@angular/material" as mat;
 
 @include mat.core();
