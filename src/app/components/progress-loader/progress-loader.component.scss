@@ -1,4 +1,4 @@
-@use "../../../my-styles.scss" as var;
+@use "../../../theme.scss" as var;
 
 div.global-spinner-container {
   width: 30%;
@@ -20,7 +20,4 @@ div.spinner-text {
   font-weight: bold;
   padding: 12px;
   margin: auto;
-}
-
-div.wrapper {
 }
