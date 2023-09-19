@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IUser } from 'src/app/shared/user/user.interface';
+import { IUser } from '../interfaces/user.interface';
 
 export const setToken = createAction(
   '[Auth] Set Token',

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { UserApiService } from 'src/app/shared/user/user-api.service';
+import { UserService } from '../../services/user/user.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -55,7 +55,7 @@ export class RegistrationComponent {
   public matcher = new MyErrorStateMatcher();
   isLoading = false;
 
-  constructor(public userApi: UserApiService, public router: Router) {}
+  constructor(public userApi: UserService, public router: Router) {}
 
   public submitForm() {
     if (

@@ -13,6 +13,7 @@ import { ClassStudentsComponent } from 'src/app/class-students/class-students.co
 import { ClassTeacherComponent } from 'src/app/class-teacher/class-teacher.component';
 import { ClassnameComponent } from 'src/app/classname/classname.component';
 import { HeadOfDeptsComponent } from 'src/app/head-of-depts/head-of-depts.component';
+import { UserService } from 'src/app/modules/authenticate/services/user/user.service';
 import { IDepartments } from 'src/app/shared/add-departments/add-departments.interface';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
@@ -21,7 +22,6 @@ import { IClassname } from 'src/app/shared/classname/classname.interface';
 import { IHOD } from 'src/app/shared/hod/hod.interface';
 import { ISubjectTeacher } from 'src/app/shared/subject-teacher/subject-teacher.interface';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
-import { UserApiService } from 'src/app/shared/user/user-api.service';
 import { selectClassStudentArray } from 'src/app/store/class-students/class-students.selectors';
 import { selectClassTeachersArray } from 'src/app/store/class-teacher/class-teacher.selector';
 import { selectDepartmentsArray } from 'src/app/store/departments/departments.selector';
@@ -43,7 +43,7 @@ export class DashboardCardComponent
 {
   constructor(
     public dialog: MatDialog,
-    private api: UserApiService,
+    private api: UserService,
     private store: Store
   ) {}
   @Input() title = '';

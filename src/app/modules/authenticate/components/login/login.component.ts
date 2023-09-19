@@ -9,10 +9,10 @@ import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { UserApiService } from 'src/app/shared/user/user-api.service';
 import { selectIsLoading, selectToken, selectUserData } from '../../store/authenticate.selectors';
 import { selectSchoolInfo, selectSchoolInfoIsLoading } from 'src/app/store/school-info/school-info.selector';
 import { isLoading, login } from '../../store/authenticate.actions';
+import { UserService } from '../../services/user/user.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -35,7 +35,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class LoginComponent {
   constructor(
-    public userApi: UserApiService,
+    public userApi: UserService,
     public router: Router,
     private _snackBar: MatSnackBar,
     private store: Store

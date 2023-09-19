@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, from, mergeMap, of, switchMap, tap } from 'rxjs';
-import { UserApiService } from 'src/app/shared/user/user-api.service';
-import { IUser } from 'src/app/shared/user/user.interface';
 import {
   isLoading,
   login,
@@ -11,12 +9,14 @@ import {
   setUser,
 } from './authenticate.actions';
 import { checkModulesRequest, isSchoolInfoLoading } from 'src/app/store/school-info/school-info.actions';
+import { UserService } from '../services/user/user.service';
+import { IUser } from '../interfaces/user.interface';
 
 @Injectable()
 export class AuthenticateEffects {
   constructor(
     private readonly actions$: Actions,
-    private readonly authService: UserApiService,
+    private readonly service: UserService,
   ) {}
   // on login, send auth data to backend,
   // get the user and add to store
@@ -24,14 +24,14 @@ export class AuthenticateEffects {
     return this.actions$.pipe(
       ofType(login),
       mergeMap(({ email, password }) =>
-        from(this.authService.authLogin(email, password)).pipe(
+        from(this.service.authLogin(email, password)).pipe(
           tap(({ token }) => {
-            this.authService.successToast('Login successful.');
+            this.service.successToast('Login successful.');
             return of(setToken({ token }));
           }),
           // map(({ user }) => setUser({user: user as IUser})),
           catchError((error) => {
-            this.authService.errorToast(error);
+            this.service.errorToast(error);
             return of(loginError({ message: error.toString() }));
           })
         )

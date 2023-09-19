@@ -39,6 +39,9 @@ import routes from './authenticate.routes';
 
     // angular imports
     ReactiveFormsModule,
-  ]
+  ],
+  providers: [
+
+  ],
 })
 export class AuthenticateModule { }

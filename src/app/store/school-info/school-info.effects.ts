@@ -2,20 +2,19 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, from, mergeMap, of, switchMap } from 'rxjs';
-import { UserApiService } from 'src/app/shared/user/user-api.service';
-import { ICheckModulesResult } from 'src/app/shared/user/user.interface';
 import {
   addSchoolInfo,
   checkModulesError,
   checkModulesRequest,
   isSchoolInfoLoading,
 } from './school-info.actions';
+import { UserService } from 'src/app/modules/authenticate/services/user/user.service';
 
 @Injectable()
 export class SchoolInfoEffects {
   constructor(
     private readonly actions$: Actions,
-    private readonly schoolInfoService: UserApiService,
+    private readonly schoolInfoService: UserService,
     private readonly router: Router
   ) {}
   // get the school info data
@@ -33,11 +32,8 @@ export class SchoolInfoEffects {
           })
         )
       ),
-      switchMap((success) => {
-        console.log(success as ICheckModulesResult);
-        const modulesRes = success as ICheckModulesResult;
-        // let res: EffectResult<Action>;
-
+      switchMap((success: any) => {
+        const modulesRes = success;
         if (
           modulesRes.missing.length &&
           modulesRes.missing[0].name === 'school-info'

@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, retry, throwError } from 'rxjs';
-import { SharedApiConstants } from '../shared.constants';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ICheckModulesResult, IUser } from './user.interface';
+import { SharedApiConstants } from 'src/app/shared/shared.constants';
+import { IUser } from '../../interfaces/user.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class UserApiService extends SharedApiConstants {
-  /*========================================
-   CRUD Methods for consuming RESTful API
- =========================================*/
-
+@Injectable()
+export class UserService extends SharedApiConstants {
   constructor(private http: HttpClient, snackBar: MatSnackBar) {
     super(snackBar);
   }
@@ -45,9 +39,9 @@ export class UserApiService extends SharedApiConstants {
   }
 
   // HttpClient API post() method => check modules
-  checkModules(adminId: string): Observable<ICheckModulesResult> {
+  checkModules(adminId: string) {
     return this.http
-      .post<any>(this.apiUrl + `check-modules/${adminId}`, {})
+      .post(this.apiUrl + `check-modules/${adminId}`, {})
       .pipe(retry(1), catchError(this.handleError));
   }
 

@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
-import { ISubject } from 'src/app/add-subjects/models/subject.model';
 import { ReportExcel } from 'src/app/OOP/classes/report-excel';
+import { IUser } from 'src/app/modules/authenticate/interfaces/user.interface';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { IAttendanceConduct } from 'src/app/shared/attendance-conduct/attendance-conduct.interface';
 import { AttendanceConductService } from 'src/app/shared/attendance-conduct/attendance-conduct.service';
@@ -19,7 +19,6 @@ import {
 import { ISubjectTeacher } from 'src/app/shared/subject-teacher/subject-teacher.interface';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { TeacherService } from 'src/app/shared/teacher/teacher.service';
-import { IUser } from 'src/app/shared/user/user.interface';
 import { selectClassStudentArray } from 'src/app/store/class-students/class-students.selectors';
 import { selectClassTeachersArray } from 'src/app/store/class-teacher/class-teacher.selector';
 import { selectChosenReport } from 'src/app/store/reports/reports.selector';

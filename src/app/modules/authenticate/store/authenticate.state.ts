@@ -1,4 +1,4 @@
-import { IUser } from 'src/app/shared/user/user.interface';
+import { IUser } from "../interfaces/user.interface";
 
 export interface AuthenticateState {
   token?: string;
