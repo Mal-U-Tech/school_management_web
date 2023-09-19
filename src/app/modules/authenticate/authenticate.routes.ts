@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { LoginComponent } from './components/login/login.component';
-import { SchoolRegistrationComponent } from './components/school-registration/school-registration.component';
+import { SchoolComponent } from './components/school/school.component';
 
 export default [
   {
@@ -12,7 +12,7 @@ export default [
 
       {
         path: 'school-registration',
-        component: SchoolRegistrationComponent,
+        component: SchoolComponent,
       },
     ],
   },

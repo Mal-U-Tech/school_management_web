@@ -5,21 +5,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolRegApiService } from '../../services/school-registration/school-reg-api.service';
 
 @Component({
-  selector: 'app-school-registration',
-  templateUrl: './school-registration.component.html',
-  styleUrls: ['./school-registration.component.scss'],
+  selector: 'app-school',
+  templateUrl: './school.component.html',
+  styleUrls: ['./school.component.scss'],
 })
-export class SchoolRegistrationComponent implements OnInit, OnDestroy {
+export class SchoolComponent implements OnInit, OnDestroy {
   public schoolName = new FormControl('');
   public schoolRegion = new FormControl('');
   public schoolEmail = new FormControl('');
   public schoolAdministrator = new FormControl('');
-
-  constructor(
-    public schoolRegApi: SchoolRegApiService,
-    public router: Router,
-    private _snackBar: MatSnackBar
-  ) {}
   public sub: any;
 
   public id: any;
@@ -27,9 +21,15 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
   public surname: any;
   public contact: any;
   public email: any;
+
+  constructor(
+    public schoolRegApi: SchoolRegApiService,
+    public router: Router,
+    private _snackBar: MatSnackBar
+  ) {}
   isLoading = false;
 
-  ngOnInit(): void {
+  ngOnInit() {
     const temp = JSON.parse(sessionStorage.getItem('userData') || '');
     this.id = temp._id;
     this.name = temp.name;
@@ -88,3 +88,4 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
     this._snackBar.open(message, action, { duration: 3000 });
   }
 }
+
