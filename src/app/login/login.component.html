@@ -3,9 +3,6 @@
     <h1 color="primary" class="splash-text">School Management System</h1>
 
     <div id="form-container-login" *ngIf="!(isSchoolInfoLoading$ | async)">
-      <!-- <!--For showing password-->
-      <!-- <p><input (click)="showPassword()" type="checkbox"> Show Password</p> -->
-
       <form class="form-container">
         <mat-form-field class="email form-field">
           <mat-label>Email</mat-label>
@@ -35,7 +32,7 @@
             [type]="visible ? 'text' : 'password'"
           />
           <mat-icon matSuffix style="cursor: pointer" (click)="showPassword()">
-            {{ !visible ? "visibility" : "visibility_off" }}</mat-icon
+            {{ visible ? "visibility" : "visibility_off" }}</mat-icon
           >
           <mat-error *ngIf="password.hasError('required')">
             Password is <strong>required</strong>
