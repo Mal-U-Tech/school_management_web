@@ -6,9 +6,6 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { LoginComponent } from './login/login.component';
-import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
@@ -125,9 +122,6 @@ import routes from './app.routes';
   declarations: [
     AppComponent,
     SplashScreenComponent,
-    RegistrationComponent,
-    LoginComponent,
-    SchoolRegistrationComponent,
     ClassnameComponent,
     AddDepartmentsComponent,
     AddSubjectsComponent,

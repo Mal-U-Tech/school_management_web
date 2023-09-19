@@ -121,7 +121,7 @@ export class AcademicsComponent implements OnInit, OnDestroy {
 
     // assign user data
     this.user$.pipe(takeWhile(() => this.alive)).subscribe({
-      next: (data: IUser) => {
+      next: (data) => {
         if (data) {
           this.user = data;
         }
@@ -215,7 +215,7 @@ export class AcademicsComponent implements OnInit, OnDestroy {
       next: (data: SchoolInfoState) => {
         console.log(data);
         try {
-          this.schoolId = data.schoolInfo._id || '';
+          this.schoolId = data?.schoolInfo?._id || '';
         } catch (error) {
           console.log(error);
         }

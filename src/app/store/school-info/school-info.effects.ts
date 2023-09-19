@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, from, map, mergeMap, of, switchMap, tap } from 'rxjs';
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
+import { catchError, from, mergeMap, of, switchMap } from 'rxjs';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
-import { ICheckModulesResult, IUser } from 'src/app/shared/user/user.interface';
-import { setUser } from '../user/user.actions';
+import { ICheckModulesResult } from 'src/app/shared/user/user.interface';
 import {
   addSchoolInfo,
   checkModulesError,
   checkModulesRequest,
-  checkModulesSuccess,
   isSchoolInfoLoading,
 } from './school-info.actions';
 
@@ -25,7 +22,7 @@ export class SchoolInfoEffects {
   getSchoolInfo$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(checkModulesRequest),
-      mergeMap(({ _id, user }) =>
+      mergeMap(({ _id }) =>
         from(this.schoolInfoService.checkModules(_id)).pipe(
           catchError((error) => {
             this.schoolInfoService.errorToast(error);

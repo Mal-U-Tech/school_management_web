@@ -1,8 +1,6 @@
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { MyErrorStateMatcher } from '../login/login.component';
-import { ISchoolInfo } from '../school-registration/models/school-info.model';
 import { TeacherService } from '../shared/teacher/teacher.service';
 import { matchValidator } from '../shared/user/form.validators';
 import { UserApiService } from '../shared/user/user-api.service';
@@ -58,7 +56,6 @@ export class TeacherComponent implements OnInit {
   onClose = new EventEmitter();
   onSubmit = new EventEmitter();
 
-  public matcher = new MyErrorStateMatcher();
   public email = new FormControl('', [Validators.required, Validators.email]);
   public passwordForm = new FormGroup({
     password: new FormControl('', [
@@ -143,7 +140,7 @@ export class TeacherComponent implements OnInit {
     let schoolInfo: any;
 
     this.schoolInfo$.subscribe({
-      next: (data: ISchoolInfo) => {
+      next: (data) => {
         if (data != null) {
           schoolInfo = data;
         }

@@ -82,13 +82,11 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
           console.log(`Class teachers found.`);
           teachers.forEach((teacher) => {
             if ((teacher.class_id as IClassname)._id === element._id) {
-              console.log(`Class teacher found`);
               // class teacher found.
               // check if teacher is current user
               this.teachers$.pipe(takeWhile(() => this.alive)).subscribe({
                 next: (data: ITeacher[]) => {
                   if (data?.length) {
-                    console.log(`Teachers found`);
                     data.forEach((teach) => {
                       if (
                         teach._id.toString() ===
@@ -98,10 +96,8 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
                         // found class teacher
                         // check if they are the user
                         this.user$.pipe(takeWhile(() => this.alive)).subscribe({
-                          next: (user: IUser) => {
-                            console.log(teach);
-                            console.log(user);
-                            if (user._id! === (teach.user_id as IUser)._id!) {
+                          next: (user) => {
+                            if (user?._id! === (teach.user_id as IUser)._id!) {
                               console.log(`User id found for teacher`);
                               this.api.selectedClass = {
                                 id: (teacher.class_id as IClassname)._id!,

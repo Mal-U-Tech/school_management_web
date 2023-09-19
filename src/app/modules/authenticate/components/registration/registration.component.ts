@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,10 +6,9 @@ import {
   NgForm,
   Validators,
 } from '@angular/forms';
-import { UserApiService } from '../shared/user/user-api.service';
 import { Router } from '@angular/router';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { matchValidator } from '../shared/user/form.validators';
+import { UserApiService } from 'src/app/shared/user/user-api.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -46,11 +45,9 @@ export class RegistrationComponent {
       Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
       Validators.minLength(6),
       Validators.maxLength(25),
-      matchValidator('confirmPassword', true),
     ]),
     confirmPassword: new FormControl('', [
       Validators.required,
-      matchValidator('password'),
     ]),
   });
   public visible = false;
@@ -79,7 +76,7 @@ export class RegistrationComponent {
           password: this.passwordForm.get('password')!.value!.toString(),
         })
         .subscribe({
-          next: (data: any) => {
+          next: (data) => {
             this.isLoading = false;
             // sessionStorage.setItem('user', data);
             this.router.navigate([`/school-registration`]);

@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { catchError, Observable, retry, throwError } from 'rxjs';
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
-import { SharedApiConstants } from '../shared.constants';
+import { ISchoolInfo } from 'src/app/interfaces/school.interface';
+import { SharedApiConstants } from 'src/app/shared/shared.constants';
 
 @Injectable({
   providedIn: 'root',

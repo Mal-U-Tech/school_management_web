@@ -1,3 +1,4 @@
+
 export interface ISchoolInfo {
   _id?: string;
   name: string;

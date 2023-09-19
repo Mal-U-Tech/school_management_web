@@ -102,7 +102,6 @@
             matInput
             [formControl]="email"
             placeholder="Example: pat@example.com"
-            [errorStateMatcher]="matcher"
           />
           <mat-error
             *ngIf="email.hasError('email') && email.hasError('required')"

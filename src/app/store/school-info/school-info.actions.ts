@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
+import { ISchoolInfo } from 'src/app/interfaces/school.interface';
 import { ICheckModulesResult, IUser } from 'src/app/shared/user/user.interface';
 
 // action to add school info for user

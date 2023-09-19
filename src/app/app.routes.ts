@@ -1,8 +1,5 @@
 import { Routes } from '@angular/router';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
-import { RegistrationComponent } from './registration/registration.component';
-import { LoginComponent } from './login/login.component';
-import { SchoolRegistrationComponent } from './school-registration/school-registration.component';
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
@@ -35,14 +32,13 @@ import { GenerateReportsComponent } from './pages/generate-reports/generate-repo
 import { ViewClassesConductComponent } from './pages/view-classes-conduct/view-classes-conduct.component';
 import { AddClassConductComponent } from './pages/add-class-conduct/add-class-conduct.component';
 
-const routes: Routes = [
-  { path: '', redirectTo: '/splash', pathMatch: 'full' },
-  { path: 'splash', component: SplashScreenComponent },
-  { path: 'registration', component: RegistrationComponent },
-  { path: 'login', component: LoginComponent },
+export default [
+  { path: '', component: SplashScreenComponent, pathMatch: 'full' },
   {
-    path: 'school-registration',
-    component: SchoolRegistrationComponent,
+    path: '',
+    loadChildren: () => import(
+      './modules/authenticate/authenticate.module'
+    ).then(m => m.AuthenticateModule)
   },
   { path: 'reg-classnames', component: ClassnameComponent },
   { path: 'add-departments', component: AddDepartmentsComponent },
@@ -56,7 +52,6 @@ const routes: Routes = [
         component: AcademicsComponent,
         children: [],
       },
-      { path: 'login', component: LoginComponent },
       { path: 'add-streams', component: ClassnameComponent },
       { path: 'view-streams', component: ViewStreamsTableComponent },
       { path: 'add-dialog/:name', component: AddDialogComponent },
@@ -96,6 +91,5 @@ const routes: Routes = [
   { path: 'generate-reports', component: GenerateReportsComponent },
   { path: 'view-attendance-conduct', component: ViewClassesConductComponent },
   { path: 'add-attendance-conduct', component: AddClassConductComponent },
-];
+] as Routes
 
-export default routes;

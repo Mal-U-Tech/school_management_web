@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SchoolRegApiService } from '../shared/school-registration/school-reg-api.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SchoolRegApiService } from '../../services/school-registration/school-reg-api.service';
 
 @Component({
   selector: 'app-school-registration',
@@ -76,7 +76,7 @@ export class SchoolRegistrationComponent implements OnInit, OnDestroy {
           sessionStorage.setItem('school-info', JSON.stringify(data));
           this.router.navigate([`/dashboard`]);
         },
-        error: (error) => {
+        error: (error: any) => {
           this.isLoading = false;
           console.log(`This is error ${error}`);
           this.openSnackBar(error, 'Close');

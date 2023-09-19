@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -9,7 +9,6 @@ import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.ser
 import { IClassStudent } from 'src/app/shared/class-students/class-students.interface';
 import { ClassStudentsService } from 'src/app/shared/class-students/class-students.service';
 import { MarksService } from 'src/app/shared/marks/marks.service';
-import { PassControlsService } from 'src/app/shared/pass-controls/pass-controls.service';
 import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
@@ -103,8 +102,7 @@ export class SelectClassComponent implements OnDestroy {
     let currentUser: any; // JSON.parse(sessionStorage.getItem('user') || '');
     let selectedYear = '';
     this.user$.pipe(takeWhile(() => this.alive)).subscribe({
-      next: (data: IUser) => {
-        console.log(data);
+      next: (data) => {
         if (data) {
           currentUser = data;
         }

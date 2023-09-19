@@ -1,5 +1,4 @@
 import { createAction, props } from '@ngrx/store';
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
 import { IUser } from 'src/app/shared/user/user.interface';
 
 export const setToken = createAction(

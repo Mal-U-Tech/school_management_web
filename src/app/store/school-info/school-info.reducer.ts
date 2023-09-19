@@ -1,27 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
 import {
   addSchoolInfo,
   checkModulesError,
   checkModulesRequest,
   isSchoolInfoLoading,
 } from './school-info.actions';
+import { ISchoolInfo } from 'src/app/interfaces/school.interface';
 
 export interface SchoolInfoState {
-  schoolInfo: ISchoolInfo;
+  schoolInfo?: ISchoolInfo;
   isSchoolInfoLoading: boolean;
   errorMsg: string;
 }
 
 export const initialState: SchoolInfoState = {
-  schoolInfo: null as any,
   isSchoolInfoLoading: false,
   errorMsg: '',
 };
 
 export const schoolInfoReducer = createReducer(
   initialState,
-  on(checkModulesRequest, (state, { _id }): SchoolInfoState => ({ ...state })),
+  on(checkModulesRequest, (state): SchoolInfoState => ({ ...state })),
   on(
     addSchoolInfo,
     (state, { school_info }): SchoolInfoState => ({

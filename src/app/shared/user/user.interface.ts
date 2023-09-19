@@ -1,4 +1,4 @@
-import { ISchoolInfo } from 'src/app/school-registration/models/school-info.model';
+import { ISchoolInfo } from 'src/app/interfaces/school.interface';
 
 export interface IUser {
   token: string;

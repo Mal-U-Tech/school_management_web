@@ -28,19 +28,17 @@ export const selectClassTeacherIsLoading = createSelector(
 export const selectAndFindClassTeacher = createSelector(
   selectClassTeacher, selectTeacher, selectAuth,
   (classTeachers: ClassTeacherState, teachers: TeacherState, user: AuthState) => {
-
-    console.log(user.user);
-    let classTeacher: IClassTeacher = null as any;
-    let teach: ITeacher = null as any;
+    let classTeacher: IClassTeacher | undefined;
+    let teach: ITeacher | undefined;
 
     teachers.teachers.forEach((teacher) => {
-      if(teacher.user_id === user.user._id || ''){
+      if(teacher.user_id === user?.user?._id){
          teach = teacher;
       }
     });
 
     classTeachers.classTeachers.forEach((classTeach) => {
-      if(teach._id === classTeach.teacher_id){
+      if(teach?._id === classTeach.teacher_id){
         classTeacher = classTeach;
       }
     });
