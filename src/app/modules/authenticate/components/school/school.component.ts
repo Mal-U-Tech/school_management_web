@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SchoolRegApiService } from '../../services/school-registration/school-reg-api.service';
+import { RegistrationService } from '../../services/registration/registration.service';
 
 @Component({
   selector: 'app-school',
@@ -23,7 +23,7 @@ export class SchoolComponent implements OnInit, OnDestroy {
   public email: any;
 
   constructor(
-    public schoolRegApi: SchoolRegApiService,
+    public schoolRegApi: RegistrationService,
     public router: Router,
     private _snackBar: MatSnackBar
   ) {}

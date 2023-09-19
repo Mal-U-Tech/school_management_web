@@ -8,7 +8,7 @@ import { SharedApiConstants } from 'src/app/shared/shared.constants';
 @Injectable({
   providedIn: 'root',
 })
-export class SchoolRegApiService extends SharedApiConstants {
+export class RegistrationService extends SharedApiConstants {
   module = 'school-info';
 
   // CRUD methods to consume RESTful API
