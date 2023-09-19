@@ -2,10 +2,9 @@ import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TeacherService } from '../shared/teacher/teacher.service';
-import { matchValidator } from '../shared/user/form.validators';
-import { UserApiService } from '../shared/user/user-api.service';
 import { selectSchoolInfoObject } from '../store/school-info/school-info.selector';
 import { postTeacherRequest } from '../store/teacher/teacher.actions';
+import { UserService } from '../modules/authenticate/services/user/user.service';
 
 @Component({
   selector: 'app-teacher',
@@ -15,7 +14,7 @@ import { postTeacherRequest } from '../store/teacher/teacher.actions';
 export class TeacherComponent implements OnInit {
   constructor(
     private apiService: TeacherService,
-    public userService: UserApiService,
+    public userService: UserService,
     private store: Store
   ) {}
 
@@ -63,11 +62,9 @@ export class TeacherComponent implements OnInit {
       Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
       Validators.minLength(6),
       Validators.maxLength(25),
-      matchValidator('confirmPassword', true),
     ]),
     confirmPassword: new FormControl('', [
       Validators.required,
-      matchValidator('password'),
     ]),
   });
   public visible = false;
