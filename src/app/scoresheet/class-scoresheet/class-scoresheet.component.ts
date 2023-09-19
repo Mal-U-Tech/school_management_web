@@ -430,7 +430,6 @@ export class ClassScoresheetComponent implements OnInit, OnDestroy {
     };
   }
 
-  // function that uses jspdf to create scoresheet pdf
   openPdf() {
     this.sortStudents();
     this.createTableHeaders();
