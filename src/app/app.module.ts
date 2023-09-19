@@ -2,7 +2,7 @@ import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
@@ -118,69 +118,7 @@ import { ViewClassesConductComponent } from './pages/view-classes-conduct/view-c
 import { AddClassConductComponent } from './pages/add-class-conduct/add-class-conduct.component';
 import { MatSelectModule } from '@angular/material/select';
 
-const routes: Routes = [
-  { path: '', redirectTo: '/splash', pathMatch: 'full' },
-  { path: 'splash', component: SplashScreenComponent },
-  { path: 'registration', component: RegistrationComponent },
-  { path: 'login', component: LoginComponent },
-  {
-    path: 'school-registration',
-    component: SchoolRegistrationComponent,
-  },
-  { path: 'reg-classnames', component: ClassnameComponent },
-  { path: 'add-departments', component: AddDepartmentsComponent },
-  { path: 'add-subjects', component: AddSubjectsComponent },
-  {
-    path: 'dashboard',
-    component: NavDashboardComponent,
-    children: [
-      {
-        path: 'academics',
-        component: AcademicsComponent,
-        children: [],
-      },
-      { path: 'login', component: LoginComponent },
-      { path: 'add-streams', component: ClassnameComponent },
-      { path: 'view-streams', component: ViewStreamsTableComponent },
-      { path: 'add-dialog/:name', component: AddDialogComponent },
-      { path: 'view-subjects', component: ViewSubjectsTableComponent },
-      { path: 'add-depts', component: AddDepartmentsComponent },
-      { path: 'view-depts', component: ViewDepartmentsTableComponent },
-      { path: 'add-teachers', component: TeacherComponent },
-      { path: 'view-teachers', component: ViewTeacherTableComponent },
-      { path: 'add-class-students', component: ClassStudentsComponent },
-      {
-        path: 'view-class-students',
-        component: ViewClassStudentsTableComponent,
-      },
-      { path: 'add-subject-teacher', component: SubjectTeacherComponent },
-      {
-        path: 'view-subject-teachers',
-        component: ViewSubTeacherTableComponent,
-      },
-      { path: 'add-class-teacher', component: ClassTeacherComponent },
-      {
-        path: 'view-class-teachers',
-        component: ViewClassTeacherTableComponent,
-      },
-      { path: 'add-hod', component: HeadOfDeptsComponent },
-      { path: 'view-hods', component: ViewHodTableComponent },
-    ],
-  },
-  { path: 'create-scoresheet-steps', component: CreateScoresheetComponent },
-  { path: 'add-by-excel', component: AddByExcelComponent },
-  { path: 'view-scoresheets', component: ViewScoresheetsComponent },
-  { path: 'select-class', component: SelectClassComponent },
-  { path: 'add-marks', component: AddMarksComponent },
-  { path: 'class-scoresheet', component: ClassScoresheetComponent },
-  { path: 'pass-controls', component: PassControlsComponent },
-  { path: 'class-marks', component: ClassMarksComponent },
-  { path: 'view-reports', component: ViewReportsComponent },
-  { path: 'generate-reports', component: GenerateReportsComponent },
-  { path: 'view-attendance-conduct', component: ViewClassesConductComponent },
-  { path: 'add-attendance-conduct', component: AddClassConductComponent },
-];
-
+import routes from './app.routes';
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
 
 @NgModule({
