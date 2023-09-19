@@ -3,6 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
+import { selectUserData } from 'src/app/modules/authenticate/store/authenticate.selectors';
 import { AttendanceConductService } from 'src/app/shared/attendance-conduct/attendance-conduct.service';
 import { IClassTeacher } from 'src/app/shared/class-teacher/class-teacher.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
@@ -11,7 +12,6 @@ import { IUser } from 'src/app/shared/user/user.interface';
 import { selectClassTeachersArray } from 'src/app/store/class-teacher/class-teacher.selector';
 import { selectStreamsArray } from 'src/app/store/streams/streams.selector';
 import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
-import { selectUserData } from 'src/app/store/user/user.selector';
 
 @Component({
   selector: 'app-view-classes-conduct',

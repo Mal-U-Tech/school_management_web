@@ -15,7 +15,6 @@ export class SchoolComponent implements OnInit, OnDestroy {
   public schoolEmail = new FormControl('');
   public schoolAdministrator = new FormControl('');
   public sub: any;
-
   public id: any;
   public name: any;
   public surname: any;
@@ -23,9 +22,9 @@ export class SchoolComponent implements OnInit, OnDestroy {
   public email: any;
 
   constructor(
-    public schoolRegApi: RegistrationService,
-    public router: Router,
-    private _snackBar: MatSnackBar
+    private registration: RegistrationService,
+    private router: Router,
+    private snackbar: MatSnackBar
   ) {}
   isLoading = false;
 
@@ -58,7 +57,7 @@ export class SchoolComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    this.schoolRegApi
+    this.registration
       .postSchoolInfo({
         name: this.schoolName.value || '',
         region: this.schoolRegion.value || '',
@@ -78,14 +77,13 @@ export class SchoolComponent implements OnInit, OnDestroy {
         },
         error: (error: any) => {
           this.isLoading = false;
-          console.log(`This is error ${error}`);
           this.openSnackBar(error, 'Close');
         },
       });
   }
 
   openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
+    this.snackbar.open(message, action, { duration: 3000 });
   }
 }
 

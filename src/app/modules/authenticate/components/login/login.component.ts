@@ -10,9 +10,9 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
-import { selectIsLoading, selectToken, selectUserData } from 'src/app/store/user/user.selector';
+import { selectIsLoading, selectToken, selectUserData } from '../../store/authenticate.selectors';
 import { selectSchoolInfo, selectSchoolInfoIsLoading } from 'src/app/store/school-info/school-info.selector';
-import { isLoading, login } from 'src/app/store/user/user.actions';
+import { isLoading, login } from '../../store/authenticate.actions';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(

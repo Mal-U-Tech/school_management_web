@@ -1,25 +1,24 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { AppState } from '../app.state';
-import { AuthState } from './user.states';
+import { AuthenticateState } from './authenticate.state';
 
-export const selectAuth = createFeatureSelector<AuthState>('auth');
+export const selectAuth = createFeatureSelector<AuthenticateState>('auth');
 
 export const selectToken = createSelector(
   selectAuth,
-  (state: AuthState) => state.token
+  (state: AuthenticateState) => state.token
 );
 
 export const selectIsAuth = createSelector(
   selectAuth,
-  (state: AuthState) => !!state.token
+  (state: AuthenticateState) => !!state.token
 );
 
 export const selectUserData = createSelector(
   selectAuth,
-  (state: AuthState) => state.user
+  (state: AuthenticateState) => state.user
 );
 
 export const selectIsLoading = createSelector(
   selectAuth,
-  (state: AuthState) => state.isLoginProgress
+  (state: AuthenticateState) => state.isLoginProgress
 );

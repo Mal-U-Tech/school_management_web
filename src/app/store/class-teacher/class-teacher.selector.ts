@@ -3,9 +3,9 @@ import { IClassTeacher } from 'src/app/shared/class-teacher/class-teacher.interf
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { TeacherState } from '../teacher/teacher.reducer';
 import { selectTeacher } from '../teacher/teacher.selector';
-import { selectAuth } from '../user/user.selector';
-import { AuthState } from '../user/user.states';
 import { ClassTeacherState } from './class-teacher.reducer';
+import { AuthenticateState } from '../../modules/authenticate/store/authenticate.state';
+import { selectAuth } from '../../modules/authenticate/store/authenticate.selectors';
 
 export const selectClassTeacher =
   createFeatureSelector<ClassTeacherState>('classTeacher');
@@ -27,7 +27,7 @@ export const selectClassTeacherIsLoading = createSelector(
 
 export const selectAndFindClassTeacher = createSelector(
   selectClassTeacher, selectTeacher, selectAuth,
-  (classTeachers: ClassTeacherState, teachers: TeacherState, user: AuthState) => {
+  (classTeachers: ClassTeacherState, teachers: TeacherState, user: AuthenticateState) => {
     let classTeacher: IClassTeacher | undefined;
     let teach: ITeacher | undefined;
 

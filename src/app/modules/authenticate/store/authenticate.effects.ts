@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, from, map, mergeMap, of, switchMap, tap } from 'rxjs';
+import { catchError, from, mergeMap, of, switchMap, tap } from 'rxjs';
 import { UserApiService } from 'src/app/shared/user/user-api.service';
 import { IUser } from 'src/app/shared/user/user.interface';
-import {
-  checkModulesRequest,
-  isSchoolInfoLoading,
-} from '../school-info/school-info.actions';
 import {
   isLoading,
   login,
   loginError,
-  loginSuccessful,
   setToken,
   setUser,
-} from './user.actions';
+} from './authenticate.actions';
+import { checkModulesRequest, isSchoolInfoLoading } from 'src/app/store/school-info/school-info.actions';
 
 @Injectable()
-export class AuthEffects {
+export class AuthenticateEffects {
+  constructor(
+    private readonly actions$: Actions,
+    private readonly authService: UserApiService,
+  ) {}
   // on login, send auth data to backend,
   // get the user and add to store
   login$ = createEffect(() => {
@@ -58,10 +57,4 @@ export class AuthEffects {
       })
     );
   });
-
-  constructor(
-    private readonly actions$: Actions,
-    private readonly authService: UserApiService,
-    private readonly router: Router
-  ) {}
 }

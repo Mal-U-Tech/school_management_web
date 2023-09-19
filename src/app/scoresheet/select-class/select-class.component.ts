@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
+import { selectUserData } from 'src/app/modules/authenticate/store/authenticate.selectors';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
@@ -13,7 +14,6 @@ import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ScoresheetService } from 'src/app/shared/scoresheet/scoresheet.service';
 import { SubjectTeacherService } from 'src/app/shared/subject-teacher/subject-teacher.service';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
-import { IUser } from 'src/app/shared/user/user.interface';
 import {
   getPassControlsByScoresheetRequest,
   passControlsIsLoading,
@@ -29,7 +29,6 @@ import {
   selectStreamsForScoresheet,
 } from 'src/app/store/scoresheet/scoresheet.selector';
 import { selectTeacherArray } from 'src/app/store/teacher/teacher.selector';
-import { selectUserData } from 'src/app/store/user/user.selector';
 
 @Component({
   selector: 'app-select-class',

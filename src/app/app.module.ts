@@ -75,12 +75,10 @@ import { UpdateClassStudentComponent } from './class-students/update-class-stude
 import { UpdateTeacherComponent } from './teacher/update-teacher/update-teacher.component';
 import { UpdateSubjectTeacherComponent } from './subject-teacher/update-subject-teacher/update-subject-teacher.component';
 import { StoreModule } from '@ngrx/store';
-import { authReducer } from './store/user/user.reducer';
 import { schoolInfoReducer } from './store/school-info/school-info.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClassMarksComponent } from './scoresheet/class-marks/class-marks.component';
 import { DeleteDialogComponent } from './scoresheet/class-marks/delete-dialog/delete-dialog.component';
-import { AuthEffects } from './store/user/user.effects';
 import { SchoolInfoEffects } from './store/school-info/school-info.effects';
 import { StreamEffects } from './store/streams/streams.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -210,7 +208,6 @@ import routes from './app.routes';
     MatFormFieldModule,
     MatSelectModule,
     StoreModule.forRoot({
-      auth: authReducer,
       schoolInfo: schoolInfoReducer,
       stream: streamsReducer,
       department: departmentsReducer,
@@ -225,7 +222,6 @@ import routes from './app.routes';
       reports: reportReducer,
     }),
     EffectsModule.forRoot([
-      AuthEffects,
       SchoolInfoEffects,
       StreamEffects,
       DepartmentEffects,

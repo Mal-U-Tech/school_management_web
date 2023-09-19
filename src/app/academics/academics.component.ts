@@ -12,8 +12,6 @@ import {
 } from '../store/streams/streams.actions';
 import { selectSchoolInfo } from '../store/school-info/school-info.selector';
 import { SchoolInfoState } from '../store/school-info/school-info.reducer';
-import { selectUserData } from '../store/user/user.selector';
-import { IUser } from '../shared/user/user.interface';
 import {
   departmentsIsLoading,
   getDepartmentsRequest,
@@ -42,6 +40,7 @@ import {
   scoresheetIsLoading,
 } from '../store/scoresheet/scoresheet.action';
 import { getReportsRequest, reportsIsLoading } from '../store/reports/reports.actions';
+import { selectUserData } from '../modules/authenticate/store/authenticate.selectors';
 
 interface TEACHER {
   _id: string;
