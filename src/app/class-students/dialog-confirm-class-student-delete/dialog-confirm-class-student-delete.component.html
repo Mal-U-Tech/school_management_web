@@ -5,7 +5,7 @@
     <b>{{ data.name }} {{ data.surname }}</b> from the class
     <b>{{ data.stream }}</b
     >. Are you sure you want to delete
-    {{ data.gender == "Male" ? "him" : "her" }} completely?
+    {{ data.gender === "Male" ? "him" : "her" }} completely?
   </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

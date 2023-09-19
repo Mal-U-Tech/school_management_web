@@ -5,7 +5,7 @@
     <b>{{ data.teacher_title }} {{ data.name }} {{ data.surname }}</b
     >, from being the head of department in <b>{{ data.department }}</b
     >. Are you sure you want to delete
-    {{ data.teacher_title == "Mr." ? "him" : "her" }} completely ?
+    {{ data.teacher_title === "Mr." ? "him" : "her" }} completely ?
   </p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

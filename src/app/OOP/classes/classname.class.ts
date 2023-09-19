@@ -1,6 +1,6 @@
 export class Classname {
   private _id?: string;
-  private name: string = '';
+  private name = '';
 
   set setId(value: string) {
     this._id = value;
