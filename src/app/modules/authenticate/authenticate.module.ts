@@ -41,7 +41,6 @@ import routes from './authenticate.routes';
     ReactiveFormsModule,
   ],
   providers: [
-
   ],
 })
 export class AuthenticateModule { }

@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
-import { selectUserData } from 'src/app/modules/authenticate/store/authenticate.selectors';
+import { selectUser } from 'src/app/modules/authenticate/store/authenticate.selectors';
 import { IPassControls } from 'src/app/pass-controls/models/pass-controls.model';
 import { PassControlsComponent } from 'src/app/pass-controls/pass-controls.component';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
@@ -59,7 +59,7 @@ export class SelectClassComponent implements OnDestroy {
   }
 
   teachers$ = this.store.select(selectTeacherArray);
-  user$ = this.store.select(selectUserData);
+  user$ = this.store.select(selectUser);
   scoresheetStreams$ = this.store.select(selectStreamsForScoresheet);
   passControlsIsLoading$ = this.store.select(selectPassControlIsLoading);
   scoresheetIsLoading$ = this.store.select(selectScoresheetIsLoading);

@@ -1,10 +1,17 @@
 export interface IUser {
-  token: string;
-  _id?: string;
-  name: string;
-  surname: string;
-  contact: string;
+  id: string;
+
   email: string;
-  userRole: string;
+  mobile: string;
   password?: string;
+
+  firstname: string;
+  lastname: string;
+
+  groups: {
+    id: string;
+    name: string;
+  }[];
+
+  token: string;
 }

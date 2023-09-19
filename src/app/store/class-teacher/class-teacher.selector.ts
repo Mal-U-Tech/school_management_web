@@ -32,7 +32,7 @@ export const selectAndFindClassTeacher = createSelector(
     let teach: ITeacher | undefined;
 
     teachers.teachers.forEach((teacher) => {
-      if(teacher.user_id === user?.user?._id){
+      if(teacher.user_id === user?.user?.id){
          teach = teacher;
       }
     });

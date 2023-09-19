@@ -252,9 +252,9 @@ export class GenerateReportsComponent implements OnDestroy {
         (teach.teacher_id as ITeacher).marital_status,
       ) +
       ' ' +
-      user.name.substring(0, 1) +
+      user.firstname.substring(0, 1) +
       '. ' +
-      user.surname
+      user.lastname
     );
   }
 
@@ -351,9 +351,9 @@ export class GenerateReportsComponent implements OnDestroy {
                                     tempTeacher.marital_status,
                                   ) +
                                   ' ' +
-                                  tempUser.name +
+                                  tempUser.firstname +
                                   ' ' +
-                                  tempUser.surname;
+                                  tempUser.lastname;
                               }
                             });
                           }

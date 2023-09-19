@@ -1,42 +1,44 @@
 import { createReducer, on } from '@ngrx/store';
 import {
-  isLoading,
-  isLoginSuccess,
-  login,
-  loginError,
-  loginSuccessful,
-  removeToken,
-  setToken,
-  setUser,
+  loginButtonClick,
+  loginEffectFailed,
+  loginEffectSuccessful,
 } from './authenticate.actions';
 import { AuthenticateState, initialState } from './authenticate.state';
 
 export const key = 'auth';
+
 export const reducer = createReducer(
   initialState,
-  on(setToken, (state, { token }): AuthenticateState => ({ ...state, token: token })),
-  on(removeToken, (state): AuthenticateState => ({ ...state, token: '' })),
-  on(setUser, (state, { user }): AuthenticateState => ({ ...state, user: user })),
-  on(login, (state, { email, password }): AuthenticateState => ({ ...state })),
+
+  // user reduction
+  on(loginButtonClick, (state): AuthenticateState => ({
+    ...state,
+    api: {
+      loading: true,
+      error: undefined
+    }
+  })),
+
+  // effect reduction
   on(
-    loginSuccessful,
-    (state, { user }): AuthenticateState => ({ ...state, user: user })
-  ),
-  on(
-    loginError,
-    (state, { message }): AuthenticateState => ({ ...state, error: message })
-  ),
-  on(
-    isLoading,
-    (state, { isLoading }): AuthenticateState => ({
+    loginEffectSuccessful,
+    (state, { user }): AuthenticateState => ({
       ...state,
-      isLoginProgress: isLoading,
+      user: user,
+      api: {
+        loading: false,
+      }
     })
   ),
   on(
-    isLoginSuccess,
-    (state, { _id, user }): AuthenticateState => ({
+    loginEffectFailed,
+    (state, { error }): AuthenticateState => ({
       ...state,
+      api: {
+        loading: false,
+        error
+      }
     })
-  )
+  ),
 );

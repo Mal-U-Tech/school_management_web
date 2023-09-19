@@ -1,32 +1,12 @@
 import { Component } from '@angular/core';
 import {
-  FormControl,
-  FormGroupDirective,
-  NgForm,
+  NonNullableFormBuilder,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { selectIsLoading, selectToken, selectUserData } from '../../store/authenticate.selectors';
-import { selectSchoolInfo, selectSchoolInfoIsLoading } from 'src/app/store/school-info/school-info.selector';
-import { isLoading, login } from '../../store/authenticate.actions';
-import { UserService } from '../../services/user/user.service';
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
+import { selectAuthLoading } from '../../store/authenticate.selectors';
+import { loginButtonClick } from '../../store/authenticate.actions';
 
 @Component({
   selector: 'app-login',
@@ -34,138 +14,38 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  visible = false;
+  form = this.builder.group({
+    email: ['', Validators.email],
+    password: ['', Validators.required]
+  })
+
+  loading$ = this.store.select(selectAuthLoading);
+
+  get email() {
+    return this.form.controls.email;
+  }
+  get password() {
+    return this.form.controls.password;
+  }
+
   constructor(
-    public userApi: UserService,
-    public router: Router,
-    private _snackBar: MatSnackBar,
-    private store: Store
+    private router: Router,
+    private store: Store,
+    private builder: NonNullableFormBuilder,
   ) {}
-  /*
-   *  Form control variable : Reactive Forms
-   * */
-  public email = new FormControl<string>('', [
-    Validators.required,
-    Validators.email,
-  ]);
-  public password = new FormControl<string>('', [Validators.required]);
-  public visible = false;
-  public matcher = new MyErrorStateMatcher();
 
-  public spinner = {
-    opacity: '1',
-    display: 'block',
-  };
-  isLoading$ = this.store.select(selectIsLoading);
-  isSchoolInfoLoading$ = this.store.select(selectSchoolInfoIsLoading);
-
-  public user$ = this.store.select(selectUserData);
-  public token$ = this.store.select(selectToken);
-  public schoolInfo$ = this.store.select(selectSchoolInfo);
-
-  public submitForm() {
+  submit() {
     this.store.dispatch(
-      login({
-        email: this.email.value as string,
-        password: this.password.value as string,
-      })
+      loginButtonClick(this.form.getRawValue())
     );
-
-    this.user$
-      .subscribe({
-        next: (data) => {
-          if (data == null) {
-            console.log('I am null');
-          } else {
-            console.log(`This is where I am: ${data}`);
-          }
-        },
-      });
-
-    this.token$.subscribe({
-      next: (data: any) => {
-        console.log(`This is token ${data}`);
-      },
-    });
-
-    // dispatch action to load
-    this.isLoadingUser();
-    // this.userApi
-    //   .userLogin(this.email.value as string, this.password.value as string)
-    //   .subscribe({
-    //     next: (data: IUser) => {
-    //       // TODO: route to home, once system is done
-    //       console.log(data);
-    //       this.isLoading = false;
-    //
-    //       this.spinner = {
-    //         opacity: '1',
-    //         display: 'block',
-    //       };
-    //       // save user data for
-    //       sessionStorage.setItem('userData', JSON.stringify(data));
-    //       this.checkModules(data);
-    //     },
-    //     error: (error) => {
-    //       this.isLoading = false;
-    //       console.log(`This is error: ${error}`);
-    //       this.userApi.errorToast(error);
-    //     },
-    //   });
   }
 
-  isLoadingUser() {
-    this.store.dispatch(isLoading({ isLoading: true }));
-  }
-
-  // public checkModules(data: IUser) {
-  //   // this.isCheckModulesLoading = !this.isCheckModulesLoading;
-  //   this.isLoadingSchoolInfoAction();
-  //
-  //   // dispatch action to get school
-  //   // this.store.dispatch(checkModulesRequest())
-  //   this.userApi.checkModules(data._id || '').subscribe({
-  //     next: (res) => {
-  //       this.isCheckModulesLoading = false;
-  //       sessionStorage.setItem('school-info', JSON.stringify(res.data));
-  //       console.log(res);
-  //       if (res.missing.length) {
-  //         const missing = res.missing[0].name;
-  //
-  //         if (missing === 'school-info') {
-  //           sessionStorage.setItem('user', JSON.stringify(data));
-  //           this.router.navigate([`/school-registration`]);
-  //         }
-  //       }
-  //
-  //       if (res.success === 100) {
-  //         this.router.navigate(['/dashboard/academics']);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.isCheckModulesLoading = false;
-  //       console.log(error);
-  //       this.userApi.errorToast(error.toString());
-  //     },
-  //   });
-  // }
-
-  public navToRegister() {
+  register() {
     this.router.navigate([`/registration`]);
   }
 
-  /*
-   *  Function to show password in login form
-   * */
-  showPassword() {
-    console.log('Making password visible');
+  toggle() {
     this.visible = !this.visible;
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, { duration: 3000 });
-  }
-
-  public saveSession(key: string, value: string) {
-    localStorage.setItem(key, value);
   }
 }

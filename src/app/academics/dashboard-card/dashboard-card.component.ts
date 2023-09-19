@@ -358,6 +358,5 @@ this.dialogRef = this.dialog.open(AddSubjectsComponent, dialogConfig);
 
 
   comingSoon() {
-    this.api.successToast('Comming Soon');
   }
 }

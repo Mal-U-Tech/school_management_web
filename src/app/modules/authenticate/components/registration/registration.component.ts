@@ -62,13 +62,11 @@ export class RegistrationComponent {
       this.passwordForm.get('password')!.value !=
       this.passwordForm.get('confirmPassword')!.value
     ) {
-      this.userApi.errorToast('Passwords do not match.');
     } else if (this.passwordForm.get('password')!.value == '') {
-      this.userApi.errorToast('Passwords are empty.');
     } else {
       this.isLoading = true;
       this.userApi
-        .userRegister({
+        .register({
           name: this.username.value!.toString(),
           surname: this.userSurname.value!.toString(),
           contact: this.userContact.value!.toString(),
@@ -85,7 +83,6 @@ export class RegistrationComponent {
           },
           error: (error) => {
             this.isLoading = false;
-            this.userApi.errorToast(error);
           },
         });
     }

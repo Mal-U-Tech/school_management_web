@@ -1,14 +1,13 @@
 <div class="login-container">
   <div class="items-container">
     <h1 color="primary" class="splash-text">School Management System</h1>
-
-    <div id="form-container-login" *ngIf="!(isSchoolInfoLoading$ | async)">
+    <div id="form-container-login">
       <form class="form-container">
         <mat-form-field class="email form-field">
           <mat-label>Email</mat-label>
           <input
-            type="email"
             matInput
+            type="email"
             [formControl]="email"
             placeholder="Example: pat@example.com"
           />
@@ -30,25 +29,21 @@
             [formControl]="password"
             [type]="visible ? 'text' : 'password'"
           />
-          <mat-icon matSuffix style="cursor: pointer" (click)="showPassword()">
-            {{ visible ? "visibility" : "visibility_off" }}</mat-icon
-          >
-          <mat-error *ngIf="password.hasError('required')">
-            Password is <strong>required</strong>
-          </mat-error>
+          <mat-icon matSuffix (click)="toggle()">{{ visible ? "visibility" : "visibility_off" }}</mat-icon>
+          <mat-error *ngIf="password.hasError('required')">Password is <strong>required</strong></mat-error>
         </mat-form-field>
 
         <div class="buttons-container">
           <button
-            *ngIf="!(isLoading$ | async)"
+            *ngIf="!(loading$ | async)"
             class="login button"
-            (click)="submitForm()"
+            (click)="submit()"
             mat-raised-button
             type="button"
           >
             Login
           </button>
-          <div *ngIf="isLoading$ | async" class="login-spinner-container">
+          <div *ngIf="loading$ | async" class="login-spinner-container">
             <mat-progress-spinner
               class="login-spinner"
               mode="indeterminate"
@@ -56,17 +51,11 @@
           </div>
           <br />
 
-          <button class="register button" (click)="navToRegister()" mat-button>
+          <button class="register button" (click)="register()" mat-button>
             Register instead
           </button>
         </div>
       </form>
     </div>
-  </div>
-</div>
-<div class="spinner check-modules" *ngIf="isSchoolInfoLoading$ | async">
-  <div class="spinner-container">
-    <mat-spinner class="modules-spinner"></mat-spinner>
-    <span>Checking modules</span>
   </div>
 </div>

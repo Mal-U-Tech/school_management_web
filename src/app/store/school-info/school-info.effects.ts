@@ -22,11 +22,9 @@ export class SchoolInfoEffects {
     return this.actions$.pipe(
       ofType(checkModulesRequest),
       mergeMap(({ _id }) =>
-        from(this.schoolInfoService.checkModules(_id)).pipe(
+        from(this.schoolInfoService.modules(_id)).pipe(
           catchError((error) => {
-            this.schoolInfoService.errorToast(error);
             return of(
-
               checkModulesError({ message: error.toString() })
             );
           })

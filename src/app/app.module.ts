@@ -114,6 +114,7 @@ import { AddClassConductComponent } from './pages/add-class-conduct/add-class-co
 import { MatSelectModule } from '@angular/material/select';
 
 import routes from './app.routes';
+import { UserService } from './modules/authenticate/services/user/user.service';
 // const materialModules = [MatTableModule, MatPaginatorModule, MatSortModule];
 
 @NgModule({
@@ -235,10 +236,13 @@ import routes from './app.routes';
       PassControlsEffects,
       ReportEffects,
     ]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: isDevMode() }),
   ],
   exports: [RouterModule],
-  providers: [SessionStorageService, { provide: MatDialogRef, useValue: {} }],
+  providers: [
+    SessionStorageService,
+    UserService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

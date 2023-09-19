@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
 import { IUser } from 'src/app/modules/authenticate/interfaces/user.interface';
-import { selectUserData } from 'src/app/modules/authenticate/store/authenticate.selectors';
+import { selectUser } from 'src/app/modules/authenticate/store/authenticate.selectors';
 import { AttendanceConductService } from 'src/app/shared/attendance-conduct/attendance-conduct.service';
 import { IClassTeacher } from 'src/app/shared/class-teacher/class-teacher.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
@@ -47,7 +47,7 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
     this.alive = false;
   }
 
-  user$ = this.store.select(selectUserData);
+  user$ = this.store.select(selectUser);
   classTeacher$ = this.store.select(selectClassTeachersArray);
   teachers$ = this.store.select(selectTeacherArray);
   classes$ = this.store.select(selectStreamsArray);
@@ -97,7 +97,7 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
                         // check if they are the user
                         this.user$.pipe(takeWhile(() => this.alive)).subscribe({
                           next: (user) => {
-                            if (user?._id! === (teach.user_id as IUser)._id!) {
+                            if (user?.id! === (teach.user_id as IUser).id!) {
                               console.log(`User id found for teacher`);
                               this.api.selectedClass = {
                                 id: (teacher.class_id as IClassname)._id!,

@@ -19,13 +19,10 @@ export class TeacherComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe({
+    this.userService.list().subscribe({
       next: (data: any) => {
         this.users = data;
-      },
-      error: (error) => {
-        this.userService.errorToast(error);
-      },
+      }
     });
   }
 
