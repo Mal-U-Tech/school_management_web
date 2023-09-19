@@ -8,7 +8,6 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { selectSchoolInfoObject } from 'src/app/store/school-info/school-info.selector';
@@ -41,7 +40,6 @@ interface TEACHER {
   marital_status: string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-view-teacher-table',
   templateUrl: './view-teacher-table.component.html',
@@ -77,7 +75,7 @@ export class ViewTeacherTableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.schoolInfo$.pipe(untilDestroyed(this)).subscribe({
+    this.schoolInfo$.subscribe({
       next: (data) => {
         if (data) {
           this.schoolInfo = data;
@@ -92,7 +90,7 @@ export class ViewTeacherTableComponent implements OnInit, AfterViewInit {
 
   loadData() {
     // this.dispatchTeacherIsLoading();
-    this.teachers$.pipe(untilDestroyed(this)).subscribe({
+    this.teachers$.subscribe({
       next: (data: ITeacher[]) => {
         console.log(data);
 
@@ -115,7 +113,7 @@ export class ViewTeacherTableComponent implements OnInit, AfterViewInit {
       },
     });
 
-    this.paginator$.pipe(untilDestroyed(this)).subscribe({
+    this.paginator$.subscribe({
       next: (data) => {
         this.paginator.pageIndex = data.currentPage;
         this.paginator.length = data.count;

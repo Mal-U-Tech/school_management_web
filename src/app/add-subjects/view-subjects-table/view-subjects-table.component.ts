@@ -8,7 +8,6 @@ import {
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { AddSubjectsService } from 'src/app/shared/add-subjects/add-subjects.service';
@@ -35,7 +34,6 @@ interface SUBJECT {
   department_index: number;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'app-view-subjects-table',
   templateUrl: './view-subjects-table.component.html',
@@ -88,7 +86,7 @@ export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
 
   loadData() {
     this.dispatchSubjectsIsLoading(true);
-    this.subjects$.pipe(untilDestroyed(this)).subscribe((data: ISubjects[]) => {
+    this.subjects$.subscribe((data: ISubjects[]) => {
       console.log('running from subjects subscribe');
       if (data.length) {
         const arr: SUBJECT[] = [];
@@ -151,7 +149,7 @@ export class ViewSubjectsTableComponent implements AfterViewInit, OnInit {
       }
     });
 
-    this.paginator$.pipe(untilDestroyed(this)).subscribe({
+    this.paginator$.subscribe({
       next: (data) => {
         this.paginator.pageIndex = data.currentPage;
         this.paginator.length = data.count;

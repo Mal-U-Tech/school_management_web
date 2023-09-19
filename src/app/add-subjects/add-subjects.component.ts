@@ -1,23 +1,18 @@
 import {
   Component,
   EventEmitter,
-  OnDestroy,
   OnInit,
   QueryList,
   ViewChildren,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AddSubjectsService } from '../shared/add-subjects/add-subjects.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AddDepartmentsService } from '../shared/add-departments/add-departments.service';
 import { Store } from '@ngrx/store';
 import { selectDepartmentsArray } from '../store/departments/departments.selector';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IDepartments } from '../shared/add-departments/add-departments.interface';
 import { postSubjectArrayRequest } from '../store/subjects/subjects.actions';
 import { ISubjects } from '../shared/add-subjects/add-subjects.interface';
 
-@UntilDestroy()
 @Component({
   selector: 'app-add-subjects',
   templateUrl: './add-subjects.component.html',
@@ -56,7 +51,6 @@ export class AddSubjectsComponent implements OnInit {
 
   retrieveDepartmentsService() {
     this.departments$
-      .pipe(untilDestroyed(this))
       .subscribe((data: IDepartments[]) => {
         if (data.length) {
           data.forEach((el: IDepartments) => {
