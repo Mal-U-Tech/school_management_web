@@ -98,3 +98,9 @@ select {
 ::ng-deep .mat-focused .mat-form-field-label {
   margin-top: 6px !important;
 }
+
+// custom globals
+a {
+  font-weight: bold;
+  color: inherit;
+}

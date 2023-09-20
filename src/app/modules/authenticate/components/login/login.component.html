@@ -26,23 +26,19 @@
     </mat-form-field>
 
     <div class="tw-flex tw-flex-col tw-gap-4 tw-mt-2">
-      <button mat-raised-button color="primary" type="button" [disabled]="form.invalid" (click)="submit()">
-        Login
+      <button mat-raised-button color="primary" type="button" [disabled]="form.invalid || (loading$ | async)" (click)="submit()">
+        <ng-container *ngIf="!(loading$ | async)">Login</ng-container>
+        <mat-progress-spinner *ngIf="loading$ | async" class="spinner" diameter="24" mode="indeterminate"></mat-progress-spinner>
       </button>
+      <mat-error class="tw-text-center error" *ngIf="error$ | async">Incorrect email address or password.</mat-error>
 
-      <hr class="tw-my-2 tw-w-full"/>
+      <hr class="tw-mt-2 tw-w-full"/>
 
       <button color="primary" (click)="register()" mat-stroked-button>
         Register Instead
       </button>
     </div>
 
-    <div class="tw-flex tw-mt-4 tw-flex-col tw-items-center">
-      <mat-progress-spinner *ngIf="loading$ | async"
-        class="login-spinner"
-        diameter="32"
-        mode="indeterminate"></mat-progress-spinner>
-      <mat-error *ngIf="error$ | async">Incorrect email or password.</mat-error>
-    </div>
+    <p color="accent" class="hint">Please make sure you have read our <a href="/">terms of use</a> and <a href="">privacy policy</a> before registering.</p>
   </div>
 </form>

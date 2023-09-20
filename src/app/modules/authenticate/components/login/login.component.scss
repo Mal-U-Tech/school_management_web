@@ -5,6 +5,7 @@
 
 $color: mat.get-color-config(sty.$theme);
 $primary: map.get($color, 'primary');
+$accent: map.get($color, 'accent');
 
 :host {
   width: 100%;
@@ -33,6 +34,20 @@ hr {
   overflow: hidden;
 
   box-shadow: 0 0 4px 1px #0001
+}
+
+.hint {
+  color: mat.get-color-from-palette($accent, 500);
+  font-size: var.$text-sm;
+  margin-top: auto;
+}
+
+.spinner::ng-deep circle {
+  stroke: white !important;
+}
+
+.error {
+  font-size: var.$text-sm
 }
 
 .splash {
