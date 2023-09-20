@@ -44,16 +44,6 @@ body {
   padding: 0;
 }
 
-html,
-body {
-  height: 100%;
-}
-
-table {
-  width: 100%;
-  min-width: 40%;
-}
-
 /* Overwrite the styles of the mat-dialog-container element globally, but only for those
 that have an id of `modal-component` */
 mat-dialog-container#modal-component {

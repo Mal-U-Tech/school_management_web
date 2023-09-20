@@ -12,12 +12,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Password</mat-label>
-      <input
-      type="password"
-      matInput
-      [formControl]="password"
-      [type]="visible ? 'text' : 'password'"
-      />
+      <input type="password" matInput [formControl]="password" [type]="visible ? 'text' : 'password'"/>
       <mat-icon matSuffix (click)="toggle()">{{ visible ? "visibility" : "visibility_off" }}</mat-icon>
       <mat-error *ngIf="password.hasError('required')">
         Please enter your password.
@@ -42,3 +37,4 @@
     <p color="accent" class="hint">Please make sure you have read our <a href="/">terms of use</a> and <a href="">privacy policy</a> before registering.</p>
   </div>
 </form>
+<p class="copyrights">copyrights &copy; 2023</p>

@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import {
   FormControl,
-  FormGroup,
+  NonNullableFormBuilder,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user/user.service';
+import { Store } from '@ngrx/store';
+import { registerButtonClick } from '../../store/authenticate.actions';
+import { IUser } from '../../interfaces/user.interface';
+import { selectAuthError, selectAuthLoading } from '../../store/authenticate.selectors';
 
 @Component({
   selector: 'app-registration',
@@ -13,73 +16,87 @@ import { UserService } from '../../services/user/user.service';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent {
-  public username = new FormControl('', [Validators.required]);
-  public userSurname = new FormControl('', [Validators.required]);
-  public userContact = new FormControl('', [Validators.required]);
-  public userEmail = new FormControl('', [Validators.required]);
-  public schoolName = new FormControl('', [Validators.required]);
-  public schoolRegion = new FormControl('', [Validators.required]);
-  public userRole = new FormControl('System Administrator', [
-    Validators.required,
-  ]);
-  public passwordForm = new FormGroup({
-    password: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
-      Validators.minLength(6),
-      Validators.maxLength(25),
-    ]),
-    confirmPassword: new FormControl('', [
-      Validators.required,
-    ]),
+  form = this.builder.group({
+    email: ['', [Validators.required, Validators.email]],
+    firstname: [''],
+    lastname: [''],
+    mobile: [''],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(6), Validators.maxLength(25)],
+    ],
+    confirm: [
+      '',
+      [
+        Validators.required,
+        (control?: FormControl<string>) => {
+          if (!control) {
+            return null;
+          }
+          if (
+            (control.parent?.controls as { password: FormControl<string> })
+              ?.password.value !== control.value
+          ) {
+            return {
+              match: true,
+            };
+          }
+          return null;
+        },
+      ],
+    ],
+    policy: [false, Validators.requiredTrue],
   });
-  public visible = false;
-  public confirmVisible = false;
-  isLoading = false;
+  visible = false;
 
-  constructor(public userApi: UserService, public router: Router) {}
+  loading$ = this.store.select(selectAuthLoading);
+  error$ = this.store.select(selectAuthError);
 
-  public submitForm() {
-    if (
-      this.passwordForm.get('password')!.value !=
-      this.passwordForm.get('confirmPassword')!.value
-    ) {
-    } else if (this.passwordForm.get('password')!.value == '') {
-    } else {
-      this.isLoading = true;
-      this.userApi
-        .register({
-          firstname: this.username.value!.toString(),
-          lastname: this.userSurname.value!.toString(),
-          mobile: this.userContact.value!.toString(),
-          email: this.userEmail.value!.toString(),
-          password: this.passwordForm.get('password')!.value!.toString(),
-        })
-        .subscribe({
-          next: (data) => {
-            this.isLoading = false;
-            // sessionStorage.setItem('user', data);
-            this.router.navigate([`/school-registration`]);
-            // save user data in sessionStorage
-            sessionStorage.setItem('userData', JSON.stringify(data));
-          },
-          error: (error) => {
-            this.isLoading = false;
-          },
-        });
-    }
+  get email() {
+    return this.form.controls.email;
+  }
+  get firstname() {
+    return this.form.controls.firstname;
+  }
+  get lastname() {
+    return this.form.controls.lastname;
+  }
+  get mobile() {
+    return this.form.controls.mobile;
+  }
+  get password() {
+    return this.form.controls.password;
+  }
+  get confirm() {
+    return this.form.controls.confirm;
+  }
+  get policy() {
+    return this.form.controls.policy;
   }
 
-  showPassword() {
-    console.log('Making password visible');
+  constructor(
+    private router: Router,
+    private store: Store,
+    private builder: NonNullableFormBuilder
+  ) {}
+
+  submit() {
+    const data = this.form.getRawValue();
+    const user = {
+      email: data.email,
+      firstname: data.firstname,
+      lastname: data.lastname,
+      mobile: data.mobile,
+      password: data.password
+    } as IUser;
+    this.store.dispatch(registerButtonClick({ user }))
+  }
+
+  toggle() {
     this.visible = !this.visible;
   }
 
-  showConfirmPassword() {
-    this.confirmVisible = !this.confirmVisible;
-  }
-
-  navToLogin() {
+  login() {
     this.router.navigate(['/login']);
   }
 }

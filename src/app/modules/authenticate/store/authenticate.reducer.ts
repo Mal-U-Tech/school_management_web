@@ -3,6 +3,9 @@ import {
   loginButtonClick,
   loginEffectFailed,
   loginEffectSuccessful,
+  registerButtonClick,
+  registerEffectFailed,
+  registerEffectSuccessful,
 } from './authenticate.actions';
 import { AuthenticateState, initialState } from './authenticate.state';
 
@@ -12,17 +15,22 @@ export const reducer = createReducer(
   initialState,
 
   // user reduction
-  on(loginButtonClick, (state): AuthenticateState => ({
-    ...state,
-    api: {
-      loading: true,
-      error: undefined
-    }
-  })),
+  on(
+    loginButtonClick,
+    registerButtonClick,
+    (state): AuthenticateState => ({
+      ...state,
+      api: {
+        loading: true,
+        error: undefined
+      }
+    })
+  ),
 
   // effect reduction
   on(
     loginEffectSuccessful,
+    registerEffectSuccessful,
     (state, { user }): AuthenticateState => ({
       ...state,
       user: user,
@@ -33,6 +41,7 @@ export const reducer = createReducer(
   ),
   on(
     loginEffectFailed,
+    registerEffectFailed,
     (state, { error }): AuthenticateState => ({
       ...state,
       api: {

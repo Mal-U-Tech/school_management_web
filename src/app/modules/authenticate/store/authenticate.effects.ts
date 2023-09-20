@@ -4,7 +4,12 @@ import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../services/user/user.service';
 import {
-  loginButtonClick, loginEffectFailed, loginEffectSuccessful,
+  loginButtonClick,
+  loginEffectFailed,
+  loginEffectSuccessful,
+  registerButtonClick,
+  registerEffectFailed,
+  registerEffectSuccessful,
 } from './authenticate.actions';
 
 @Injectable()
@@ -12,7 +17,7 @@ export class AuthenticateEffects {
   constructor(
     private readonly actions$: Actions,
 
-    private readonly service: UserService,
+    private readonly service: UserService
   ) {}
 
   login$ = createEffect(() => {
@@ -21,9 +26,21 @@ export class AuthenticateEffects {
       exhaustMap(({ email, password }) =>
         this.service.login(email, password).pipe(
           map((user) => loginEffectSuccessful({ user })),
-          catchError((error) => of(loginEffectFailed({ error }))),
-        ),
-      ),
+          catchError((error) => of(loginEffectFailed({ error })))
+        )
+      )
+    );
+  });
+
+  register$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(registerButtonClick),
+      exhaustMap(({ user }) =>
+        this.service.register(user).pipe(
+          map((user) => registerEffectSuccessful({ user })),
+          catchError((error) => of(registerEffectFailed({ error })))
+        )
+      )
     );
   });
 }

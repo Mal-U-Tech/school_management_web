@@ -2,7 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RegistrationService } from '../../services/registration/registration.service';
 
 @Component({
   selector: 'app-school',
@@ -22,7 +21,6 @@ export class SchoolComponent implements OnInit, OnDestroy {
   public email: any;
 
   constructor(
-    private registration: RegistrationService,
     private router: Router,
     private snackbar: MatSnackBar
   ) {}
@@ -37,16 +35,6 @@ export class SchoolComponent implements OnInit, OnDestroy {
     this.contact = temp.contact;
 
     this.schoolAdministrator.setValue(`${this.name} ${this.surname}`);
-    // this.sub = this._Activatedroute.paramMap.subscribe((params) => {
-    //   console.log(params);
-    //   this.id = params.get('id');
-    //   this.name = params.get('name');
-    //   this.surname = params.get('surname');
-    //   this.contact = params.get('contact');
-    //   this.email = params.get('email');
-    //
-    //   this.schoolAdministrator.setValue(`${this.name} ${this.surname}`);
-    // });
   }
 
   ngOnDestroy() {
@@ -57,29 +45,6 @@ export class SchoolComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
 
-    this.registration
-      .postSchoolInfo({
-        name: this.schoolName.value || '',
-        region: this.schoolRegion.value || '',
-        administrators: [{ user: this.id }],
-        email: this.schoolEmail.value || '',
-        teachers: [],
-      })
-      .subscribe({
-        next: (data: any) => {
-          this.isLoading = false;
-          this.openSnackBar(
-            'Successfully registered school information!',
-            'Close'
-          );
-          sessionStorage.setItem('school-info', JSON.stringify(data));
-          this.router.navigate([`/dashboard`]);
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          this.openSnackBar(error, 'Close');
-        },
-      });
   }
 
   openSnackBar(message: string, action: string) {
