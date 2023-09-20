@@ -40,7 +40,7 @@ import {
   scoresheetIsLoading,
 } from '../store/scoresheet/scoresheet.action';
 import { getReportsRequest, reportsIsLoading } from '../store/reports/reports.actions';
-import { selectUser } from '../modules/authenticate/store/authenticate.selectors';
+import { selectAuthUser } from '../modules/authenticate/store/authenticate.selectors';
 
 interface TEACHER {
   _id: string;
@@ -162,7 +162,7 @@ export class AcademicsComponent implements OnInit, OnDestroy {
   public schoolId = '';
   public user: any;
   schoolInfo$ = this.store.select(selectSchoolInfo);
-  user$ = this.store.select(selectUser);
+  user$ = this.store.select(selectAuthUser);
   // teachers$ = this.store.select(selectTeacherArray);
 
   dispatchStreamsIsLoading() {

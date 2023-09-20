@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IUser } from '../../interfaces/user.interface';
 import { environment } from 'src/environments/environment';
+import { tap } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -13,37 +14,23 @@ export class UserService {
 
   login(email: string, password: string) {
     return this.http
-      .post<IUser>(`${environment.users.api}/login`, { identity: email, password });
+      .post<IUser>(`${environment.users.api}/login`, { identity: email, password })
+      .pipe(tap((user) => this.store(user)));
   }
 
-  modules(admin: string) {
+  register(user: Pick<IUser, 'email' | 'password'> & Partial<IUser>) {
     return this.http
-      .post(`check-modules/${admin}`, {});
-  }
-
-  register(user: {
-    name: string;
-    surname: string;
-    contact: string;
-    email: string;
-    password: string;
-  }) {
-    return this.http
-      .post<IUser>(environment.users.api, user);
-  }
-
-  profile(id: string) {
-    return this.http
-      .get<IUser>(`${environment.users.api}/profile?id=${id}`)
+      .post<IUser>(environment.users.api, user)
+      .pipe(tap((user) => this.store(user)));
   }
 
   update(user: IUser) {
     return this.http
       .put<IUser>(environment.users.api, user)
+      .pipe(tap((user) => this.store(user)));
   }
 
-  delete(id: string) {
-    return this.http
-      .delete(`delete/${id}`);
+  store(user: IUser) {
+    localStorage.setItem('user', JSON.stringify(user));
   }
 }

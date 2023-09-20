@@ -1,8 +1,6 @@
-@use "../../../../theme.scss" as var;
 div.add-marks-wrapper {
   // text-align: center;
   width: 100%;
-  font-family: var.$regular;
   // margin: auto;
   background-color: #eee;
   display: block;
@@ -102,7 +100,6 @@ td {
     position: absolute;
     left: 0;
     padding-left: 8%;
-    font-family: var.$bold;
   }
 
   div.add-marks-wrapper {
@@ -143,20 +140,6 @@ td {
   .mat-column-percentage {
     width: 100% !important;
     text-align: right;
-  }
-
-  ::ng-deep {
-    .mat-mdc-table .mdc-data-table__row {
-      border: 1px dashed black;
-      display: flex;
-      flex-direction: column;
-      justify-content: right;
-      margin: 25px;
-      width: auto;
-      height: auto;
-      font-family: var.$regular;
-      text-align: right;
-    }
   }
 
   table {

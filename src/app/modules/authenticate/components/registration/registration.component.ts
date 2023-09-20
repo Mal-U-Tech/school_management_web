@@ -2,27 +2,10 @@ import { Component } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  FormGroupDirective,
-  NgForm,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { UserService } from '../../services/user/user.service';
-
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(
-    control: FormControl | null,
-    form: FormGroupDirective | NgForm | null
-  ): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(
-      control &&
-      control.invalid &&
-      (control.dirty || control.touched || isSubmitted)
-    );
-  }
-}
 
 @Component({
   selector: 'app-registration',
@@ -52,7 +35,6 @@ export class RegistrationComponent {
   });
   public visible = false;
   public confirmVisible = false;
-  public matcher = new MyErrorStateMatcher();
   isLoading = false;
 
   constructor(public userApi: UserService, public router: Router) {}
@@ -67,9 +49,9 @@ export class RegistrationComponent {
       this.isLoading = true;
       this.userApi
         .register({
-          name: this.username.value!.toString(),
-          surname: this.userSurname.value!.toString(),
-          contact: this.userContact.value!.toString(),
+          firstname: this.username.value!.toString(),
+          lastname: this.userSurname.value!.toString(),
+          mobile: this.userContact.value!.toString(),
           email: this.userEmail.value!.toString(),
           password: this.passwordForm.get('password')!.value!.toString(),
         })

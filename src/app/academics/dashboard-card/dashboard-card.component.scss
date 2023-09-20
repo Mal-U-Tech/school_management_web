@@ -1,4 +1,3 @@
-@use ".../../../../../theme.scss" as var;
 .grid-container {
   margin: 20px;
 }
@@ -22,7 +21,6 @@
 }
 
 mat-grid-tile {
-  background-color: #eee;
   margin-top: 24px;
   border-radius: 6px;
 }
@@ -42,30 +40,15 @@ button {
 }
 
 button.add-button {
-  background-color: var.$secondary;
   color: white;
-  font-family: var.$regular;
 }
 
 button.view-button {
-  background-color: var.$tenary;
   color: black;
-  font-family: var.$regular;
-}
-
-::ng-deep {
-  .mat-raised-button {
-    font-family: var.$regular;
-  }
 }
 
 .grid-tile {
-  font-family: var.$bold;
   color: black;
-}
-
-.card-title {
-  font-family: var.$semi-bold;
 }
 
 @media screen and (max-width: 768px) {

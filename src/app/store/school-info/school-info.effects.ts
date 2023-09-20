@@ -17,42 +17,6 @@ export class SchoolInfoEffects {
     private readonly schoolInfoService: UserService,
     private readonly router: Router
   ) {}
-  // get the school info data
-  getSchoolInfo$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(checkModulesRequest),
-      mergeMap(({ _id }) =>
-        from(this.schoolInfoService.modules(_id)).pipe(
-          catchError((error) => {
-            return of(
-              checkModulesError({ message: error.toString() })
-            );
-          })
-        )
-      ),
-      switchMap((success: any) => {
-        const modulesRes = success;
-        if (
-          modulesRes.missing.length &&
-          modulesRes.missing[0].name === 'school-info'
-        ) {
-          this.navigateToSchoolRegistration();
-          return of(
-            isSchoolInfoLoading({ isSchoolInfoLoading: false }),
-            checkModulesError({ message: 'School info not found' })
-          );
-        } else if(modulesRes.success === 100) {
-          this.navigateToDashboard();
-          return of(
-            isSchoolInfoLoading({ isSchoolInfoLoading: false }),
-            addSchoolInfo({ school_info: modulesRes.data })
-          );
-        }
-
-        return of(isSchoolInfoLoading({isSchoolInfoLoading: false}));
-      })
-    );
-  });
 
   // function to navigate to navigate to dashboard
   navigateToDashboard() {

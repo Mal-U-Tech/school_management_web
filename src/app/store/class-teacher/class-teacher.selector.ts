@@ -5,7 +5,7 @@ import { TeacherState } from '../teacher/teacher.reducer';
 import { selectTeacher } from '../teacher/teacher.selector';
 import { ClassTeacherState } from './class-teacher.reducer';
 import { AuthenticateState } from '../../modules/authenticate/store/authenticate.state';
-import { selectAuth } from '../../modules/authenticate/store/authenticate.selectors';
+import { selectAuthState } from '../../modules/authenticate/store/authenticate.selectors';
 
 export const selectClassTeacher =
   createFeatureSelector<ClassTeacherState>('classTeacher');
@@ -26,7 +26,7 @@ export const selectClassTeacherIsLoading = createSelector(
 );
 
 export const selectAndFindClassTeacher = createSelector(
-  selectClassTeacher, selectTeacher, selectAuth,
+  selectClassTeacher, selectTeacher, selectAuthState,
   (classTeachers: ClassTeacherState, teachers: TeacherState, user: AuthenticateState) => {
     let classTeacher: IClassTeacher | undefined;
     let teach: ITeacher | undefined;

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { selectSchoolInfoObject } from '../store/school-info/school-info.selector';
-import { selectUser } from '../modules/authenticate/store/authenticate.selectors';
+import { selectAuthUser } from '../modules/authenticate/store/authenticate.selectors';
 
 @Component({
   selector: 'app-nav-dashboard',
@@ -14,7 +14,7 @@ export class NavDashboardComponent {
   salutations = '';
   userName = '';
   userSurname = '';
-  user$ = this.store.select(selectUser);
+  user$ = this.store.select(selectAuthUser);
   schoolInfo$ = this.store.select(selectSchoolInfoObject);
 
   constructor(

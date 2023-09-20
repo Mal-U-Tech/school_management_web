@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeWhile } from 'rxjs';
 import { IUser } from 'src/app/modules/authenticate/interfaces/user.interface';
-import { selectUser } from 'src/app/modules/authenticate/store/authenticate.selectors';
+import { selectAuthUser } from 'src/app/modules/authenticate/store/authenticate.selectors';
 import { AttendanceConductService } from 'src/app/shared/attendance-conduct/attendance-conduct.service';
 import { IClassTeacher } from 'src/app/shared/class-teacher/class-teacher.interface';
 import { IClassname } from 'src/app/shared/classname/classname.interface';
@@ -47,7 +47,7 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
     this.alive = false;
   }
 
-  user$ = this.store.select(selectUser);
+  user$ = this.store.select(selectAuthUser);
   classTeacher$ = this.store.select(selectClassTeachersArray);
   teachers$ = this.store.select(selectTeacherArray);
   classes$ = this.store.select(selectStreamsArray);

@@ -1,9 +1,6 @@
-@use "../../theme.scss" as var;
-
 h1 {
   text-align: center;
   font-size: 2rem;
-  font-family: var.$bold;
 }
 .scoresheet {
   // background-color: green;
@@ -20,33 +17,14 @@ h1 {
 }
 
 button.create-sheet {
-  background-color: var.$secondary;
   color: white;
 }
 
 button.view-sheet {
-  background-color: var.$tenary;
   color: black;
 }
 
-button {
-  font-family: var.$regular;
-}
-::ng-deep {
-  mat-grid-list {
-    display: flex;
-    flex-wrap: wrap;
-    min-width: 200px;
-  }
-
-  mat-grid-tile {
-    display: flex;
-    flex-wrap: wrap;
-  }
-}
-
 .school-reports {
-  background-color: var.$light;
   max-width: 240px;
   width: 70%;
 }

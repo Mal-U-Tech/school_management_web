@@ -1,61 +1,48 @@
-<div class="login-container">
-  <div class="items-container">
-    <h1 color="primary" class="splash-text">School Management System</h1>
-    <div id="form-container-login">
-      <form class="form-container">
-        <mat-form-field class="email form-field">
-          <mat-label>Email</mat-label>
-          <input
-            matInput
-            type="email"
-            [formControl]="email"
-            placeholder="Example: pat@example.com"
-          />
-          <mat-error
-            *ngIf="email.hasError('email') && email.hasError('required')"
-          >
-            Please enter a valid email address.
-          </mat-error>
-          <mat-error *ngIf="email.hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field>
+<form class="tw-flex tw-flex-col container">
+  <h1 color="primary" class="splash">School Management System</h1>
 
-        <mat-form-field class="password form-field">
-          <mat-label>Password</mat-label>
-          <input
-            type="password"
-            matInput
-            [formControl]="password"
-            [type]="visible ? 'text' : 'password'"
-          />
-          <mat-icon matSuffix (click)="toggle()">{{ visible ? "visibility" : "visibility_off" }}</mat-icon>
-          <mat-error *ngIf="password.hasError('required')">Password is <strong>required</strong></mat-error>
-        </mat-form-field>
+  <div class="tw-flex tw-flex-col tw-gap-2 tw-p-6">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="Example: pat@example.com" [formControl]="email"/>
+      <mat-error *ngIf="email.hasError('email') || email.hasError('required')">
+        Please enter a valid email address.
+      </mat-error>
+    </mat-form-field>
 
-        <div class="buttons-container">
-          <button
-            *ngIf="!(loading$ | async)"
-            class="login button"
-            (click)="submit()"
-            mat-raised-button
-            type="button"
-          >
-            Login
-          </button>
-          <div *ngIf="loading$ | async" class="login-spinner-container">
-            <mat-progress-spinner
-              class="login-spinner"
-              mode="indeterminate"
-            ></mat-progress-spinner>
-          </div>
-          <br />
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input
+      type="password"
+      matInput
+      [formControl]="password"
+      [type]="visible ? 'text' : 'password'"
+      />
+      <mat-icon matSuffix (click)="toggle()">{{ visible ? "visibility" : "visibility_off" }}</mat-icon>
+      <mat-error *ngIf="password.hasError('required')">
+        Please enter your password.
+      </mat-error>
+      <mat-hint>Keep your password confidential and secure.</mat-hint>
+    </mat-form-field>
 
-          <button class="register button" (click)="register()" mat-button>
-            Register instead
-          </button>
-        </div>
-      </form>
+    <div class="tw-flex tw-flex-col tw-gap-4 tw-mt-2">
+      <button mat-raised-button color="primary" type="button" [disabled]="form.invalid" (click)="submit()">
+        Login
+      </button>
+
+      <hr class="tw-my-2 tw-w-full"/>
+
+      <button color="primary" (click)="register()" mat-stroked-button>
+        Register Instead
+      </button>
+    </div>
+
+    <div class="tw-flex tw-mt-4 tw-flex-col tw-items-center">
+      <mat-progress-spinner *ngIf="loading$ | async"
+        class="login-spinner"
+        diameter="32"
+        mode="indeterminate"></mat-progress-spinner>
+      <mat-error *ngIf="error$ | async">Incorrect email or password.</mat-error>
     </div>
   </div>
-</div>
+</form>

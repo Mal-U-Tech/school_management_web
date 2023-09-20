@@ -1,16 +1,10 @@
-@use "../../../../../theme.scss" as var;
-// material styles
-// .school-reg-container {}
-
 .school-reg-title {
   position: relative;
   top: 60px;
-  background-color: var.$primary;
   height: 18px;
   text-align: center;
 
   span {
-    font-family: var.$regular;
     font-size: 3.4rem;
   }
 }
@@ -37,24 +31,7 @@ button {
   margin: auto;
 }
 
-::ng-deep {
-  mat-label {
-    font-family: var.$regular;
-    color: var.$primary;
-  }
-
-  mat-input {
-    color: red;
-    background-color: red;
-  }
-
-  .mat-form-field-ripple {
-    background-color: green;
-  }
-}
-
 button.confirm {
-  background-color: var.$primary;
   color: white;
 }
 
@@ -64,10 +41,6 @@ button.confirm {
   height: 40px;
   width: 40px;
   margin: 20px auto;
-}
-
-:host ::ng-deep .spinner circle {
-  stroke: var.$secondary;
 }
 
 @media screen and (max-width: 768px) {

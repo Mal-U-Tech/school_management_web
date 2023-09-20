@@ -1,13 +1,8 @@
-@use "../../../theme.scss" as var;
 
 .form-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-::ng-deep {
-  font-family: var.$regular;
 }
 
 .form-field {
@@ -24,14 +19,12 @@
 }
 
 button.gender.menu {
-  background-color: var.$primary;
   color: white;
   display: flex;
   justify-content: center;
   margin: 12px auto;
 }
 button.maritalStatus.menu {
-  background-color: var.$secondary;
   margin: auto;
   display: flex;
   justify-content: center;

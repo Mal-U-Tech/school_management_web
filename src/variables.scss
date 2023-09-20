@@ -1,0 +1,137 @@
+// font family definitions
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-Light.ttf");
+  font-weight: 100;
+}
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-Medium.ttf");
+  font-weight: 200;
+}
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-Regular.ttf");
+  font-weight: 300;
+}
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-Retina.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-SemiBold.ttf");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "FiraCode";
+  src: url("./assets/fonts/FiraCodeNerdFontMono-Bold.ttf");
+  font-weight: 600;
+}
+
+// color palette definitions
+$turquois-palette: (
+  50: #e8eff3,
+  100: #c5d8e0,
+  200: #9ebecc,
+  300: #77a3b7,
+  400: #5a90a7,
+  500: #3d7c98,
+  600: #377490,
+  700: #2f6985,
+  800: #275f7b,
+  900: #1a4c6a,
+  A100: #a5dbff,
+  A200: #72c7ff,
+  A400: #3fb3ff,
+  A700: #25a9ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$tint-palette: (
+  50: #eef6f9,
+  100: #d5e7f0,
+  200: #b9d8e6,
+  300: #9dc8dc,
+  400: #88bcd5,
+  500: #73b0cd,
+  600: #6ba9c8,
+  700: #60a0c1,
+  800: #5697ba,
+  900: #4387ae,
+  A100: #ffffff,
+  A200: #d0edff,
+  A400: #9ddaff,
+  A700: #84d0ff,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
+);
+
+$crimson-palette: (
+  50: #f1e0e0,
+  100: #dbb3b3,
+  200: #c48080,
+  300: #ac4d4d,
+  400: #9a2626,
+  500: #880000,
+  600: #800000,
+  700: #750000,
+  800: #6b0000,
+  900: #580000,
+  A100: #ff8a8a,
+  A200: #ff5757,
+  A400: #ff2424,
+  A700: #ff0a0a,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+// sizes
+$sm: 480px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
