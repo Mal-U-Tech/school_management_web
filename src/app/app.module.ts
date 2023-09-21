@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
@@ -28,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { NavDashboardComponent } from './nav-dashboard/nav-dashboard.component';
 import { DashboardCardComponent } from './academics/dashboard-card/dashboard-card.component';
 import { ViewStreamsTableComponent } from './classname/view-streams-table/view-streams-table.component';
@@ -120,7 +119,6 @@ import { UserService } from './modules/authenticate/services/user/user.service';
 @NgModule({
   declarations: [
     AppComponent,
-    SplashScreenComponent,
     ClassnameComponent,
     AddDepartmentsComponent,
     AddSubjectsComponent,

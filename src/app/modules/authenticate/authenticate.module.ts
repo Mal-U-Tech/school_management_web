@@ -6,11 +6,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './components/login/login.component';
 import { RegistrationComponent } from './components/registration/registration.component';
+import { SplashComponent } from './components/splash/splash.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { SchoolComponent } from './components/school/school.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducer, key } from './store/authenticate.reducer';
@@ -22,7 +22,7 @@ import routes from './authenticate.routes';
   declarations: [
     LoginComponent,
     RegistrationComponent,
-    SchoolComponent,
+    SplashComponent,
   ],
   imports: [
     // core imports

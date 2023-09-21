@@ -1,4 +1,3 @@
-@use "../../../theme.scss" as var;
 .form-container {
   display: flex;
   justify-content: center;
@@ -9,6 +8,5 @@
 }
 
 .update-button {
-  background-color: var.$primary;
   color: white;
 }

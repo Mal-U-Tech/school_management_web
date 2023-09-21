@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { ClassnameComponent } from './classname/classname.component';
 import { AddDepartmentsComponent } from './add-departments/add-departments.component';
 import { AddSubjectsComponent } from './add-subjects/add-subjects.component';
@@ -33,7 +32,6 @@ import { ViewClassesConductComponent } from './pages/view-classes-conduct/view-c
 import { AddClassConductComponent } from './pages/add-class-conduct/add-class-conduct.component';
 
 export default [
-  { path: '', component: SplashScreenComponent, pathMatch: 'full' },
   {
     path: '',
     loadChildren: () => import(
