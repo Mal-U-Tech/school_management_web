@@ -1,4 +1,0 @@
-@use "../../../theme.scss" as var;
-:host ::ng-deep .spinner circle {
-  stroke: var.$primary;
-}

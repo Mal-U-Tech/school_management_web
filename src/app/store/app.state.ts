@@ -1,7 +1,7 @@
-import { SchoolInfoState } from './school-info/school-info.reducer';
-import { AuthState } from './user/user.states';
+import { IUser } from '../modules/authenticate/interfaces/user.interface';
 
 export interface AppState {
-  auth: AuthState;
-  schoolInfo: SchoolInfoState;
+  user?: IUser;
 }
+
+export const initial = {};

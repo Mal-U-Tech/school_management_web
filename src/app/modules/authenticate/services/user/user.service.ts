@@ -30,7 +30,7 @@ export class UserService {
       .pipe(tap((user) => this.store(user)));
   }
 
-  store(user: IUser) {
+  private store(user: IUser) {
     localStorage.setItem('user', JSON.stringify(user));
   }
 }

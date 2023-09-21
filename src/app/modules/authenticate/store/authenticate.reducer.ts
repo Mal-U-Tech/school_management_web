@@ -7,12 +7,12 @@ import {
   registerEffectFailed,
   registerEffectSuccessful,
 } from './authenticate.actions';
-import { AuthenticateState, initialState } from './authenticate.state';
+import { AuthenticateState, initial } from './authenticate.state';
 
-export const key = 'auth';
+export const key = 'authenticate';
 
 export const reducer = createReducer(
-  initialState,
+  initial,
 
   // user reduction
   on(

@@ -9,7 +9,7 @@ export interface AuthenticateState {
   }
 }
 
-export const initialState: AuthenticateState = {
+export const initial: AuthenticateState = {
   api: {
     loading: false
   }

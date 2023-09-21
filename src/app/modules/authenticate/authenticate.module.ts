@@ -15,6 +15,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducer, key } from './store/authenticate.reducer';
 import { AuthenticateEffects } from './store/authenticate.effects';
+import { UserService } from './services/user/user.service';
 
 import routes from './authenticate.routes';
 
@@ -43,6 +44,7 @@ import routes from './authenticate.routes';
     ReactiveFormsModule,
   ],
   providers: [
+    UserService
   ],
 })
 export class AuthenticateModule { }

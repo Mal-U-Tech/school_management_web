@@ -97,6 +97,6 @@ export class RegistrationComponent {
   }
 
   login() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['login']);
   }
 }
