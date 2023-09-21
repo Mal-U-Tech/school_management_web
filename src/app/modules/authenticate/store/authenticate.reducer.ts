@@ -31,9 +31,8 @@ export const reducer = createReducer(
   on(
     loginEffectSuccessful,
     registerEffectSuccessful,
-    (state, { user }): AuthenticateState => ({
+    (state): AuthenticateState => ({
       ...state,
-      user: user,
       api: {
         loading: false,
       }

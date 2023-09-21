@@ -5,7 +5,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { selectAuthError, selectAuthLoading } from '../../store/authenticate.selectors';
+import { selectAuthenticateError, selectAuthenticateLoading } from '../../store/authenticate.selectors';
 import { loginButtonClick } from '../../store/authenticate.actions';
 
 @Component({
@@ -20,8 +20,8 @@ export class LoginComponent {
     password: ['', Validators.required]
   })
 
-  loading$ = this.store.select(selectAuthLoading);
-  error$ = this.store.select(selectAuthError);
+  loading$ = this.store.select(selectAuthenticateLoading);
+  error$ = this.store.select(selectAuthenticateError);
 
   get email() {
     return this.form.controls.email;

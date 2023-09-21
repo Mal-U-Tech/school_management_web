@@ -8,10 +8,6 @@ import { tap } from 'rxjs';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  list() {
-    return this.http.get<IUser>(environment.users.api);
-  }
-
   login(email: string, password: string) {
     return this.http
       .post<IUser>(`${environment.users.api}/login`, { identity: email, password })
@@ -31,6 +27,6 @@ export class UserService {
   }
 
   private store(user: IUser) {
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem(environment.token, JSON.stringify(user));
   }
 }

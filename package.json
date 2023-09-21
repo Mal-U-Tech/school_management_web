@@ -41,6 +41,7 @@
     "@angular/cli": "~16.2.2",
     "@angular/compiler-cli": "^16.2.5",
     "@ngrx/eslint-plugin": "^16.2.0",
+    "@ngrx/schematics": "^16.2.0",
     "@types/jasmine": "~4.3.1",
     "@types/pdfmake": "^0.2.2",
     "@typescript-eslint/eslint-plugin": "6.7.2",

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { registerButtonClick } from '../../store/authenticate.actions';
 import { IUser } from '../../interfaces/user.interface';
-import { selectAuthError, selectAuthLoading } from '../../store/authenticate.selectors';
+import { selectAuthenticateError, selectAuthenticateLoading } from '../../store/authenticate.selectors';
 
 @Component({
   selector: 'app-registration',
@@ -49,8 +49,8 @@ export class RegistrationComponent {
   });
   visible = false;
 
-  loading$ = this.store.select(selectAuthLoading);
-  error$ = this.store.select(selectAuthError);
+  loading$ = this.store.select(selectAuthenticateLoading);
+  error$ = this.store.select(selectAuthenticateError);
 
   get email() {
     return this.form.controls.email;
