@@ -7,8 +7,7 @@ export class AppService {
   loaduser() {
     const data = localStorage.getItem(environment.token);
     if (data) {
-      const user: IUser = JSON.parse(data);
-      return user;
+      return JSON.parse(data) as IUser;
     }
 
     return null;

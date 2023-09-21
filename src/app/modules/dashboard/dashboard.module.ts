@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { StoreModule } from '@ngrx/store';
+import { MatButtonModule } from '@angular/material/button';
 import { key, reducer } from './store/dashboard.reducer';
 
 import routes from './dashboard.routes';
@@ -23,6 +24,7 @@ import routes from './dashboard.routes';
 
     // material imports
     MatSidenavModule,
+    MatButtonModule,
     MatListModule,
     MatIconModule,
     MatToolbarModule,

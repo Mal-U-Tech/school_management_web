@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { RegistrationComponent } from './components/registration/registration.component';
-import { LoginComponent } from './components/login/login.component';
-import { SplashComponent } from './components/splash/splash.component';
+import { RegistrationComponent } from './pages/registration/registration.component';
+import { LoginComponent } from './pages/login/login.component';
+import { SplashComponent } from './pages/splash/splash.component';
 
 export default [
   {
