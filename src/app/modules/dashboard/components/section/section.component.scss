@@ -1,7 +1,24 @@
+@use "sass:map";
+@use "src/styles.scss" as sty;
+@use "src/variables.scss" as var;
+@use "@angular/material" as mat;
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+$accent: map.get($color, "accent");
+
+$margin: 12px;
+
 :host {
   display: flex;
   flex-flow: column;
   cursor: pointer;
+
+  margin: $margin;
+  border-radius: 8px;
+  overflow: hidden;
+
+  background-color: rgba(mat.get-color-from-palette(map.get($primary, 'contrast'), 400), 0.24);
 }
 
 .title {
@@ -10,7 +27,7 @@
   justify-content: space-between;
 
   transition: padding 256ms;
-  padding: 16px 24px;
+  padding: 12px 24px;
 
   > div {
     display: flex;
@@ -24,7 +41,7 @@
 }
 .title_expanded {
   transition: padding 256ms;
-  padding: 16px 18px;
+  padding: 12px 8px;
 
   > div {
     > div {
@@ -64,9 +81,6 @@
     > p:not(:last-child):after {
       content: ",";
     }
-    > p:last-child:after {
-      content: "...";
-    }
   }
 }
 .title_items_toggled {
@@ -88,7 +102,7 @@
     align-items: center;
 
     padding: 0 32px;
-    height: 48px;
+    height: 40px;
 
     font-size: 10pt;
     margin: 0;
@@ -111,7 +125,7 @@
 .items_expanded {
   > div {
     transition: padding 256ms;
-    padding: 0 20px;
+    padding: 0 10px;
 
     > div {
       transition: opacity 256ms;
@@ -123,6 +137,6 @@
 .toggler {
   > mat-icon {
     transition: opacity 256ms;
-    padding: 0 18px;
+    padding: 0 8px;
   }
 }
