@@ -8,6 +8,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { StoreModule } from '@ngrx/store';
 import { MatButtonModule } from '@angular/material/button';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ToolbarService } from './services/toolbar.service';
+import { DrawerComponent } from './components/drawer/drawer.component';
+import { SectionComponent } from './components/section/section.component';
+import { MatRippleModule } from '@angular/material/core';
 import { key, reducer } from './store/dashboard.reducer';
 
 import routes from './dashboard.routes';
@@ -15,6 +24,9 @@ import routes from './dashboard.routes';
 @NgModule({
   declarations: [
     DashboardComponent,
+    ToolbarComponent,
+    DrawerComponent,
+    SectionComponent,
   ],
   imports: [
     // core imports
@@ -28,6 +40,14 @@ import routes from './dashboard.routes';
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
+    MatChipsModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatRippleModule,
+  ],
+  providers: [
+    ToolbarService
   ]
 })
 export class DashboardModule { }

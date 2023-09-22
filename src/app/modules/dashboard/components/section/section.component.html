@@ -1,0 +1,48 @@
+<!--
+we define the first part, the title section
+-->
+<div
+  class="title"
+  [class.title_expanded]="expanded"
+  [class.title_toggled]="toggled"
+  matRipple
+  (click)="main()"
+  [routerLink]="route"
+>
+  <div>
+    <mat-icon [matTooltip]="title">{{ icon }}</mat-icon>
+    <div class="title_items" [class.title_items_toggled]="toggled">
+      <p>{{ title }}</p>
+      <div>
+        <p *ngFor="let item of items">{{ item.title }}</p>
+      </div>
+    </div>
+  </div>
+
+  <mat-icon (click)="toggled = !toggled">expand_more</mat-icon>
+</div>
+
+<mat-divider *ngIf="toggled"></mat-divider>
+
+<!--
+then we do the items the will fall under the main item
+-->
+<div class="items" *ngIf="toggled" [class.items_expanded]="expanded">
+  <div
+    *ngFor="let item of items"
+    matRipple
+    (click)="link(item)"
+    [routerLink]="item.route"
+  >
+    <mat-icon [matTooltip]="item.title">{{ item.icon }}</mat-icon>
+    <div class="title_items" [class.title_items_toggled]="toggled">
+      <p>{{ item.title }}</p>
+    </div>
+  </div>
+</div>
+
+<div [class.title_toggled]="toggled" class="toggler" matRipple>
+  <mat-icon *ngIf="expanded" (click)="toggled = !toggled">expand_more</mat-icon>
+</div>
+
+<mat-divider></mat-divider>

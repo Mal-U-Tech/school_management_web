@@ -7,6 +7,7 @@ export interface IUser {
 
   firstname: string;
   lastname: string;
+  avatar: string;
 
   groups: {
     id: string;

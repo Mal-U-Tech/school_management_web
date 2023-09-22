@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs/operators';
 import { IUser } from '../modules/authenticate/interfaces/user.interface';
 import { Router } from '@angular/router';
 import { loginEffectSuccessful, registerEffectSuccessful } from '../modules/authenticate/store/authenticate.actions';
+import { toolbarLogoutClick } from '../modules/dashboard/store/dashboard.actions';
 
 @Injectable()
 export class AppEffects {
@@ -33,6 +34,16 @@ export class AppEffects {
         registerEffectSuccessful
       ),
       map(() => this.router.navigate(['dashboard']))
+    )
+  }, { dispatch: false });
+
+  logout$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(toolbarLogoutClick),
+      map(() => {
+        this.service.logout();
+        this.router.navigate(['/'])
+      }),
     )
   }, { dispatch: false });
 }

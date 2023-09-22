@@ -1,0 +1,104 @@
+@use "sass:map";
+@use "src/styles.scss" as sty;
+@use "src/variables.scss" as var;
+@use "@angular/material" as mat;
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+$accent: map.get($color, "accent");
+
+:host {
+  transition: width 256ms;
+  width: 256px;
+  min-width: 64px;
+
+  display: flex;
+  flex-flow: column;
+  box-shadow: 0 0 4px 1px #0001;
+
+  position: relative;
+  overflow: hidden;
+  color: mat.get-color-from-palette(map.get($primary, 'contrast'), 500);
+
+  background-color: mat.get-color-from-palette($primary, 500);
+
+  > img, > mat-icon {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    filter: blur(0.5px);
+
+    object-fit: cover;
+  }
+}
+
+.title {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  > img, > mat-icon {
+    transition: margin-left 256ms;
+    margin-left: 24px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+  > p {
+    margin: 0;
+    white-space: nowrap;
+
+    transition: opacity 256ms;
+    opacity: 1;
+  }
+}
+.title_toggle {
+  > img {
+    transition: margin-left 256ms;
+    margin-left: 18px;
+  }
+  > p {
+    opacity: 0;
+  }
+}
+
+.container {
+  flex: 1;
+}
+
+.footer {
+  height: 48px;
+  display: flex;
+  flex-flow: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+
+  @media screen and (max-width: 480px) {
+    > button {
+      display: none;
+    }
+    > p {
+      margin: 0 !important;
+      width: 100%;
+      text-align: center;
+    }
+  }
+  > p {
+    margin: 0 0 0 24px;
+  }
+  > button {
+    transition: margin-right 25ms, margin-left 256ms, transform 256ms;
+    margin-right: 24px;
+    margin-left: 0;
+    transform: rotate(0deg);
+  }
+}
+.footer_toggle {
+  > button {
+    transition: margin-right 25ms, margin-left 256ms, transform 256ms;
+    margin-right: 12px;
+    margin-left: 12px;
+    transform: rotate(180deg);
+  }
+}

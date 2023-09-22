@@ -1,5 +1,10 @@
+import { IMenu } from "../interfaces/menu.interface";
 
 export interface DashboardState {
+  menu: IMenu[]
 }
 
-export const initial = {};
+export const initial: DashboardState = {
+  menu: []
+};
+

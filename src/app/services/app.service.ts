@@ -12,4 +12,8 @@ export class AppService {
 
     return null;
   }
+
+  logout() {
+    localStorage.removeItem(environment.token);
+  }
 }

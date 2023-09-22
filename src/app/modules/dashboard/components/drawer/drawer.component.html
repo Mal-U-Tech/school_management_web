@@ -1,0 +1,35 @@
+<!--
+so we layout the drawer as title, menu stuff, then footer with version and controls and stuff
+-->
+<div class="title" [class.title_toggle]="expanded">
+  <mat-icon>home</mat-icon>
+  <p>{{ title | slice:0:16 }}<ng-container *ngIf="title.length > 16">...</ng-container></p>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="container">
+  <!--
+    here we generate the menu sections
+    -->
+  <app-section
+    *ngFor="let item of sections$ | async"
+    [title]="item.title"
+    [icon]="item.icon"
+    [route]="item.route"
+    [items]="item.items"
+    [expanded]="expanded"
+  >
+  </app-section>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="footer" [class.footer_toggle]="expanded">
+  <button mat-icon-button (click)="expanded = !expanded">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  <p>v1.0.0</p>
+</div>
+
+<img src="" alt="" />

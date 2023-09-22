@@ -1,24 +1,12 @@
-<div class="content-container">
-  <mat-toolbar color="accent">
-    <mat-toolbar-row>
-      <button mat-icon-button>
-        <mat-icon>menu</mat-icon>
-      </button>
-    </mat-toolbar-row>
-  </mat-toolbar>
-  <mat-sidenav-container class="container">
-    <mat-sidenav mode="over" closed>
-      <mat-nav-list>
-        <a mat-list-item class="nav-link" routerLink="login">
-          <span>Administration</span>
-        </a>
-        <a mat-list-item class="nav-link" routerLink="academics">
-          <span>Academics</span>
-        </a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content class="padding-10">
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
+<app-drawer></app-drawer>
+
+<div class="container">
+  <app-toolbar></app-toolbar>
+  <!--
+    we want the toolbar to sit on top of the content so that when the user scrolls the content, we can add
+    a scroll event to hide the toolbar
+    -->
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </div>

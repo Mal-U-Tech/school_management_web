@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+.container {
+  position: relative;
+  flex: 1;
+  overflow-x: hidden;
+
+  > app-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    min-height: 48px;
+  }
+}
+
+.content {
+  width: 100%;
+  height: calc(100% - 48px);
+  padding-top: 48px;
+
+  overflow-y: hidden;
+}
+
+// for the toggle animation
+.toggle {
+  transition: width 256ms;
+  width: 64px;
+}

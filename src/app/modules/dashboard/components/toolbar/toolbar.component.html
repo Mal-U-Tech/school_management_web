@@ -1,0 +1,55 @@
+<div class="top">
+  <div class="lefty">
+    <ng-container *ngIf="loader$ | async">
+      <mat-progress-spinner
+        class="spinner"
+        diameter="24"
+        mode="indeterminate"
+      ></mat-progress-spinner>
+    </ng-container>
+    <ng-container *ngIf="!(loader$ | async)">
+      <mat-chip-listbox class="breadcrumb">
+        <mat-chip
+          color="primary"
+          *ngFor="let breadcrumb of crumb$ | async"
+          [routerLink]="[breadcrumb.url]"
+        >
+          {{ breadcrumb.label }}
+        </mat-chip>
+      </mat-chip-listbox>
+    </ng-container>
+  </div>
+  <div *ngIf="user$ | async as user" class="popup">
+    <div matRipple matTooltip="{{ user!.email }}">
+      <img *ngIf="user?.avatar" [src]="user?.avatar" />
+      <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
+    </div>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>expand_more</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-menu #menu>
+  <div class="menu" *ngIf="user$ | async as user">
+    <div matRipple class="avatar">
+      <img *ngIf="user?.avatar" [src]="user?.avatar" />
+      <mat-icon *ngIf="!user?.avatar">account_circle</mat-icon>
+    </div>
+
+    <div class="name">
+      <p class="mat-h5">{{ user?.firstname }} {{ user?.lastname }}</p>
+    </div>
+    <div class="email">
+      <p class="mat-h4">{{ user?.email }}</p>
+    </div>
+
+    <button mat-button class="manage">Edit Profile</button>
+
+    <mat-divider></mat-divider>
+
+    <div class="controls">
+      <button mat-button (click)="logout()">Sign Out</button>
+    </div>
+  </div>
+</mat-menu>
