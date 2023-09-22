@@ -10,10 +10,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { AppComponent } from './app.component';
 import { AppService } from './services/app.service';
 import { AppEffects } from './store/app.effects';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { PermissionService } from './services/permission.service';
 
 import { key, reducer } from './store/app.reducer';
 import routes from './app.routes';
-import { TokenInterceptor } from './interceptors/token.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
   ],
   providers: [
     AppService,
+    PermissionService,
 
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],

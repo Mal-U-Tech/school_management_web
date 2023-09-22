@@ -8,3 +8,8 @@ export const selectAppUser = createSelector(
   selectAppState,
   (state) => state.user
 );
+
+export const selectAppPermissions = createSelector(
+  selectAppState,
+  (state) => state.permissions
+);
