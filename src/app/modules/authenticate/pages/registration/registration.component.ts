@@ -7,7 +7,7 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { registerButtonClick } from '../../store/authenticate.actions';
-import { IUser } from '../../interfaces/user.interface';
+import { IUser } from '../../../../interfaces/user.interface';
 import { selectAuthenticateError, selectAuthenticateLoading } from '../../store/authenticate.selectors';
 
 @Component({

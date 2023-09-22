@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IUser } from '../interfaces/user.interface';
+import { IUser } from '../../../interfaces/user.interface';
 
 // user actions
 export const loginButtonClick = createAction(

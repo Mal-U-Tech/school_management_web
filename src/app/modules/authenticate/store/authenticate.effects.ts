@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { UserService } from '../services/user/user.service';
 import {
@@ -23,9 +23,11 @@ export class AuthenticateEffects {
   login$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loginButtonClick),
-      exhaustMap(({ email, password }) =>
+      switchMap(({ email, password }) =>
         this.service.login(email, password).pipe(
-          map((user) => loginEffectSuccessful({ user })),
+          map((user) => {
+            return loginEffectSuccessful({ user });
+          }),
           catchError((error) => of(loginEffectFailed({ error })))
         )
       )
@@ -35,7 +37,7 @@ export class AuthenticateEffects {
   register$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(registerButtonClick),
-      exhaustMap(({ user }) =>
+      switchMap(({ user }) =>
         this.service.register(user).pipe(
           map((user) => registerEffectSuccessful({ user })),
           catchError((error) => of(registerEffectFailed({ error })))

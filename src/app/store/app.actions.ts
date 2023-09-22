@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IUser } from '../modules/authenticate/interfaces/user.interface';
+import { IUser } from '../interfaces/user.interface';
 
 export const userAppLanding = createAction('[App] User App Landing');
 
