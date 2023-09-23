@@ -16,4 +16,14 @@ export class AppService {
   logout() {
     localStorage.removeItem(environment.token);
   }
+
+  verify() {
+    const user = this.loaduser()
+    if (!user) {
+      return false;
+    }
+
+    const expiry = (JSON.parse(window.atob(user.token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) < expiry;
+  }
 }

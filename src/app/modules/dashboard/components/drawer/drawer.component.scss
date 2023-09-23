@@ -70,6 +70,26 @@ $accent: map.get($color, "accent");
   overflow-y: scroll;
   max-height: calc(100vh - 48px - 48px);
 }
+.loading {
+  width: calc(100% - 24px - 32px);
+
+  display: flex;
+  justify-content: center;
+  margin: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  background-color: rgba(mat.get-color-from-palette(map.get($primary, 'contrast'), 400), 0.24);
+
+  > ::ng-deep mat-progress-spinner circle {
+    stroke: white !important;
+  }
+}
+.loading_expanded {
+  padding: 8px;
+  width: calc(100% - 40px);
+}
 
 .footer {
   height: 48px;

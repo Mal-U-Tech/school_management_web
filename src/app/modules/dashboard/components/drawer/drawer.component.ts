@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { selectDashboardMenu } from '../../store/dashboard.selectors';
+import { selectDashboardMenu, selectDashboardMenuLoading } from '../../store/dashboard.selectors';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -16,6 +16,7 @@ export class DrawerComponent {
 
   // we define the menu sections, we will illustrate each section
   sections$ = this.store.select(selectDashboardMenu);
+  loading$ = this.store.select(selectDashboardMenuLoading);
 
   constructor(
     private readonly store: Store

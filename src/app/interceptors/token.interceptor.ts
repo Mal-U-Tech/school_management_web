@@ -8,7 +8,6 @@ import { AppService } from '../services/app.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  user = this.service.loaduser();
 
   constructor(private service: AppService) {}
 
@@ -16,8 +15,9 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ) {
-    if (this.user) {
-      return next.handle(request.clone({ setHeaders: { authorization: `bearer ${this.user.token}` }}));
+    const user = this.service.loaduser();
+    if (user) {
+      return next.handle(request.clone({ setHeaders: { authorization: `bearer ${user.token}` }}));
     }
     return next.handle(request);
   }

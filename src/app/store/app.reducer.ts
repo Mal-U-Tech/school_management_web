@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { AppState, initial } from './app.state';
 import {
   loadPermissionEffectSuccess,
+  loadSchoolsEffectSuccessful,
   userLandingEffectSuccessful,
 } from './app.actions';
 import {
@@ -23,6 +24,7 @@ export const reducer = createReducer(
       user,
     })
   ),
+
   on(
     toolbarLogoutClick,
     (state): AppState => ({
@@ -36,5 +38,13 @@ export const reducer = createReducer(
       ...state,
       permissions: action.permissions,
     })
-  )
+  ),
+
+  on(
+    loadSchoolsEffectSuccessful,
+    (state, action): AppState => ({
+      ...state,
+      schools: action.schools,
+    })
+  ),
 );

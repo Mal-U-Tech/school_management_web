@@ -11,6 +11,9 @@ export const environment = {
   permissions: {
     api: 'https://qvd5y9k6uc.execute-api.us-east-1.amazonaws.com/dev',
   },
+  schools: {
+    api: 'https://i0euk51qxd.execute-api.us-east-1.amazonaws.com/dev',
+  },
   token: 'user',
 };
 

@@ -13,3 +13,8 @@ export const selectAppPermissions = createSelector(
   selectAppState,
   (state) => state.permissions
 );
+
+export const selectAppSchools = createSelector(
+  selectAppState,
+  (state) => state.schools
+);
