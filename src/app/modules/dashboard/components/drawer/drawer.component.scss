@@ -69,7 +69,21 @@ $accent: map.get($color, "accent");
   flex: 1;
   overflow-y: scroll;
   max-height: calc(100vh - 48px - 48px);
+
+  > p {
+    padding: 12px 28px;
+    padding-bottom: 0;
+    margin: 0;
+    opacity: 0.5;
+    font-size: 10pt;
+  }
 }
+.container_expanded {
+  > p {
+    display: none;
+  }
+}
+
 .loading {
   width: calc(100% - 24px - 32px);
 

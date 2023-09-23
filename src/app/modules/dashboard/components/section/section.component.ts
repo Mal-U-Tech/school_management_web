@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ToolbarService } from '../../services/toolbar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-section',
@@ -23,7 +24,10 @@ export class SectionComponent {
   // we define the component bindings here
   toggled = true;
 
-  constructor(private service: ToolbarService) {}
+  constructor(
+    private service: ToolbarService,
+    private router: Router
+  ) {}
 
   // we define a function that will link to the main parts if the interface
   main() {
@@ -38,5 +42,6 @@ export class SectionComponent {
   link(route: { title: string; icon: string; route: string[] }) {
     // so here we are going to emit the item data so that other components are able to react to the route change
     this.service.next(route);
+    return this.router.navigate([...this.route, ...route.route])
   }
 }

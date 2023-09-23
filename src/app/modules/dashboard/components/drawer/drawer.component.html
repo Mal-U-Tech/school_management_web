@@ -8,10 +8,12 @@ so we layout the drawer as title, menu stuff, then footer with version and contr
 
 <mat-divider></mat-divider>
 
-<div class="container">
+<div class="container" [class.container_expanded]="expanded">
   <!--
     here we generate the menu sections
     -->
+  <p>Schools</p>
+
   <app-section
     *ngFor="let item of sections$ | async"
     [title]="item.title"

@@ -32,7 +32,6 @@ then we do the items the will fall under the main item
     *ngFor="let item of items"
     matRipple
     (click)="link(item)"
-    [routerLink]="item.route"
   >
     <mat-icon [matTooltip]="item.title">{{ item.icon }}</mat-icon>
     <div class="title_items" [class.title_items_toggled]="toggled">

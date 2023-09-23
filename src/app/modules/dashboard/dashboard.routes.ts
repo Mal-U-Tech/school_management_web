@@ -5,6 +5,13 @@ export default [
   {
     path: '',
     component: DashboardComponent,
-    children: [],
+    children: [
+      {
+        path: ':id',
+        loadChildren: () => import(
+          '../schools/schools.module'
+        ).then((m) => m.SchoolsModule),
+      }
+    ],
   },
 ] as Routes;

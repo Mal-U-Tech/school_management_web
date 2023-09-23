@@ -7,7 +7,7 @@ import {
   Router,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
 import { selectAppUser } from 'src/app/store/app.selectors';
 import { toolbarLogoutClick } from '../../store/dashboard.actions';
 
@@ -28,7 +28,8 @@ export class ToolbarComponent {
   crumb$ = this.router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
     distinctUntilChanged(),
-    map(() => this.render(this.activated.root))
+    map(() => this.render(this.activated.root)),
+    startWith([{ label: 'Home', url: '../' }])
   );
   user$ = this.store.select(selectAppUser);
 
@@ -36,7 +37,8 @@ export class ToolbarComponent {
     private readonly store: Store,
     private readonly router: Router,
     private readonly activated: ActivatedRoute
-  ) {}
+  ) {
+  }
 
   logout() {
     this.store.dispatch(toolbarLogoutClick());
@@ -46,8 +48,8 @@ export class ToolbarComponent {
   private render(
     route: ActivatedRoute,
     url = '',
-    breadcrumbs: Array<BreadCrumb> = [{ label: 'Home', url: '../' }]
-  ): Array<BreadCrumb> {
+    breadcrumbs: Array<IBreadCrumb> = [{ label: 'Home', url: '../' }]
+  ): Array<IBreadCrumb> {
     const label = route.routeConfig?.data?.['breadcrumb'];
 
     const path = route.routeConfig ? route.routeConfig.path : '';
@@ -74,7 +76,7 @@ export class ToolbarComponent {
   }
 }
 
-interface BreadCrumb {
+interface IBreadCrumb {
   label: string;
   url: string;
 }
