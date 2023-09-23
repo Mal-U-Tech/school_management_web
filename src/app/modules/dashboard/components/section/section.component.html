@@ -12,7 +12,7 @@ we define the first part, the title section
   <div>
     <mat-icon [matTooltip]="title">{{ icon }}</mat-icon>
     <div class="title_items" [class.title_items_toggled]="toggled">
-      <p>{{ title }}</p>
+      <p>{{ title | slice:0:16 }}<ng-container *ngIf="title.length >= 16">...</ng-container></p>
       <div>
         <p *ngFor="let item of items">{{ item.title }}</p>
       </div>
