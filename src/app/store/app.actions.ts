@@ -37,3 +37,7 @@ export const tokenExpiredLogoutEffectComplete = createAction(
 export const tokenExpiredLogoutEffect = createAction(
   '[App] Token Expired Logout Effect',
 );
+
+export const appInitializedEffect = createAction(
+  '[App] App Initialized Effect'
+)

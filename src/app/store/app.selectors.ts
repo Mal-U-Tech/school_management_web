@@ -18,3 +18,8 @@ export const selectAppSchools = createSelector(
   selectAppState,
   (state) => state.schools
 );
+
+export const selectAppLoading = createSelector(
+  selectAppState,
+  (state) => state.loading,
+)

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+    appInitializedEffect,
   loadPermissionEffectFailed,
   loadPermissionEffectSuccess,
   loadSchoolsEffectFailed,
@@ -11,7 +12,7 @@ import {
   userLandingEffectSuccessful,
 } from './app.actions';
 import { AppService } from '../services/app.service';
-import { catchError, exhaustMap, filter, map } from 'rxjs/operators';
+import { bufferCount, catchError, exhaustMap, filter, map } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
 import {
@@ -43,6 +44,19 @@ export class AppEffects {
       map((user) => userLandingEffectSuccessful({ user: user as IUser }))
     );
   });
+
+  landed$ = createEffect(() => {
+    const actions = [
+      userLandingEffectSuccessful,
+      loadSchoolsEffectSuccessful,
+      loadPermissionEffectSuccess,
+    ];
+    return this.actions$.pipe(
+      ofType(...actions),
+      bufferCount(actions.length),
+      map(() => appInitializedEffect()),
+    );
+  })
 
   schools$ = createEffect(() => {
     return this.actions$.pipe(

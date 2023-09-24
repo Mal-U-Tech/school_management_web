@@ -65,10 +65,22 @@ $icons: 15pt;
   transition: opacity 64ms;
   opacity: 1;
 
-  > p {
+  > p:first-child {
     margin: 0;
     white-space: nowrap;
   }
+  > p:nth-child(2) {
+    margin: 0;
+    margin-left: auto;
+    white-space: nowrap;
+
+    font-size: 6pt;
+    background-color: rgba(mat.get-color-from-palette(map.get($primary, 'contrast'), 400), 0.24);
+    border-radius: 8px;
+
+    padding: 1px 8px;
+  }
+
   > div {
     display: flex;
     align-items: center;

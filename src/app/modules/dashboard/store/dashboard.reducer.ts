@@ -27,18 +27,21 @@ function buildmenu(schools: ISchool[]): IMenu[] {
 
       items: [
         {
-          title: 'Classes',
+          title: `Classes`,
+          suffix: school.classes?.length,
           icon: 'class',
           route: ['classes']
         },
         {
-          title: 'Subjects',
+          title: `Subjects`,
           icon: 'subject',
+          suffix: school.subjects?.length,
           route: ['subjects']
         },
         {
           title: 'Students',
           icon: 'person',
+          suffix: school.students?.length,
           route: ['students']
         },
       ]

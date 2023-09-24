@@ -20,6 +20,10 @@ import { MatRippleModule } from '@angular/material/core';
 import { key, reducer } from './store/dashboard.reducer';
 
 import routes from './dashboard.routes';
+import { OverviewComponent } from './pages/overview/overview.component';
+import { TitleComponent } from './components/title/title.component';
+import { ContentComponent } from './components/content/content.component';
+import { PanelComponent } from './components/panel/panel.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +31,10 @@ import routes from './dashboard.routes';
     ToolbarComponent,
     DrawerComponent,
     SectionComponent,
+    OverviewComponent,
+    TitleComponent,
+    ContentComponent,
+    PanelComponent,
   ],
   imports: [
     // core imports

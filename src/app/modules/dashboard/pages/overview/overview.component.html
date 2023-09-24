@@ -1,0 +1,43 @@
+<app-title>Overview &amp; Updates</app-title>
+
+<app-content>
+  <div *ngIf="user$ | async as user" class="schools">
+    <div>
+      <h2>{{ user.firstname }}'s Schools</h2>
+      <p>View your recent school updates.</p>
+    </div>
+
+    <app-panel [loading]="!!(loading$ | async)">
+      <div class="container" *ngFor="let school of schools$ | async">
+        <h3>{{ school.name }}</h3>
+
+        <div class="tw-flex tw-flex-col classes">
+          <p>Classes</p>
+          <div class="tw-flex tw-gap-4">
+            <div class="class tw-cursor-pointer" *ngFor="let class of school.classes | slice:0:4;">
+
+              <div class="tw-flex tw-items-center tw-justify-between tw-mb-4 class_title">
+                <div class="tw-flex tw-gap-2">
+                  <p>{{ class.name }}</p>
+
+                  <mat-icon *ngIf="showclasswarning(class)" class="tw-cursor-pointer pill" matTooltip="There are actions that can be taken on this class">warning</mat-icon>
+                </div>
+                <mat-icon color="primary" matTooltip="view details">edit</mat-icon>
+              </div>
+
+              <div class="tw-flex tw-gap-2 tw-flex-wrap">
+                <div class="tw-flex tw-items-center block" matRipple>
+                  <p>{{ class?.subjects?.length ?? 0 }} Subject<ng-container *ngIf="!class?.subjects || (class?.subjects?.length ?? 0) > 1">s</ng-container></p>
+                </div>
+
+                <div class="tw-flex tw-items-center block" matRipple>
+                  <p>{{ class?.users?.length ?? 0 }} Teacher<ng-container *ngIf="(class?.users?.length ?? 0) > 1">s</ng-container></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </app-panel>
+  </div>
+</app-content>

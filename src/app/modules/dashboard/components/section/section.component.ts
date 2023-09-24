@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ToolbarService } from '../../services/toolbar.service';
 import { Router } from '@angular/router';
+import { IMenuItem } from '../../interfaces/menu.interface';
 
 @Component({
   selector: 'app-section',
@@ -19,7 +20,7 @@ export class SectionComponent {
   route!: string[];
 
   @Input()
-  items!: { title: string; icon: string; route: string[] }[];
+  items!: IMenuItem[];
 
   // we define the component bindings here
   toggled = true;
@@ -42,6 +43,6 @@ export class SectionComponent {
   link(route: { title: string; icon: string; route: string[] }) {
     // so here we are going to emit the item data so that other components are able to react to the route change
     this.service.next(route);
-    return this.router.navigate([...this.route, ...route.route])
+    return this.router.navigate([[...this.route, ...route.route].join('/')])
   }
 }

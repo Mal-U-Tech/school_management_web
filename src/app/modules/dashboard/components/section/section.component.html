@@ -34,8 +34,9 @@ then we do the items the will fall under the main item
     (click)="link(item)"
   >
     <mat-icon [matTooltip]="item.title">{{ item.icon }}</mat-icon>
-    <div class="title_items" [class.title_items_toggled]="toggled">
+    <div class="title_items tw-flex tw-w-full" [class.title_items_toggled]="toggled">
       <p>{{ item.title }}</p>
+      <p *ngIf="item.suffix" matRipple>{{ item.suffix }}</p>
     </div>
   </div>
 </div>

@@ -38,6 +38,7 @@ $accent: map.get($color, "accent");
 .title {
   height: 48px;
   display: flex;
+  cursor: pointer;
   align-items: center;
   gap: 12px;
   > img, > mat-icon {

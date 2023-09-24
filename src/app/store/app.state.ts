@@ -6,9 +6,13 @@ export interface AppState {
   user?: IUser;
   permissions: IPermission[];
   schools: ISchool[];
+
+  loading: boolean;
 }
 
 export const initial: AppState = {
   permissions: [],
-  schools: []
+  schools: [],
+
+  loading: true,
 };

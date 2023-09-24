@@ -1,20 +1,14 @@
-import { IAddress } from "./address.interface";
-import { IClass } from "./class.interface";
 import { IStudent } from "./student.interface";
 import { ISubject } from "./subject.interface";
 import { IUser } from "./user.interface";
 
-export interface ISchool {
+export interface IClass {
   id: string;
   name: string;
-  email: string;
+  school_id: string;
 
-  address: IAddress;
-
-  classes?: IClass[];
   subjects?: ISubject[];
-
-  users: IUser[];
+  users?: IUser[];
   students?: IStudent[];
 
   created_at: Date;

@@ -1,7 +1,7 @@
 <!--
 so we layout the drawer as title, menu stuff, then footer with version and controls and stuff
 -->
-<div class="title" [class.title_toggle]="expanded">
+<div class="title" [class.title_toggle]="expanded" [routerLink]="['']" matRipple>
   <mat-icon>home</mat-icon>
   <p>{{ title | slice:0:16 }}<ng-container *ngIf="title.length > 16">...</ng-container></p>
 </div>
