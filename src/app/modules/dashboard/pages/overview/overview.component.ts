@@ -21,4 +21,12 @@ export class OverviewComponent {
   showclasswarning(data: IClass) {
     return (data.subjects?.length ?? 0) < 2 || (data.users?.length ?? 0) < 2
   }
+
+  orderbylastupdated<T extends { updated_at: Date }>(data: T[] | undefined) {
+    const copy = data ? [...data] : undefined;
+
+    return copy?.sort((a, b) => {
+      return (new Date(b.updated_at)).getTime() - (new Date(a.updated_at)).getTime();
+    })
+  }
 }

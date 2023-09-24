@@ -1,6 +1,7 @@
 // material theming
 @use "./variables.scss" as var;
 @use "@angular/material" as mat;
+@use "sass:map";
 
 // tailwind
 // leaving out the base import since it conflicts with the material input styling
@@ -110,4 +111,15 @@ hr {
   width: 20px;
   height: 20px;
   border-radius: 6px;
+}
+
+.tooltip-warn {
+  .mdc-tooltip__surface {
+    background-color: mat.get-color-from-palette(var.$warn-palette, 900) !important;
+
+    color: mat.get-color-from-palette(
+      map.get(var.$warn-palette, "contrast"),
+      500
+    );
+  }
 }

@@ -29,6 +29,7 @@ function buildmenu(schools: ISchool[]): IMenu[] {
         {
           title: `Classes`,
           suffix: school.classes?.length,
+          warning: school.classes?.some((c) => (c.subjects?.length ?? 0) < 2 || (c.users?.length ?? 0) < 2),
           icon: 'class',
           route: ['classes']
         },

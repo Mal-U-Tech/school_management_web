@@ -13,7 +13,7 @@ we define the first part, the title section
     <mat-icon [matTooltip]="title">{{ icon }}</mat-icon>
     <div class="title_items" [class.title_items_toggled]="toggled">
       <p>{{ title | slice:0:16 }}<ng-container *ngIf="title.length >= 16">...</ng-container></p>
-      <div>
+      <div class="minified">
         <p *ngFor="let item of items">{{ item.title }}</p>
       </div>
     </div>
@@ -36,7 +36,11 @@ then we do the items the will fall under the main item
     <mat-icon [matTooltip]="item.title">{{ item.icon }}</mat-icon>
     <div class="title_items tw-flex tw-w-full" [class.title_items_toggled]="toggled">
       <p>{{ item.title }}</p>
-      <p *ngIf="item.suffix" matRipple>{{ item.suffix }}</p>
+
+      <div class="tw-flex pills">
+        <mat-icon *ngIf="item.warning" matRipple class="pill">warning</mat-icon>
+        <p *ngIf="item.suffix" matRipple class="pill">{{ item.suffix }}</p>
+      </div>
     </div>
   </div>
 </div>

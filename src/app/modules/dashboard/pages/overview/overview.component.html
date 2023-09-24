@@ -14,27 +14,85 @@
         <div class="tw-flex tw-flex-col classes">
           <p>Classes</p>
           <div class="tw-flex tw-gap-4">
-            <div class="class tw-cursor-pointer" *ngFor="let class of school.classes | slice:0:4;">
-
-              <div class="tw-flex tw-items-center tw-justify-between tw-mb-4 class_title">
+            <div
+              class="class tw-cursor-pointer"
+              *ngFor="
+                let class of orderbylastupdated(school.classes) | slice : 0 : 4
+              "
+            >
+              <div
+                class="tw-flex tw-items-center tw-justify-between tw-mb-4 class_title"
+              >
                 <div class="tw-flex tw-gap-2">
                   <p>{{ class.name }}</p>
 
-                  <mat-icon *ngIf="showclasswarning(class)" class="tw-cursor-pointer pill" matTooltip="There are actions that can be taken on this class">warning</mat-icon>
+                  <mat-icon
+                    *ngIf="showclasswarning(class)"
+                    class="tw-cursor-pointer pill"
+                    matTooltip="There are actions that can be taken on this class"
+                    matTooltipClass="tooltip-warn"
+                    >warning</mat-icon
+                  >
                 </div>
-                <mat-icon color="primary" matTooltip="view details">edit</mat-icon>
+                <mat-icon color="primary" matTooltip="view details"
+                  >edit</mat-icon
+                >
               </div>
 
               <div class="tw-flex tw-gap-2 tw-flex-wrap">
                 <div class="tw-flex tw-items-center block" matRipple>
-                  <p>{{ class?.subjects?.length ?? 0 }} Subject<ng-container *ngIf="!class?.subjects || (class?.subjects?.length ?? 0) > 1">s</ng-container></p>
+                  <p>
+                    {{ class?.subjects?.length ?? 0 }} Subject<ng-container
+                      *ngIf="
+                        !class?.subjects || (class?.subjects?.length ?? 0) > 1
+                      "
+                      >s</ng-container
+                    >
+                  </p>
                 </div>
 
                 <div class="tw-flex tw-items-center block" matRipple>
-                  <p>{{ class?.users?.length ?? 0 }} Teacher<ng-container *ngIf="(class?.users?.length ?? 0) > 1">s</ng-container></p>
+                  <p>
+                    {{ class?.users?.length ?? 0 }} Teacher<ng-container
+                      *ngIf="(class?.users?.length ?? 0) > 1"
+                      >s</ng-container
+                    >
+                  </p>
+                </div>
+
+                <div class="tw-flex tw-items-center block" matRipple>
+                  <p>
+                    {{ class?.students?.length ?? 0 }} Student<ng-container
+                      *ngIf="
+                        !class?.students || (class?.students?.length ?? 0) > 1
+                      "
+                      >s</ng-container
+                    >
+                  </p>
                 </div>
               </div>
             </div>
+
+            <div class="view">
+              <button mat-flat-button class="tw-my-auto">
+                view all
+                <ng-container *ngIf="(school.classes?.length ?? 0) > 4"
+                  >({{ (school.classes?.length ?? 0) - 4 }} more)</ng-container
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tw-flex tw-flex-col tw-mt-5 students">
+          <p>Students</p>
+          <div class="tw-flex">
+            <div class="tw-flex tw-flex-col">
+              <h1>{{ school.students?.length ?? 0 }}</h1>
+              <p>Students</p>
+            </div>
+
+            <div></div>
           </div>
         </div>
       </div>

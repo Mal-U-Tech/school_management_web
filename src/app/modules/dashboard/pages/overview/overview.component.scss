@@ -29,16 +29,34 @@ $accent: map.get($color, "accent");
   }
 }
 
-.classes {
+.classes, .students {
   > p {
     color: mat.get-color-from-palette($accent, 500);
     font-size: 9pt;
     margin-bottom: 2px;
   }
+  > div {
+    flex-wrap: wrap;
+  }
 }
 
-.class {
+.view {
+  min-width: 220px;
   width: 220px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > button {
+    color: mat.get-color-from-palette($primary, 500);
+    font-weight: normal;
+  }
+}
+.class {
+  min-width: 220px;
+  width: 220px;
+
   border: 1px solid mat.get-color-from-palette($primary, 100);
   border-radius: 8px;
   padding: 12px;

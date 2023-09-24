@@ -65,23 +65,28 @@ $icons: 15pt;
   transition: opacity 64ms;
   opacity: 1;
 
-  > p:first-child {
+  > p {
     margin: 0;
     white-space: nowrap;
   }
-  > p:nth-child(2) {
-    margin: 0;
+
+  > .pills {
     margin-left: auto;
-    white-space: nowrap;
+    display: flex;
+    gap: 4px;
 
-    font-size: 6pt;
-    background-color: rgba(mat.get-color-from-palette(map.get($primary, 'contrast'), 400), 0.24);
-    border-radius: 8px;
-
-    padding: 1px 8px;
+    > mat-icon {
+      color: mat.get-color-from-palette(var.$warn-palette, 900);
+      background-color: rgba(mat.get-color-from-palette(var.$warn-palette, 400), 0.24);
+    }
+    > p {
+      margin: 0;
+      font-size: 6pt;
+      background-color: rgba(mat.get-color-from-palette(map.get($primary, 'contrast'), 400), 0.24);
+    }
   }
 
-  > div {
+  > .minified {
     display: flex;
     align-items: center;
     gap: 3px;
@@ -101,7 +106,7 @@ $icons: 15pt;
   }
 }
 .title_items_toggled {
-  > div {
+  > .minified {
     display: flex;
     align-items: center;
     gap: 3px;
