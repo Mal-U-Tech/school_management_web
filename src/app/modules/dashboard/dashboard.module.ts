@@ -17,13 +17,13 @@ import { ToolbarService } from './services/toolbar.service';
 import { DrawerComponent } from './components/drawer/drawer.component';
 import { SectionComponent } from './components/section/section.component';
 import { MatRippleModule } from '@angular/material/core';
-import { key, reducer } from './store/dashboard.reducer';
-
-import routes from './dashboard.routes';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { TitleComponent } from './components/title/title.component';
 import { ContentComponent } from './components/content/content.component';
-import { PanelComponent } from './components/panel/panel.component';
+import { ComponentsModule } from '../../components/components.module';
+import { key, reducer } from './store/dashboard.reducer';
+
+import routes from './dashboard.routes';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,6 @@ import { PanelComponent } from './components/panel/panel.component';
     OverviewComponent,
     TitleComponent,
     ContentComponent,
-    PanelComponent,
   ],
   imports: [
     // core imports
@@ -53,6 +52,10 @@ import { PanelComponent } from './components/panel/panel.component';
     MatMenuModule,
     MatTooltipModule,
     MatRippleModule,
+    MatChipsModule,
+
+    // internal imports
+    ComponentsModule,
   ],
   providers: [
     ToolbarService

@@ -22,10 +22,13 @@
 
 .content {
   width: 100%;
-  height: calc(100% - 48px);
+
+  height: calc(100vh - 48px);
+  max-height: calc(100vh - 48px);
+
   padding-top: 48px;
 
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 
 // for the toggle animation

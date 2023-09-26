@@ -10,8 +10,10 @@ $accent: map.get($color, "accent");
 :host {
   display: flex;
   box-shadow: 4px 0 4px 1px #0001;
+  background: white;
 
   align-items: center;
+  z-index: 9;
 
   > p {
     margin: 0 0 0 24px;

@@ -2,100 +2,54 @@
 
 <app-content>
   <div *ngIf="user$ | async as user" class="schools">
-    <div>
+    <div class="title">
       <h2>{{ user.firstname }}'s Schools</h2>
       <p>View your recent school updates.</p>
     </div>
 
-    <app-panel [loading]="!!(loading$ | async)">
-      <div class="container" *ngFor="let school of schools$ | async">
-        <h3>{{ school.name }}</h3>
+    <hr class="tw-my-6"/>
 
-        <div class="tw-flex tw-flex-col classes">
-          <p>Classes</p>
-          <div class="tw-flex tw-gap-4">
-            <div
-              class="class tw-cursor-pointer"
-              *ngFor="
-                let class of orderbylastupdated(school.classes) | slice : 0 : 4
-              "
-            >
-              <div
-                class="tw-flex tw-items-center tw-justify-between tw-mb-4 class_title"
-              >
-                <div class="tw-flex tw-gap-2">
-                  <p>{{ class.name }}</p>
+    <app-loader *ngIf="!!(loading$ | async)" [diameter]="32" color="primary"></app-loader>
 
-                  <mat-icon
-                    *ngIf="showclasswarning(class)"
-                    class="tw-cursor-pointer pill"
-                    matTooltip="There are actions that can be taken on this class"
-                    matTooltipClass="tooltip-warn"
-                    >warning</mat-icon
-                  >
-                </div>
-                <mat-icon color="primary" matTooltip="view details"
-                  >edit</mat-icon
-                >
-              </div>
+    <ng-container *ngIf="!(loading$ | async)">
+      <div class="school tw-mb-12" *ngFor="let school of (schools$ | async)">
+        <div class="tw-flex tw-items-center tw-mb-4">
+          <h2><mat-icon>school</mat-icon>{{ school.name }}</h2>
+          <div class="tw-ml-4 chip">{{ school.students?.length ?? 0}} students</div>
+        </div>
 
-              <div class="tw-flex tw-gap-2 tw-flex-wrap">
-                <div class="tw-flex tw-items-center block" matRipple>
-                  <p>
-                    {{ class?.subjects?.length ?? 0 }} Subject<ng-container
-                      *ngIf="
-                        !class?.subjects || (class?.subjects?.length ?? 0) > 1
-                      "
-                      >s</ng-container
-                    >
-                  </p>
-                </div>
-
-                <div class="tw-flex tw-items-center block" matRipple>
-                  <p>
-                    {{ class?.users?.length ?? 0 }} Teacher<ng-container
-                      *ngIf="(class?.users?.length ?? 0) > 1"
-                      >s</ng-container
-                    >
-                  </p>
-                </div>
-
-                <div class="tw-flex tw-items-center block" matRipple>
-                  <p>
-                    {{ class?.students?.length ?? 0 }} Student<ng-container
-                      *ngIf="
-                        !class?.students || (class?.students?.length ?? 0) > 1
-                      "
-                      >s</ng-container
-                    >
-                  </p>
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-mt-2 tw-gap-8">
+          <app-panel class="class" *ngFor="let class of orderbylastupdated(school.classes ?? []) | slice:0:8">
+            <div class="tw-flex tw-flex-col class-content">
+              <div class="subjects">
+                <p>Subjects ({{ class.subjects?.length ?? 0 }})</p>
+                <div class="tw-flex">
+                  <p *ngFor="let subject of (class.subjects ?? []) | slice:0:3">{{ subject.name }}</p>
+                  <p *ngIf="(class.subjects ?? []).length < 1">no subjects associated</p>
                 </div>
               </div>
+              <div class="tw-p-4 tw-flex tw-cursor-pointer tw-items-center" matRipple>
+                <h1 class="tw-m-0">{{ class.name }}</h1>
+                <div class="tw-ml-auto tiny" [class.warn]="!class.students?.length">{{ class.students?.length ?? 0 }} students</div>
+              </div>
+
+              <mat-icon [matTooltip]="'Click to manage ' + class.name">link</mat-icon>
             </div>
 
-            <div class="view">
-              <button mat-flat-button class="tw-my-auto">
-                view all
-                <ng-container *ngIf="(school.classes?.length ?? 0) > 4"
-                  >({{ (school.classes?.length ?? 0) - 4 }} more)</ng-container
-                >
-              </button>
-            </div>
+          </app-panel>
+
+          <div class="tw-flex tw-flex-col tw-mx-auto class-content" *ngIf="true">
+            <button mat-stroked-button color="primary">view all</button>
           </div>
         </div>
 
-        <div class="tw-flex tw-flex-col tw-mt-5 students">
-          <p>Students</p>
-          <div class="tw-flex">
-            <div class="tw-flex tw-flex-col">
-              <h1>{{ school.students?.length ?? 0 }}</h1>
-              <p>Students</p>
-            </div>
-
-            <div></div>
-          </div>
+        <div class="tw-flex tw-mt-5 manage">
+          <div class="tw-flex tw-items-center"><mat-icon class="tw-mr-3">link</mat-icon> View &amp; Manage {{ school.name }}</div>
         </div>
+
+        <hr class="tw-mt-4"/>
       </div>
-    </app-panel>
+    </ng-container>
   </div>
 </app-content>
+

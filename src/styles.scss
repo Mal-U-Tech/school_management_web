@@ -31,6 +31,7 @@ $theme: mat.define-light-theme(
       primary: $primary,
       accent: $accent,
       warn: $warn,
+      error: $warn
     ),
     typography: $typography,
   )
@@ -43,6 +44,8 @@ body {
   height: 100vh;
   margin: 0;
   padding: 0;
+
+  overflow: hidden;
 }
 
 /* Overwrite the styles of the mat-dialog-container element globally, but only for those
@@ -98,7 +101,7 @@ a {
 
 hr {
   border: none;
-  height: 0.5px;
+  height: 0.7px;
 }
 
 .pill {
@@ -111,6 +114,21 @@ hr {
   width: 20px;
   height: 20px;
   border-radius: 6px;
+}
+
+.chip {
+  padding: 7px;
+  height: 12px;
+  border-radius: 9px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: mat.get-color-from-palette($accent, 600);
+  color: white;
+
+  font-size: 8pt;
 }
 
 .tooltip-warn {

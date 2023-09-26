@@ -28,7 +28,7 @@ function buildmenu(schools: ISchool[]): IMenu[] {
       items: [
         {
           title: `Classes`,
-          suffix: school.classes?.length,
+          suffix: school.classes?.length ?? String(0),
           warning: school.classes?.some((c) => (c.subjects?.length ?? 0) < 2 || (c.users?.length ?? 0) < 2),
           icon: 'class',
           route: ['classes']
@@ -36,13 +36,13 @@ function buildmenu(schools: ISchool[]): IMenu[] {
         {
           title: `Subjects`,
           icon: 'subject',
-          suffix: school.subjects?.length,
+          suffix: school.subjects?.length ?? String(0),
           route: ['subjects']
         },
         {
           title: 'Students',
           icon: 'person',
-          suffix: school.students?.length,
+          suffix: school.students?.length ?? String(0),
           route: ['students']
         },
       ]
