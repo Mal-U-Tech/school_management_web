@@ -2,8 +2,8 @@
 :host {
   display: inline-block;
   width: 100%;
-  height: 100%;
-  padding: 64px 0;
+  height: calc(100% - 48px - 128px);
+  padding: 48px 0;
 
   > div {
     display: flex;

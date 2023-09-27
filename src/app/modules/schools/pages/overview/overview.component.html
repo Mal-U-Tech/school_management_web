@@ -1,10 +1,24 @@
-<nav mat-tab-nav-bar fitInkBarToContent mat-align-tabs="start" mat-stretch-tabs="false" [tabPanel]="panel">
-  <a mat-tab-link [routerLink]="['classes']">Classes</a>
-  <a mat-tab-link [routerLink]="['classes']">Subjects</a>
-  <a mat-tab-link [routerLink]="['classes']">Students</a>
-  <a mat-tab-link [routerLink]="['classes']">Staff</a>
-</nav>
+<div *ngIf="(school$ | async) as school" class="container">
+  <div class="title tw-w-full tw-flex">
+    <h1>{{ school.name }}</h1>
+  </div>
 
-<mat-tab-nav-panel #panel>
-  <router-outlet></router-outlet>
-</mat-tab-nav-panel>
+  <nav
+    mat-tab-nav-bar
+    fitInkBarToContent
+    disableRipple
+    mat-align-tabs="start"
+    mat-stretch-tabs="false"
+    [tabPanel]="panel"
+    *ngIf="(active$ | async) as active"
+    >
+    <a *ngFor="let tab of tabs" mat-tab-link [routerLink]="tab.route" [active]="active === tab.route[0]">{{ tab.name }}</a>
+  </nav>
+  <hr class="tw-m-0"/>
+</div>
+
+<div class="tw-p-6">
+  <mat-tab-nav-panel #panel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
+</div>

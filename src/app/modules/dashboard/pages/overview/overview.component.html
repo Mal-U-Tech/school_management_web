@@ -1,7 +1,9 @@
 <app-title>Overview &amp; Updates</app-title>
 
-<app-content>
-  <div *ngIf="user$ | async as user" class="schools">
+<app-content *ngIf="user$ | async as user">
+  <app-loader *ngIf="!!(loading$ | async)" [diameter]="32" color="primary"></app-loader>
+
+  <div class="schools" *ngIf="!(loading$ | async)">
     <div class="title">
       <h2>{{ user.firstname }}'s Schools</h2>
       <p>View your recent school updates.</p>
@@ -9,7 +11,6 @@
 
     <hr class="tw-my-6"/>
 
-    <app-loader *ngIf="!!(loading$ | async)" [diameter]="32" color="primary"></app-loader>
 
     <ng-container *ngIf="!(loading$ | async)">
       <div class="school tw-mb-12" *ngFor="let school of (schools$ | async)">
