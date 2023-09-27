@@ -32,6 +32,7 @@ then we do the items the will fall under the main item
     *ngFor="let item of items"
     matRipple
     (click)="link(item)"
+    [class.highlight]="active === item"
   >
     <mat-icon [matTooltip]="item.title">{{ item.icon }}</mat-icon>
     <div class="title_items tw-flex tw-w-full" [class.title_items_toggled]="toggled">

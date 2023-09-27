@@ -24,6 +24,8 @@ import { ComponentsModule } from '../../components/components.module';
 import { key, reducer } from './store/dashboard.reducer';
 
 import routes from './dashboard.routes';
+import { EffectsModule } from '@ngrx/effects';
+import { DashboardEffects } from './store/dashboard.effects';
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import routes from './dashboard.routes';
     CommonModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature(key, reducer),
+    EffectsModule.forFeature([DashboardEffects]),
 
     // material imports
     MatSidenavModule,

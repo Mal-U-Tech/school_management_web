@@ -141,3 +141,7 @@ $accent: map.get($color, "accent");
     transform: rotate(180deg);
   }
 }
+
+.highlight {
+  background: rgba(white, 0.1);
+}

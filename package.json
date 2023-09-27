@@ -23,6 +23,7 @@
     "@angular/router": "^16.2.5",
     "@ngrx/effects": "^16.2.0",
     "@ngrx/entity": "^16.2.0",
+    "@ngrx/router-store": "^16.2.0",
     "@ngrx/store": "^16.2.0",
     "@ngrx/store-devtools": "^16.2.0",
     "pdfmake": "^0.2.7",

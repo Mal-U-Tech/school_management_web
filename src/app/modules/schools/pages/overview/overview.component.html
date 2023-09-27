@@ -1,1 +1,10 @@
-<p>overview works!</p>
+<nav mat-tab-nav-bar fitInkBarToContent mat-align-tabs="start" mat-stretch-tabs="false" [tabPanel]="panel">
+  <a mat-tab-link [routerLink]="['classes']">Classes</a>
+  <a mat-tab-link [routerLink]="['classes']">Subjects</a>
+  <a mat-tab-link [routerLink]="['classes']">Students</a>
+  <a mat-tab-link [routerLink]="['classes']">Staff</a>
+</nav>
+
+<mat-tab-nav-panel #panel>
+  <router-outlet></router-outlet>
+</mat-tab-nav-panel>

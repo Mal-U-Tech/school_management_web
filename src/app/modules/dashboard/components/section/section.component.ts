@@ -21,6 +21,8 @@ export class SectionComponent {
 
   @Input()
   items!: IMenuItem[];
+  @Input()
+  active: IMenuItem | null | undefined;
 
   // we define the component bindings here
   toggled = true;
@@ -43,6 +45,6 @@ export class SectionComponent {
   link(route: { title: string; icon: string; route: string[] }) {
     // so here we are going to emit the item data so that other components are able to react to the route change
     this.service.next(route);
-    return this.router.navigate([[...this.route, ...route.route].join('/')])
+    return this.router.navigate(route.route)
   }
 }

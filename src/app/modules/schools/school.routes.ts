@@ -5,5 +5,13 @@ export default [
   {
     path: '',
     component: OverviewComponent,
+    children: [
+      {
+        path: 'classes',
+        loadChildren: () => import(
+          '../classes/classes.module'
+        ).then((m) => m.ClassesModule)
+      }
+    ]
   }
 ] as Routes;

@@ -13,3 +13,8 @@ export const selectDashboardMenuLoading = createSelector(
   selectDashboardMenu,
   (menu) => menu.length < 1
 )
+
+export const selectDashboardActiveItem = createSelector(
+  selectDashboardState,
+  (state) => state.active
+);

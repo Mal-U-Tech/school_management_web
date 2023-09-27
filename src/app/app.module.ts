@@ -13,6 +13,7 @@ import { AppEffects } from './store/app.effects';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { PermissionService } from './services/permission.service';
 import { SchoolService } from './services/school.service';
+import { StoreRouterConnectingModule } from '@ngrx/router-store';
 
 import { key, reducer } from './store/app.reducer';
 import routes from './app.routes';
@@ -31,6 +32,7 @@ import routes from './app.routes';
     }),
     EffectsModule.forRoot([AppEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: isDevMode() }),
+    StoreRouterConnectingModule.forRoot(),
   ],
   providers: [
     AppService,

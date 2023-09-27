@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { OverviewComponent } from './pages/overview/overview.component';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import routes from './school.routes';
-import { OverviewComponent } from './pages/overview/overview.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,9 @@ import { OverviewComponent } from './pages/overview/overview.component';
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+
+    // material imports
+    MatTabsModule,
   ]
 })
 export class SchoolsModule { }
