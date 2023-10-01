@@ -39,10 +39,8 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
         }
       },
     });
-
     this.dataSource.data = this.classes;
   }
-
   ngOnDestroy(): void {
     this.alive = false;
   }
@@ -106,7 +104,7 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
                               this.api.selectedClass = {
                                 id: (teacher.class_id as IClassname)._id!,
                                 name: (teacher.class_id as IClassname).name,
-                              }
+                              };
                               this.router.navigateByUrl(
                                 'add-attendance-conduct',
                               );
@@ -122,7 +120,6 @@ export class ViewClassesConductComponent implements OnInit, OnDestroy {
           });
 
           // notify user that they are not the class teacher
-
         }
       },
     });

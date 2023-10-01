@@ -15,9 +15,8 @@ import {
 })
 export class UpdateClassStudentComponent {
   constructor(
-    private apiService: ClassStudentsService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private store: Store
+    private store: Store,
   ) {
     const student = data.student;
     this._id = student._id;
@@ -27,8 +26,8 @@ export class UpdateClassStudentComponent {
     this.year = student.year;
     this.genderSelection = student.gender;
     this.classSelection = {
-      name: student.class.name,
-      _id: student.class._id,
+      name: data.stream.name,
+      _id: data.stream.class_id,
     };
   }
 
@@ -72,7 +71,7 @@ export class UpdateClassStudentComponent {
 
   dispatchClassStudentsIsLoading(state: boolean) {
     this.store.dispatch(
-      classStudentsIsLoading({ classStudentsIsLoading: state })
+      classStudentsIsLoading({ classStudentsIsLoading: state }),
     );
   }
 
@@ -93,8 +92,12 @@ export class UpdateClassStudentComponent {
 
     // dispatch action to update class student in effect
     this.store.dispatch(
-      updateClassStudentObjectRequest({ id: this._id, classStudent: student })
+      updateClassStudentObjectRequest({ id: this._id, classStudent: student }),
     );
+
+    setTimeout(() => {
+      this.onLoadDataClicked();
+    }, 10000);
     this.onCloseClicked();
     // this.apiService.updateStudent(this._id, student).subscribe({
     //   next: (data: IClassStudent) => {
