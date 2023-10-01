@@ -1,7 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { takeWhile } from 'rxjs';
-import { ISubject } from 'src/app/add-subjects/models/subject.model';
+import { concatMap, from, Observable, of, takeWhile } from 'rxjs';
 import { ReportExcel } from 'src/app/OOP/classes/report-excel';
 import { ISubjects } from 'src/app/shared/add-subjects/add-subjects.interface';
 import { IAttendanceConduct } from 'src/app/shared/attendance-conduct/attendance-conduct.interface';
@@ -16,6 +15,7 @@ import {
   IReportsCriteria,
   IReportsData,
 } from 'src/app/shared/reports/reports.interface';
+import { IScoresheet } from 'src/app/shared/scoresheet/scoresheet.interface';
 import { ISubjectTeacher } from 'src/app/shared/subject-teacher/subject-teacher.interface';
 import { ITeacher } from 'src/app/shared/teacher/teacher.interface';
 import { TeacherService } from 'src/app/shared/teacher/teacher.service';
@@ -34,7 +34,7 @@ import {
   templateUrl: './generate-reports.component.html',
   styleUrls: ['./generate-reports.component.scss'],
 })
-export class GenerateReportsComponent implements OnDestroy {
+export class GenerateReportsComponent implements OnDestroy, AfterViewInit {
   constructor(
     private store: Store,
     private marksApi: MarksService,
@@ -45,6 +45,8 @@ export class GenerateReportsComponent implements OnDestroy {
   private secondaryRegEx = new RegExp('^Form [1-3].');
   private highSchoolRegEx = new RegExp('^Form [4-5].');
   classTeachers: string[] = [];
+  secondarySubs: ISubjects[] = [];
+  highSchoolSubs: ISubjects[] = [];
   alive = true;
   report$ = this.store.select(selectChosenReport);
   classStudents$ = this.store.select(selectClassStudentArray);
@@ -56,6 +58,24 @@ export class GenerateReportsComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.alive = false;
+  }
+
+  ngAfterViewInit(): void {
+    this.secondarySubjects$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: ISubjects[]) => {
+        if (data?.length) {
+          this.secondarySubs = data;
+        }
+      },
+    });
+
+    this.highSchoolSubjects$.pipe(takeWhile(() => this.alive)).subscribe({
+      next: (data: ISubjects[]) => {
+        if (data?.length) {
+          this.highSchoolSubs = data;
+        }
+      },
+    });
   }
 
   // function to update report instance
@@ -70,11 +90,13 @@ export class GenerateReportsComponent implements OnDestroy {
 
   // function to initiate the generation and computation of reports
   async generateReports() {
+    this.allClassesReports = [];
+    this.classTeachers = [];
     console.log('Generating reports now');
     let report: IReports = null as any;
     let learners: IClassStudent[] = [];
     const classes = [];
-    let reportName = '';
+    // let reportName = '';
     // let scoresheetsWrapper: any[][] = [];
     // let numStudents = 0;
     // let classTeacher = '';
@@ -99,9 +121,6 @@ export class GenerateReportsComponent implements OnDestroy {
           classname: temp,
           learners: [],
         });
-
-        // hold temp classes array
-        // classes.push(temp);
 
         // set learners for each class
         learners = this.getClassLearners(temp);
@@ -134,12 +153,7 @@ export class GenerateReportsComponent implements OnDestroy {
             subjects: null as any,
           });
         });
-
-        // get class teacher
-        // classTeacher = this.getClassTeacher(temp);
       }
-
-      // console.log(this.allClassesReports);
     });
 
     // assing subjects to students
@@ -148,6 +162,47 @@ export class GenerateReportsComponent implements OnDestroy {
     // get scoresheet and assign learners marks
     await this.getLearnersMarks(report);
 
+    // for await (const crit of report.criteria) {
+    //   // loop through classes
+    //   // let m = 0;
+    //   const marks = [];
+    //   let m = 0;
+    //   for await (const stream of crit.classes) {
+    //     // const stream = crit.classes[m];
+    //     console.log(`Getting marks for ${stream.name}`);
+    //     console.log('First');
+    //
+    //     let sheetIndex = 0;
+    //     for await (const scoresheet of crit.scoresheets) {
+    //       console.log(`For ${scoresheet.name} scoresheet`);
+    //
+    //
+    //          this.getLearnerMarksByClassScoresheet(
+    //           stream,
+    //           scoresheet,
+    //           sheetIndex,
+    //           report,
+    //         );
+    //
+    //       sheetIndex++;
+    //     }
+    //     of(marks).pipe(
+    //       concatMap((val) => {
+    //         return of(val);
+    //       }),
+    //     ).subscribe({
+    //         next: (data) => {
+    //           // get attendance and conduct for the class
+    //
+    //           m++;
+    //         }
+    //       });
+    //   }
+    // }
+
+
+    // console.log(this.allClassesReports);
+
     // assign scoresheets marks to the allClassesReports values for each subject
     // this.assignScoresheetMarksToSubjects(
     //   scoresheetsWrapper,
@@ -155,55 +210,19 @@ export class GenerateReportsComponent implements OnDestroy {
     // );
 
     // get reports name
-    reportName = report.name;
+    // reportName = report.name;
 
-    // get number of students
-    // numStudents = learners.length;
-
-    // TODO: get total day
-
-    // TODO: re-open data
-
-    // TODO: get attendance data
-
-    // TODO: get conduct
-
-    // const reportExcel = new ReportExcel(report.name, );
-    // console.log(this.allClassesReports);
     console.log(this.classTeachers);
-    let j = 0;
-    setTimeout(() => {
-      this.allClassesReports.forEach((stream) => {
-        const teacher = this.classTeachers[j];
-
-        // get attendance and conduct for the class
-        this.attendanceApi
-          .getAttendanceReportClass(report._id!, stream.classname._id!)
-          .pipe(takeWhile(() => this.alive))
-          .subscribe({
-            next: (classAttendance: IAttendanceConduct[]) => {
-              if (classAttendance?.length) {
-                // console.log(this.classTeachers[j]);
-
-                const reportExcel = new ReportExcel(
-                  report.name,
-                  stream.classname.name,
-                  stream.learners,
-                  report.year,
-                  teacher,
-                  classAttendance,
-                  report.criteria[0],
-                );
-
-                reportExcel.formulateData();
-                reportExcel.createExcel();
-              }
-            },
-          });
-
-        j++;
-      });
-    }, 5000);
+    // let j = 0;
+    // setTimeout(() => {
+    //   this.allClassesReports.forEach((stream) => {
+    //     const teacher = this.classTeachers[j];
+    //
+    //
+    //
+    //     j++;
+    //   });
+    // }, 1000);
   }
 
   // function to get class learners
@@ -234,8 +253,7 @@ export class GenerateReportsComponent implements OnDestroy {
         if (data?.length) {
           data.forEach((teacher) => {
             if (
-              (teacher.class_id as IClassname)._id ||
-              '' === stream._id ||
+              (teacher.class_id as IClassname)._id! === stream._id ||
               ''
             ) {
               teach = teacher;
@@ -244,7 +262,7 @@ export class GenerateReportsComponent implements OnDestroy {
         }
       },
     });
-    // console.log(teach);
+    console.log(teach);
 
     const user = (teach.teacher_id as ITeacher).user_id as IUser;
     return (
@@ -259,9 +277,160 @@ export class GenerateReportsComponent implements OnDestroy {
     );
   }
 
+  // function to get learners marks separately using classes and scoresheet
+  async getLearnerMarksByClassScoresheet(
+    stream: IClassname,
+    scoresheetId: IScoresheet,
+    sheetIndex: number,
+    report: IReports,
+  ) {
+    let subs: ISubjects[] = [];
+    let allMarks: any[] = [];
+    // find out if the classes if secondary or high school
+    if (this.secondaryRegEx.test(stream.name)) {
+      subs = this.secondarySubs;
+    } else {
+      subs = this.highSchoolSubs;
+    }
+
+
+    // for the selected stream, get the scoresheet marks and store them
+    this.marksApi
+      .getSubjectMarksWithArray(
+        scoresheetId.year,
+        scoresheetId._id!,
+        subs,
+        0,
+        5,
+      )
+      .subscribe({
+        next: (data) => {
+          allMarks = data;
+
+          // get the next batch of marks for the subjects
+          this.marksApi
+            .getSubjectMarksWithArray(
+              scoresheetId.year,
+              scoresheetId._id!,
+              subs,
+              6,
+              subs.length,
+            )
+            .subscribe({
+              next: (data2) => {
+                data2.forEach((item) => allMarks.push(item));
+
+                console.log(
+                  `Here is all marks for the class ${stream.name} for scoresheet ${scoresheetId.name}`,
+                );
+                console.log(allMarks);
+
+                this.setMarksToStream(stream, allMarks, sheetIndex, report);
+              },
+            });
+        },
+      });
+  }
+
+  // function to assign marks to class learners
+  async setMarksToStream(
+    stream: IClassname,
+    marks: any,
+    sheetIndex: number,
+    report: IReports,
+  ) {
+    // find the class in allClassesReports array and add them to the correct learners
+
+    for (let i = 0; i < this.allClassesReports.length; i++) {
+      const className = this.allClassesReports[i];
+      if (className.classname._id || '' === stream._id || '') {
+        // console.log(`Here is the class ${className.classname.name}`);
+        // found the class
+        // now loop through the marks in each subject and find out who the learner is
+        marks.forEach((mark: IMarks[]) => {
+          // now I have a subjec marks on hand
+          // loop through every mark
+          mark.forEach((score: IMarks) => {
+            // loop through the learners in the classname
+            className.learners.forEach((learner) => {
+              // console.log(score);
+              if (score.class_student_id !== null) {
+                if (
+                  (score.class_student_id as IClassStudent)._id ===
+                  learner.reportInfo.id
+                ) {
+                  // console.log(`Learner has been found`);
+
+                  // now find the subject in the learner that the mark belongs to
+                  learner.subjects.forEach((subject) => {
+                    if (
+                      score.subject_id.toString() ===
+                      subject.name._id?.toString()
+                    ) {
+                      // found the subject
+                      // append mark
+                      const calMark = Math.round(
+                        (Number.parseInt(score.mark) / score.max_score) * 100,
+                      );
+                      // console.log(calMark + ' '+ score.mark);
+
+                      if (!isNaN(calMark)) {
+                        if (subject.marks.first === '' && sheetIndex === 0) {
+                          subject.marks.first = calMark.toString();
+                        } else if (
+                          subject.marks.second === '' &&
+                          sheetIndex === 1
+                        ) {
+                          subject.marks.second = calMark.toString();
+                        } else if (
+                          subject.marks.third === '' &&
+                          sheetIndex === 2
+                        ) {
+                          subject.marks.third = calMark.toString();
+                        } else if (
+                          subject.marks.fourth === '' &&
+                          sheetIndex === 3
+                        ) {
+                          subject.marks.fourth = calMark.toString();
+                        }
+
+                        // add subject teacher
+                        const tempUser: IUser = (
+                          (score.subject_teacher_id as ISubjectTeacher)
+                            .teacher_id as ITeacher
+                        ).user_id as IUser;
+                        const tempTeacher: ITeacher = (
+                          score.subject_teacher_id as ISubjectTeacher
+                        ).teacher_id as ITeacher;
+                        subject.marks.teacher =
+                          this.teacherService.computeTeacherTitle(
+                            tempTeacher.gender,
+                            tempTeacher.marital_status,
+                          ) +
+                          ' ' +
+                          tempUser.name +
+                          ' ' +
+                          tempUser.surname;
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          });
+        });
+      } else {
+        console.log('Could not find class');
+      }
+    }
+  }
+
   // function to get learners marks from scoresheets
   async getLearnersMarks(report: IReports) {
     // const scoresheetsWrapper: any[][] = [];
+    //
+    // get marks per class per scoresheet
+    const api = this.marksApi;
 
     console.log(report);
     report.criteria.forEach((crit) => {
@@ -269,109 +438,190 @@ export class GenerateReportsComponent implements OnDestroy {
       for (let i = 0; i < crit.scoresheets.length; i++) {
         const temp = crit.scoresheets[i];
 
-        console.log(`Year: ${temp.year}, Scoresheet: ${temp._id!}`);
-        // get the marks for the scoresheets
-        this.marksApi
-          .getClassStudentMarks(temp.year, temp._id || '')
-          .pipe(takeWhile(() => this.alive))
-          .subscribe({
-            next: (data: IMarks[]) => {
-              // console.log('Retrieved scoresheet marks');
-              if (data?.length) {
-                // console.log(data);
+        console.log(temp.name);
+        // get scoresheet foreach class at a time and store in global array
+        for (let k = 0; k < 1; k++) {
+          const stream = crit.classes[k];
+          console.log(stream.name);
+          const sheetMarks: any[] = [];
+          // let subs = [];
+          if (this.secondaryRegEx.test(stream.name)) {
+            this.secondarySubjects$
+              .pipe(takeWhile(() => this.alive))
+              .subscribe({
+                next: (secondarySubs: ISubjects[]) => {
+                  // console.log(secondarySubs);
 
-                // let j = 0;
-                data.forEach((mark) => {
-                  // console.log(`${mark}`);
-                  this.allClassesReports.forEach((stream) => {
-                    // console.log(
-                    //   `Class id: ${
-                    //     (mark.subject_teacher_id as ISubjectTeacher).class_id
-                    //   } streamId ${stream.classname._id!}`,
-                    // );
-                    if (
-                      (mark.subject_teacher_id as ISubjectTeacher).class_id ===
-                      stream.classname._id!
-                    ) {
-                      // the mark belongs to the class
-                      // check who the mark belongs to
-                      stream.learners.forEach((learner) => {
-                        // console.log(mark.class_student_id);
-                        if (mark.class_student_id !== null) {
-                          // console.log(
-                          //   `Mark student_id: ${mark.class_student_id} Learner id: ${learner.reportInfo.id}`,
-                          // );
-                          if (
-                            (mark.class_student_id as IClassStudent)._id ===
-                            learner.reportInfo.id
-                          ) {
-                            // the mark belongs to the student
-                            // check which subject the mark belongs to
-
-                            learner.subjects.forEach((sub) => {
-                              // console.log(
-                              //   `Mark Subject id: ${
-                              //     (mark.subject_teacher_id as ISubjectTeacher)
-                              //       .subject_id._id
-                              //   } Subject id: ${sub.name._id!} SubjectName: ${
-                              //     sub.name.name
-                              //   }`,
-                              // );
-                              if (
-                                sub.name._id! ===
-                                (mark.subject_teacher_id as ISubjectTeacher)
-                                  .subject_id._id
-                              ) {
-                                // the mark belongs to this subject
-                                // check if the first scoresheet mark has been added
-                                // if not, add the mark
-                                if (sub.marks.first === '') {
-                                  sub.marks.first = mark.mark;
-                                } else if (sub.marks.second === '') {
-                                  sub.marks.second = mark.mark;
-                                } else if (sub.marks.third === '') {
-                                  sub.marks.third = mark.mark;
-                                } else {
-                                  sub.marks.fourth = mark.mark;
-                                }
-                                // console.log(mark);
-                                // sub.marks.first = mark.mark;
-                                // console.log(learner);
-
-                                // add subject teacher
-                                const tempUser: IUser = (
-                                  (mark.subject_teacher_id as ISubjectTeacher)
-                                    .teacher_id as ITeacher
-                                ).user_id as IUser;
-                                const tempTeacher: ITeacher = (
-                                  mark.subject_teacher_id as ISubjectTeacher
-                                ).teacher_id as ITeacher;
-                                sub.marks.teacher =
-                                  this.teacherService.computeTeacherTitle(
-                                    tempTeacher.gender,
-                                    tempTeacher.marital_status,
-                                  ) +
-                                  ' ' +
-                                  tempUser.name +
-                                  ' ' +
-                                  tempUser.surname;
-                              }
+                  if (secondarySubs?.length) {
+                    console.log(secondarySubs);
+                    api
+                      .getSubjectMarksWithArray(
+                        temp.year,
+                        temp._id || '',
+                        secondarySubs,
+                        0,
+                        6,
+                      )
+                      .subscribe({
+                        next: (firstMarks) => {
+                          if (firstMarks?.length) {
+                            // add marks to array
+                            firstMarks.forEach((first: any) => {
+                              sheetMarks.push(first);
                             });
+
+                            this.marksApi
+                              .getSubjectMarksWithArray(
+                                temp.year,
+                                temp._id || '',
+                                secondarySubs,
+                                7,
+                                secondarySubs.length,
+                              )
+                              .subscribe((secondMarks) => {
+                                if (secondMarks?.length) {
+                                  secondMarks.forEach((second: any) => {
+                                    sheetMarks.push(second);
+                                  });
+
+                                  sheetMarks.forEach((marks) => {
+                                    console.log(`${marks}`);
+                                    marks.forEach((mark: IMarks) => {
+                                      this.allClassesReports.forEach(
+                                        (stream) => {
+                                          // console.log(stream);
+                                          if (
+                                            (
+                                              mark.subject_teacher_id as ISubjectTeacher
+                                            ).class_id === stream.classname._id!
+                                          ) {
+                                            // the mark belongs to the class
+                                            // check who the mark belongs to
+                                            console.log(stream);
+                                            stream.learners.forEach(
+                                              (learner) => {
+                                                // console.log(mark.class_student_id);
+                                                if (
+                                                  mark.class_student_id !== null
+                                                ) {
+                                                  // console.log(
+                                                  //   `Mark student_id: ${mark.class_student_id} Learner id: ${learner.reportInfo.id}`,
+                                                  // );
+                                                  if (
+                                                    (
+                                                      mark.class_student_id as IClassStudent
+                                                    )._id ===
+                                                    learner.reportInfo.id
+                                                  ) {
+                                                    // the mark belongs to the student
+                                                    // check which subject the mark belongs to
+                                                    console.log(
+                                                      'Found owner of mark',
+                                                    );
+
+                                                    learner.subjects.forEach(
+                                                      (sub) => {
+                                                        // console.log(
+                                                        //   `Mark Subject id: ${
+                                                        //     (
+                                                        //       mark.subject_teacher_id as ISubjectTeacher
+                                                        //     ).subject_id._id
+                                                        //   } Subject id: ${sub
+                                                        //     .name
+                                                        //     ._id!} SubjectName: ${
+                                                        //     sub.name.name
+                                                        //   }`,
+                                                        // );
+                                                        if (
+                                                          sub.name._id! ===
+                                                          (
+                                                            mark.subject_teacher_id as ISubjectTeacher
+                                                          ).subject_id._id
+                                                        ) {
+                                                          // the mark belongs to this subject
+                                                          // check if the first scoresheet mark has been added
+                                                          // if not, add the mark
+                                                          if (
+                                                            sub.marks.first ===
+                                                            ''
+                                                          ) {
+                                                            sub.marks.first =
+                                                              mark.mark;
+                                                          } else if (
+                                                            sub.marks.second ===
+                                                            ''
+                                                          ) {
+                                                            sub.marks.second =
+                                                              mark.mark;
+                                                          } else if (
+                                                            sub.marks.third ===
+                                                            ''
+                                                          ) {
+                                                            sub.marks.third =
+                                                              mark.mark;
+                                                          } else {
+                                                            sub.marks.fourth =
+                                                              mark.mark;
+                                                          }
+                                                          // console.log(mark);
+                                                          // sub.marks.first = mark.mark;
+                                                          // console.log(learner);
+
+                                                          // add subject teacher
+                                                          const tempUser: IUser =
+                                                            (
+                                                              (
+                                                                mark.subject_teacher_id as ISubjectTeacher
+                                                              )
+                                                                .teacher_id as ITeacher
+                                                            ).user_id as IUser;
+                                                          const tempTeacher: ITeacher =
+                                                            (
+                                                              mark.subject_teacher_id as ISubjectTeacher
+                                                            )
+                                                              .teacher_id as ITeacher;
+                                                          sub.marks.teacher =
+                                                            this.teacherService.computeTeacherTitle(
+                                                              tempTeacher.gender,
+                                                              tempTeacher.marital_status,
+                                                            ) +
+                                                            ' ' +
+                                                            tempUser.name +
+                                                            ' ' +
+                                                            tempUser.surname;
+                                                        }
+                                                      },
+                                                    );
+                                                  }
+                                                } else {
+                                                  console.log(
+                                                    `Class student is null`,
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          }
+                                        },
+                                      );
+                                    });
+                                  });
+                                }
+                              });
                           }
-                        } else {
-                          console.log(`Class student is null`);
-                        }
+                        },
                       });
-                    }
-                  });
-                });
-              }
 
-              console.log(this.allClassesReports);
-            },
-          });
+                    // console.log(typeof sheetMarks);
+                  }
+                },
+              });
+          }
 
-        // console.log(this.allClassesReports);
+          console.log('before sheet marks');
+          console.log(sheetMarks[0]);
+        }
+
+        console.log(this.allClassesReports);
       }
     });
 

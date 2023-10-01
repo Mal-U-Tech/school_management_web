@@ -27,25 +27,12 @@ interface SUBJECT_TEACHER {
   year: string;
 }
 
-// interface TAB_GROUP_OBJECT {
-//   name: string; // classname
-//   data: {
-//     index: string;
-//     _id: string;
-//     subject_id: object;
-//     teacher_id: object;
-//     title: string;
-//     year: string;
-//   };
-// }
-
 @Component({
   selector: 'app-view-sub-teacher-table',
   templateUrl: './view-sub-teacher-table.component.html',
   styleUrls: ['./view-sub-teacher-table.component.scss'],
 })
 export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
-  // ELEMENT_DATA: SUBJECT_TEACHER[] = [];
   isLoading = false;
   alive = true;
   totalRows = 0;
@@ -70,12 +57,12 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
   constructor(
     private api: SubjectTeacherService,
     public dialog: MatDialog,
-    private store: Store
+    private store: Store,
   ) {}
 
   dispatchSubjectTeacherIsLoading(state: boolean) {
     this.store.dispatch(
-      subjectTeacherIsLoading({ subjectTeacherIsLoading: state })
+      subjectTeacherIsLoading({ subjectTeacherIsLoading: state }),
     );
   }
 
@@ -102,7 +89,7 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
             // console.log(temp.teacher_id.user_id.name);
 
             let index = labels.findIndex(
-              (label) => label === temp.class_id.name
+              (label) => label === temp.class_id.name,
             );
 
             // add classname to labels array
@@ -138,7 +125,7 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
                 },
                 title: this.api.computeTeacherTitle(
                   temp.teacher_id.gender,
-                  temp.teacher_id.marital_status
+                  temp.teacher_id.marital_status,
                 ),
                 class_id: temp.class_id,
                 year: temp.year,
@@ -157,7 +144,7 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
                 },
                 title: this.api.computeTeacherTitle(
                   temp.teacher_id.gender,
-                  temp.teacher_id.marital_status
+                  temp.teacher_id.marital_status,
                 ),
                 class_id: temp.class_id,
                 year: temp.year,
@@ -209,7 +196,6 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
     instance.onSubmit.subscribe(() => {
       instance.saveSubjectTeacher();
       this.dialogRef.close();
-
     });
   }
 
@@ -221,7 +207,7 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
 
     this.dialogRef = this.dialog.open(
       UpdateSubjectTeacherComponent,
-      dialogConfig
+      dialogConfig,
     );
     const instance = this.dialogRef.componentInstance;
 
@@ -232,7 +218,6 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
     instance.onSubmit.subscribe(() => {
       instance.updateSubjectTeacher();
       this.dialogRef.close();
-
     });
 
     instance.onLoadData.subscribe(() => {
@@ -256,7 +241,7 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
 
     const dialog = this.dialog.open(
       DialogConfirmSubTeacherDeleteComponent,
-      dialogConfig
+      dialogConfig,
     );
 
     const instance = dialog.componentInstance;
@@ -267,7 +252,6 @@ export class ViewSubTeacherTableComponent implements OnInit, OnDestroy {
     instance.onConfirmDelete.subscribe(() => {
       this.deleteRow(teacher);
       dialog.close();
-
     });
   }
 }

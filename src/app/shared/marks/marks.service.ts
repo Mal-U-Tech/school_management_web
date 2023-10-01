@@ -12,7 +12,10 @@ export class MarksService extends SharedApiConstants {
   module = 'marks';
   selectedClass: object = { class_id: '', name: '' };
 
-  constructor(private http: HttpClient, _snackBar: MatSnackBar) {
+  constructor(
+    private http: HttpClient,
+    _snackBar: MatSnackBar,
+  ) {
     super(_snackBar);
   }
 
@@ -50,7 +53,7 @@ export class MarksService extends SharedApiConstants {
     return this.http
       .get<Array<IMarks>>(
         this.apiUrl +
-          `${this.module}/view/${mark.year}/${mark.subject_teacher_id}/${mark.subject_id}/${mark.scoresheet_id}`
+          `${this.module}/view/${mark.year}/${mark.subject_teacher_id}/${mark.subject_id}/${mark.scoresheet_id}`,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -58,11 +61,25 @@ export class MarksService extends SharedApiConstants {
   // HttpClient API get() => get class student marks
   getClassStudentMarks(
     year: string,
-    scoresheet_id: string
+    scoresheet_id: string,
   ): Observable<Array<IMarks>> {
     return this.http
       .get<Array<IMarks>>(
-        this.apiUrl + `${this.module}/view-marks/${year}/${scoresheet_id}`
+        this.apiUrl + `${this.module}/view-marks/${year}/${scoresheet_id}`,
+      )
+      .pipe(retry(1), catchError(this.handleError));
+  }
+
+  // HttpClient API get() => get class scoresheet marks
+  getMarksByClassScoresheet(
+    classId: string,
+    scoresheetId: string,
+    year: string,
+  ): Observable<IMarks[]> {
+    return this.http
+      .get<IMarks[]>(
+        this.apiUrl +
+          `${this.module}/view-class-scoresheet/${classId}/${scoresheetId}/${year}`,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -92,12 +109,12 @@ export class MarksService extends SharedApiConstants {
   getSubjectMarks(
     year: string,
     scoresheetId: string,
-    subjectId: string
+    subjectId: string,
   ): Observable<IMarks[]> {
     return this.http
       .get<IMarks[]>(
         this.apiUrl +
-          `${this.module}/subject/${year}/${scoresheetId}/${subjectId}`
+          `${this.module}/subject/${year}/${scoresheetId}/${subjectId}`,
       )
       .pipe(retry(1), catchError(this.handleError));
   }
@@ -108,7 +125,7 @@ export class MarksService extends SharedApiConstants {
     scoresheetId: string,
     subjects: any[],
     start: number,
-    end: number
+    end: number,
   ) {
     console.log(year);
     console.log(scoresheetId);
@@ -126,7 +143,7 @@ export class MarksService extends SharedApiConstants {
       subs.push(
         this.http
           .get<IMarks[]>(link)
-          .pipe(retry(1), catchError(this.handleError))
+          .pipe(retry(1), catchError(this.handleError)),
       );
     }
     return forkJoin(subs);

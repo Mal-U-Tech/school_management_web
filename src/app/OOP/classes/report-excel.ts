@@ -68,8 +68,8 @@ export class ReportExcel {
       if(this.secondaryRegEx.test(tempItem.Form)){
         secondary = true;
       }
-      console.log((attendance.student as IClassStudent)._id! === tempItem.id);
-      console.log(attendance.attendance);
+      // console.log((attendance.student as IClassStudent)._id! === tempItem.id);
+      // console.log(attendance.attendance);
       // console.log(te);
       // console.log(tempItem);
       this.excelData.push({
@@ -305,7 +305,7 @@ export class ReportExcel {
           this.excelData[index].Sub1_Content1 =
             subject.marks['first'] == '' ? '' : subject.marks['first'];
           this.excelData[index].Sub1_Content2 =
-            subject.marks.second == '' ? '' : subject.marks.second;
+            subject.marks['second'] == '' ? '' : subject.marks['second'];
           this.excelData[index].Sub1_Content3 =
             subject.marks.third == '' ? '' : subject.marks.third;
           this.excelData[index].Sub1_Content4 =
