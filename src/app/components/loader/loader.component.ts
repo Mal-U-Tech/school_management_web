@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent {
-  @Input() diameter: number = 0;
-  @Input() color?: 'primary' | 'accent' | 'warn';
+  @Input() diameter: number = 24;
+  @Input() color?: 'primary' | 'accent' | 'warn' = 'primary';
 }

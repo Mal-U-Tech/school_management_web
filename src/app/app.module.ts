@@ -32,7 +32,14 @@ import routes from './app.routes';
       [key]: reducer,
     }),
     EffectsModule.forRoot([AppEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: isDevMode() }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: isDevMode(),
+      features: {
+        lock: true,
+        persist: true,
+      }
+    }),
     StoreRouterConnectingModule.forRoot(),
   ],
   providers: [

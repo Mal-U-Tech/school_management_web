@@ -11,12 +11,12 @@
 
     <hr class="tw-my-6"/>
 
-
     <ng-container *ngIf="!(loading$ | async)">
       <div class="school tw-mb-12" *ngFor="let school of (schools$ | async)">
         <div class="tw-flex tw-items-center tw-mb-4">
           <h2><mat-icon>school</mat-icon>{{ school.name }}</h2>
           <div class="tw-ml-4 chip">{{ school.students?.length ?? 0}} students</div>
+          <mat-icon class="warning" *ngIf="showschoolwarning(school)">warning</mat-icon>
         </div>
 
         <div class="tw-flex tw-flex-wrap tw-items-center tw-mt-2 tw-gap-8">

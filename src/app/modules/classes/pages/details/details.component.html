@@ -1,20 +1,36 @@
 <app-content>
   <p class="title">Classes</p>
-  <mat-accordion multi hideToggle>
-    <mat-expansion-panel *ngFor="let class of classes$ | async">
+  <mat-accordion hideToggle>
+    <mat-expansion-panel *ngFor="let class of classes$ | async" (opened)="opened(class)">
 
       <mat-expansion-panel-header>
         <mat-panel-title class="title tw-flex tw-items-center tw-gap-3">
           <p class="tw-m-0">{{ class.name }}</p>
-          <p class="chip tw-m-0">{{ (class.students ?? []).length }} students</p>
-          <p class="chip tw-m-0">{{ (class.subjects ?? []).length }} subjects</p>
+          <p class="chip tw-m-0" *ngIf="(class.students ?? []).length > 0">{{ (class.students ?? []).length }} students</p>
+          <p class="chip tw-m-0" *ngIf="(class.subjects ?? []).length > 0">{{ (class.subjects ?? []).length }} subjects</p>
 
-          <mat-icon class="warning" *ngIf="showsubjectwarning(class)">warning</mat-icon>
+          <mat-icon class="warning" *ngIf="showsubjectwarning(class) || showstudentwarning(class)">warning</mat-icon>
         </mat-panel-title>
         <mat-panel-description class="tw-flex tw-justify-end description">
           <mat-icon color="primary" matTooltip="click to view class details">link</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
+
+      <app-banner class="tw-mb-4" type="warning" *ngIf="showstudentwarning(class)">
+        <p message>
+        <b>{{ class.name }}</b> does not have any subjects allocated, please add more subjects to the class.
+        </p>
+
+        <button mat-flat-button controls>Assign Subjects</button>
+      </app-banner>
+
+      <app-banner class="tw-mb-4" type="warning" *ngIf="showstudentwarning(class)">
+        <p message>
+        <b>{{ class.name }}</b> does not have any students allocated, please add more students to the class.
+        </p>
+
+        <button mat-flat-button controls>Add Students</button>
+      </app-banner>
 
       <app-banner class="tw-mb-4" type="warning" *ngIf="showsubjectwarning(class)">
         <p message>
@@ -23,7 +39,7 @@
         so all subjects of <b>{{ class.name }}</b> have an instructor.
         </p>
 
-        <button mat-flat-button controls>Allocate teachers</button>
+        <button mat-flat-button controls>Allocate Teachers</button>
       </app-banner>
 
       <app-teachers class="tw-flex tw-flex-col tw-mb-4" *ngIf="(class.users?.length ?? 0) > 0" [teachers]="class.users ?? []"></app-teachers>

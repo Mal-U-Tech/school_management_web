@@ -21,6 +21,10 @@ export const reducer = createReducer<ClassState>(
     (state, { students }): ClassState => ({
       ...state,
       students,
+      api: {
+        loading: false,
+        error: undefined,
+      }
     })
   ),
   on(

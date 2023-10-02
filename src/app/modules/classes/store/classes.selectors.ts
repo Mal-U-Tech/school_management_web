@@ -52,12 +52,13 @@ export const selectSchoolClasses = createSelector(
 
         return clone;
       });
+
       copy.students = c.students?.map((s) => {
         const clone = { ...s };
 
         clone.user = students.find((student) => student.user_id === s.user_id)
           ?.user as IUser;
-        return clone;
+          return clone;
       });
 
       return copy;

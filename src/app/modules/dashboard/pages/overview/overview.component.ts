@@ -4,6 +4,7 @@ import { IClass } from 'src/app/interfaces/class.interface';
 import { ISchool } from 'src/app/interfaces/school.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import { selectAppLoading, selectAppSchools, selectAppUser } from 'src/app/store/app.selectors';
+import { showClassWarning } from 'src/app/utilities/class.utilities';
 
 @Component({
   selector: 'app-overview',
@@ -19,8 +20,12 @@ export class OverviewComponent {
     private readonly store: Store,
   ) {}
 
+  showschoolwarning(school: ISchool) {
+    return school.classes?.some((c) => this.showclasswarning(c)) ?? false;
+  }
+
   showclasswarning(data: IClass) {
-    return (data.subjects?.length ?? 0) < 2 || (data.users?.length ?? 0) < 2
+    return showClassWarning(data);
   }
 
   orderbylastupdated<T extends { updated_at: Date }>(data: T[] | undefined) {
