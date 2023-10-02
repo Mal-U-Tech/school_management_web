@@ -1,0 +1,20 @@
+<p class="title">Teachers</p>
+
+<div class="tw-flex tw-w-min teacher" *ngFor="let teacher of teachers">
+  <div matRipple class="avatar">
+    <img *ngIf="teacher?.avatar" [src]="teacher?.avatar" />
+    <mat-icon *ngIf="!teacher?.avatar">account_circle</mat-icon>
+  </div>
+  <div class="tw-flex tw-flex-col tw-ml-4 detail">
+    <h3 *ngIf="teacher.firstname || teacher.lastname">{{ teacher.firstname ?? '' }} {{ teacher.lastname ?? '' }}</h3>
+    <p><a>{{ teacher.email }}</a><ng-container *ngIf="teacher.mobile">/{{ teacher.mobile }}</ng-container></p>
+
+    <div class="subjects">
+      <p>Subjects ({{ teacher.subjects?.length ?? 0 }})</p>
+      <div class="tw-flex">
+        <p *ngFor="let subject of (teacher.subjects ?? []) | slice:0:3">{{ subject.name }}</p>
+        <p *ngIf="(teacher.subjects ?? []).length < 1">no subjects associated</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="container"
+  [class.info]="type === 'info'"
+  [class.warning]="type === 'warning'"
+  [class.error]="type === 'error'">
+  <div class="tw-m-4 tw-mt-2 tw-ml-1 tw-flex tw-justify-center">
+    <ng-container [ngSwitch]="type">
+      <mat-icon *ngSwitchCase="'info'" color="primary">info_outline</mat-icon>
+      <mat-icon *ngSwitchCase="'warning'">warning_outline</mat-icon>
+      <mat-icon *ngSwitchCase="'error'" color="error">error_outline</mat-icon>
+    </ng-container>
+  </div>
+
+  <div class="content">
+    <ng-content select="[message]"></ng-content>
+
+    <div class="tw-flex tw-items-center tw-justify-end controls"
+      [class.info]="type === 'info'"
+      [class.warning]="type === 'warning'"
+      [class.error]="type === 'error'">
+      <ng-content select="[controls]"></ng-content>
+    </div>
+  </div>
+</div>

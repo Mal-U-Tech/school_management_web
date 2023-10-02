@@ -1,0 +1,63 @@
+@use "src/styles.scss" as sty;
+@use "@angular/material" as mat;
+@use "sass:map";
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+
+:host ::ng-deep.mat-mdc-row {
+  height: 40px !important;
+}
+:host ::ng-deep.mat-mdc-header-row {
+  height: 48px !important;
+}
+
+.title {
+  color: mat.get-color-from-palette($primary, 500);
+  margin: 0;
+  font-size: 9pt;
+}
+
+.avatar {
+  padding: 0;
+  color: mat.get-color-from-palette($primary, 400);
+  // box-shadow: 0 0 2px 1px #0001;
+  background-color: #fff0;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 24px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  > img {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+  > mat-icon {
+    font-size: 32px;
+    width: inherit;
+    height: inherit;
+  }
+}
+
+a {
+  color: mat.get-color-from-palette($primary, 400);
+  font-weight: 500;
+}
+
+.mat-column-avatar {
+  width: 32px;
+}
+.mat-column-name {
+  width: 180px;
+}
+
+.update {
+  font-weight: 400;
+}

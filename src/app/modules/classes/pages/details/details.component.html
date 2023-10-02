@@ -1,1 +1,35 @@
-<p>details works!</p>
+<app-content>
+  <p class="title">Classes</p>
+  <mat-accordion multi hideToggle>
+    <mat-expansion-panel *ngFor="let class of classes$ | async">
+
+      <mat-expansion-panel-header>
+        <mat-panel-title class="title tw-flex tw-items-center tw-gap-3">
+          <p class="tw-m-0">{{ class.name }}</p>
+          <p class="chip tw-m-0">{{ (class.students ?? []).length }} students</p>
+          <p class="chip tw-m-0">{{ (class.subjects ?? []).length }} subjects</p>
+
+          <mat-icon class="warning" *ngIf="showsubjectwarning(class)">warning</mat-icon>
+        </mat-panel-title>
+        <mat-panel-description class="tw-flex tw-justify-end description">
+          <mat-icon color="primary" matTooltip="click to view class details">link</mat-icon>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <app-banner class="tw-mb-4" type="warning" *ngIf="showsubjectwarning(class)">
+        <p message>
+        The instructors associated with <b>{{ class.name }}</b> do not teach all
+        the subjects assigned to the class. You will need to associate more teachers
+        so all subjects of <b>{{ class.name }}</b> have an instructor.
+        </p>
+
+        <button mat-stroked-button controls>Allocate teachers</button>
+      </app-banner>
+
+      <app-teachers class="tw-flex tw-flex-col tw-mb-4" *ngIf="(class.users?.length ?? 0) > 0" [teachers]="class.users ?? []"></app-teachers>
+
+      <app-students *ngIf="(class.students?.length ?? 0) > 0" [students]="class.students ?? []"></app-students>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</app-content>

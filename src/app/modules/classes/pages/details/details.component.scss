@@ -1,0 +1,31 @@
+@use "src/styles.scss" as sty;
+@use "src/variables.scss" as var;
+@use "@angular/material" as mat;
+@use "sass:map";
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+$warning: var.$warn-palette;
+
+.title {
+  color: mat.get-color-from-palette($primary, 500);
+}
+
+.description {
+  margin-right: 0 !important;
+}
+
+.warning {
+  background: mat.get-color-from-palette($warning, 100);
+  color: mat.get-color-from-palette($warning, 600);
+
+  font-size: 10pt;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+}

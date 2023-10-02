@@ -19,7 +19,6 @@ import { SectionComponent } from './components/section/section.component';
 import { MatRippleModule } from '@angular/material/core';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { TitleComponent } from './components/title/title.component';
-import { ContentComponent } from './components/content/content.component';
 import { ComponentsModule } from '../../components/components.module';
 import { key, reducer } from './store/dashboard.reducer';
 
@@ -35,7 +34,6 @@ import { DashboardEffects } from './store/dashboard.effects';
     SectionComponent,
     OverviewComponent,
     TitleComponent,
-    ContentComponent,
   ],
   imports: [
     // core imports

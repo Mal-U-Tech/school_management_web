@@ -1,0 +1,58 @@
+@use "sass:map";
+@use "src/styles.scss" as sty;
+@use "src/variables.scss" as var;
+@use "@angular/material" as mat;
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+$warning: var.$warn-palette;
+
+:host {
+  display: flex;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.info {
+  color: mat.get-color-from-palette($primary, 800);
+  background-color: mat.get-color-from-palette($primary, 50);
+  box-shadow: 0 0 8px 1px mat.get-color-from-palette($primary, 50);
+
+  &::ng-deep {
+    > button {
+      color: mat.get-color-from-palette($primary, 800);
+      font-weight: 400;
+    }
+  }
+}
+
+.warning {
+  color: mat.get-color-from-palette($warning, 800);
+  background-color: mat.get-color-from-palette($warning, 50);
+  box-shadow: 0 0 8px 1px mat.get-color-from-palette($warning, 50);
+
+  &::ng-deep {
+    > button {
+      color: mat.get-color-from-palette($warning, 800);
+      font-weight: 400;
+    }
+  }
+}
+
+.content {
+  font-size: 10pt;
+  line-height: 24px;
+
+
+  &::ng-deep {
+    > p {
+      margin: 4px;
+    }
+  }
+}
+
