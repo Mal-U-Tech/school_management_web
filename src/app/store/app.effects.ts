@@ -20,7 +20,9 @@ import {
   map,
 } from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
-import { Router } from '@angular/router';
+import {
+  Router,
+} from '@angular/router';
 import {
   loginEffectSuccessful,
   registerEffectSuccessful,
@@ -141,10 +143,7 @@ export class AppEffects {
   logout$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(
-          toolbarLogoutClick,
-          tokenExpiredLogoutEffect,
-        ),
+        ofType(toolbarLogoutClick, tokenExpiredLogoutEffect),
         map(() => {
           this.app.logout();
           this.router.navigate(['login']);

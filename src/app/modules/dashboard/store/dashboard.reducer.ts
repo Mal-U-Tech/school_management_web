@@ -4,6 +4,7 @@ import { loadSchoolsEffectSuccessful } from 'src/app/store/app.actions';
 import { ISchool } from 'src/app/interfaces/school.interface';
 import { IMenu } from '../interfaces/menu.interface';
 import { routerMenuUpdateEffect } from './dashboard.actions';
+import { showClassSubjectWarning } from 'src/app/utilities/class.utilities';
 
 export const key = 'dashboard';
 
@@ -37,7 +38,7 @@ function buildmenu(schools: ISchool[]): IMenu[] {
         {
           title: `Classes`,
           suffix: school.classes?.length ?? String(0),
-          warning: school.classes?.some((c) => (c.subjects?.length ?? 0) < 2 || (c.users?.length ?? 0) < 2),
+          warning: school.classes?.some((c) => showClassSubjectWarning(c)),
           icon: 'class',
           route: ['dashboard', school.id, 'classes']
         },

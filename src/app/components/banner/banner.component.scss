@@ -25,7 +25,8 @@ $warning: var.$warn-palette;
 
   &::ng-deep {
     > button {
-      color: mat.get-color-from-palette($primary, 800);
+      background: mat.get-color-from-palette($primary, 800);
+      color: white;
       font-weight: 400;
     }
   }
@@ -38,7 +39,8 @@ $warning: var.$warn-palette;
 
   &::ng-deep {
     > button {
-      color: mat.get-color-from-palette($warning, 800);
+      background: mat.get-color-from-palette($warning, 800);
+      color: white;
       font-weight: 400;
     }
   }

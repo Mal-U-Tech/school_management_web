@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectAppUser } from 'src/app/store/app.selectors';
+import { toolbarLogoutClick } from '../../store/dashboard.actions';
 import {
   ActivatedRoute,
   NavigationEnd,
@@ -6,10 +9,8 @@ import {
   RouteConfigLoadStart,
   Router,
 } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map, startWith } from 'rxjs/operators';
-import { selectAppUser } from 'src/app/store/app.selectors';
-import { toolbarLogoutClick } from '../../store/dashboard.actions';
+import { distinctUntilChanged, filter, map } from 'rxjs';
+import { IBreadCrumb } from 'src/app/interfaces/breadcrumb.interface';
 
 @Component({
   selector: 'app-toolbar',
@@ -28,24 +29,18 @@ export class ToolbarComponent {
   crumb$ = this.router.events.pipe(
     filter((event) => event instanceof NavigationEnd),
     distinctUntilChanged(),
-    map(() => this.render(this.activated.root)),
-    startWith([{ label: 'Home', url: '../' }])
+    map(() => ToolbarComponent.render(this.router.routerState.root))
   );
   user$ = this.store.select(selectAppUser);
 
-  constructor(
-    private readonly store: Store,
-    private readonly router: Router,
-    private readonly activated: ActivatedRoute
-  ) {
-  }
+  constructor(private readonly store: Store, private readonly router: Router) {}
 
   logout() {
     this.store.dispatch(toolbarLogoutClick());
   }
 
   // we define a function that will format the route event into something that can be used to render a chip list
-  private render(
+  private static render(
     route: ActivatedRoute,
     url = '',
     breadcrumbs: Array<IBreadCrumb> = [{ label: 'Home', url: '../' }]
@@ -74,9 +69,4 @@ export class ToolbarComponent {
     }
     return newcrumbs;
   }
-}
-
-interface IBreadCrumb {
-  label: string;
-  url: string;
 }

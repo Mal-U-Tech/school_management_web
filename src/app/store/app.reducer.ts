@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { AppState, initial } from './app.state';
 import {
-    appInitializedEffect,
+  appInitializedEffect,
   loadPermissionEffectSuccess,
   loadSchoolsEffectSuccessful,
   userAppLanding,
@@ -22,12 +22,15 @@ export const reducer = createReducer(
     (state): AppState => ({
       ...state,
       loading: true,
-    }),
+    })
   ),
-  on(appInitializedEffect, (state): AppState => ({
-    ...state,
-    loading: false,
-  })),
+  on(
+    appInitializedEffect,
+    (state): AppState => ({
+      ...state,
+      loading: false,
+    })
+  ),
   on(
     userLandingEffectSuccessful,
     loginEffectSuccessful,
@@ -59,5 +62,5 @@ export const reducer = createReducer(
       ...state,
       schools: action.schools,
     })
-  ),
+  )
 );

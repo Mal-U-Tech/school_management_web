@@ -14,6 +14,9 @@ export const environment = {
   schools: {
     api: 'https://i0euk51qxd.execute-api.us-east-1.amazonaws.com/dev',
   },
+  students: {
+    api: 'https://gjbbidtdv5.execute-api.us-east-1.amazonaws.com/dev'
+  },
   token: 'user',
 };
 

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { selectSchoolClasses } from '../../store/classes.selectors';
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
-import { ISubject } from 'src/app/interfaces/subject.interface';
+import { showClassSubjectWarning } from 'src/app/utilities/class.utilities';
 
 @Component({
   selector: 'app-details',
@@ -17,12 +17,6 @@ export class DetailsComponent {
   ) {}
 
   showsubjectwarning(value: IClass): boolean {
-    const subjects = value.users?.reduce((a, c) => {
-      return [...a, ...(c.subjects ?? [])];
-    }, [] as ISubject[]) ?? [];
-
-    const count = (new Set(subjects.map(({ id }) => id))).size;
-
-    return (value.subjects?.length ?? 0) > count;
+    return showClassSubjectWarning(value);
   }
 }

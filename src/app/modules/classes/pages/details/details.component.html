@@ -23,7 +23,7 @@
         so all subjects of <b>{{ class.name }}</b> have an instructor.
         </p>
 
-        <button mat-stroked-button controls>Allocate teachers</button>
+        <button mat-flat-button controls>Allocate teachers</button>
       </app-banner>
 
       <app-teachers class="tw-flex tw-flex-col tw-mb-4" *ngIf="(class.users?.length ?? 0) > 0" [teachers]="class.users ?? []"></app-teachers>

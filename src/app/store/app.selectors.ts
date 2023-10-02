@@ -22,4 +22,4 @@ export const selectAppSchools = createSelector(
 export const selectAppLoading = createSelector(
   selectAppState,
   (state) => state.loading,
-)
+);

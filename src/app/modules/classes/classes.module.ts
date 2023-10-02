@@ -11,19 +11,21 @@ import { StudentsComponent } from './components/students/students.component';
 import { MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TeachersComponent } from './components/teachers/teachers.component';
+import { StoreModule } from '@ngrx/store';
+import { ClassesEffects } from './store/classes.effects';
+import { EffectsModule } from '@ngrx/effects';
+import { key, reducer } from './store/classes.reducer';
 
 import routes from './classes.routes';
-import { TeachersComponent } from './components/teachers/teachers.component';
 
 @NgModule({
-  declarations: [
-    DetailsComponent,
-    StudentsComponent,
-    TeachersComponent
-  ],
+  declarations: [DetailsComponent, StudentsComponent, TeachersComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    StoreModule.forFeature(key, reducer),
+    EffectsModule.forFeature([ClassesEffects]),
 
     // material imports
     MatExpansionModule,
@@ -36,6 +38,6 @@ import { TeachersComponent } from './components/teachers/teachers.component';
 
     // internal modules
     ComponentsModule,
-  ]
+  ],
 })
-export class ClassesModule { }
+export class ClassesModule {}
