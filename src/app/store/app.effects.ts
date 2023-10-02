@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-    appInitializedEffect,
+  appInitializedEffect,
   loadPermissionEffectFailed,
   loadPermissionEffectSuccess,
   loadSchoolsEffectFailed,
@@ -12,7 +12,13 @@ import {
   userLandingEffectSuccessful,
 } from './app.actions';
 import { AppService } from '../services/app.service';
-import { bufferCount, catchError, exhaustMap, filter, map } from 'rxjs/operators';
+import {
+  bufferCount,
+  catchError,
+  exhaustMap,
+  filter,
+  map,
+} from 'rxjs/operators';
 import { IUser } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
 import {
@@ -38,10 +44,12 @@ export class AppEffects {
 
   landing$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userAppLanding),
+      ofType(tokenExpiredLogoutEffectComplete),
       map(() => this.app.loaduser()),
       filter((u) => !!u),
-      map((user) => userLandingEffectSuccessful({ user: user as IUser }))
+      map((user) => {
+        return userLandingEffectSuccessful({ user: user as IUser });
+      })
     );
   });
 
@@ -54,9 +62,9 @@ export class AppEffects {
     return this.actions$.pipe(
       ofType(...actions),
       bufferCount(actions.length),
-      map(() => appInitializedEffect()),
+      map(() => appInitializedEffect())
     );
-  })
+  });
 
   schools$ = createEffect(() => {
     return this.actions$.pipe(
@@ -72,7 +80,13 @@ export class AppEffects {
               schools.map((school) => this.school.profile(school.id))
             ).pipe(
               map((school_profiles) =>
-                loadSchoolsEffectSuccessful({ schools: school_profiles.sort((a, b) => (new Date(b.updated_at)).getTime() - (new Date(a.updated_at)).getTime()) })
+                loadSchoolsEffectSuccessful({
+                  schools: school_profiles.sort(
+                    (a, b) =>
+                      new Date(b.updated_at).getTime() -
+                      new Date(a.updated_at).getTime()
+                  ),
+                })
               )
             )
           ),
@@ -100,12 +114,12 @@ export class AppEffects {
 
   verify$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userLandingEffectSuccessful),
+      ofType(userAppLanding),
       map(() => {
         if (this.app.verify()) {
           return tokenExpiredLogoutEffectComplete();
         }
-        return tokenExpiredLogoutEffect()
+        return tokenExpiredLogoutEffect();
       })
     );
   });
@@ -127,7 +141,10 @@ export class AppEffects {
   logout$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(toolbarLogoutClick, tokenExpiredLogoutEffect),
+        ofType(
+          toolbarLogoutClick,
+          tokenExpiredLogoutEffect,
+        ),
         map(() => {
           this.app.logout();
           this.router.navigate(['login']);
