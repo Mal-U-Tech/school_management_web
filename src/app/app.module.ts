@@ -15,6 +15,7 @@ import { PermissionService } from './services/permission.service';
 import { SchoolService } from './services/school.service';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StudentService } from './services/student.service';
+import { NotificationsService } from './services/notifications.service';
 
 import { key, reducer } from './store/app.reducer';
 import routes from './app.routes';
@@ -47,6 +48,7 @@ import routes from './app.routes';
     PermissionService,
     SchoolService,
     StudentService,
+    NotificationsService,
 
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
   ],
