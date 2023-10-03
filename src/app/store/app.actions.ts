@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { IUser } from '../interfaces/user.interface';
 import { IPermission } from '../interfaces/permission.interface';
 import { ISchool } from '../interfaces/school.interface';
+import { INotification } from '../interfaces/notification.interface';
 
 export const userAppLanding = createAction('[App] User App Landing');
 
@@ -27,6 +28,16 @@ export const loadSchoolsEffectSuccessful = createAction(
 
 export const loadSchoolsEffectFailed = createAction(
   '[App] Load Schools Effect Failed',
+  props<{ error: Error }>()
+);
+
+export const loadNotificationsEffectSuccessful = createAction(
+  '[App] Load Notifications Effect Successful',
+  props<{ notifications: INotification[] }>()
+);
+
+export const loadNotificationsEffectFailed = createAction(
+  '[App] Load Notifications Effect Failed',
   props<{ error: Error }>()
 );
 

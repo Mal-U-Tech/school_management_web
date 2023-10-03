@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { AppState, initial } from './app.state';
 import {
   appInitializedEffect,
+  loadNotificationsEffectSuccessful,
   loadPermissionEffectSuccess,
   loadSchoolsEffectSuccessful,
   userAppLanding,
@@ -61,6 +62,14 @@ export const reducer = createReducer(
     (state, action): AppState => ({
       ...state,
       schools: action.schools,
+    })
+  ),
+
+  on(
+    loadNotificationsEffectSuccessful,
+    (state, action): AppState => ({
+      ...state,
+      notifications: action.notifications
     })
   )
 );

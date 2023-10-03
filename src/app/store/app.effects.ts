@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   appInitializedEffect,
+  loadNotificationsEffectFailed,
+  loadNotificationsEffectSuccessful,
   loadPermissionEffectFailed,
   loadPermissionEffectSuccess,
   loadSchoolsEffectFailed,
@@ -31,6 +33,7 @@ import { toolbarLogoutClick } from '../modules/dashboard/store/dashboard.actions
 import { PermissionService } from '../services/permission.service';
 import { forkJoin, of } from 'rxjs';
 import { SchoolService } from '../services/school.service';
+import { NotificationsService } from '../services/notifications.service';
 
 @Injectable()
 export class AppEffects {
@@ -41,7 +44,8 @@ export class AppEffects {
 
     private app: AppService,
     private permission: PermissionService,
-    private school: SchoolService
+    private school: SchoolService,
+    private notification: NotificationsService,
   ) {}
 
   landing$ = createEffect(() => {
@@ -110,6 +114,22 @@ export class AppEffects {
           map((permissions) => loadPermissionEffectSuccess({ permissions })),
           catchError((error) => of(loadPermissionEffectFailed({ error })))
         );
+      })
+    );
+  });
+
+  notifications$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        userLandingEffectSuccessful,
+        loginEffectSuccessful,
+        registerEffectSuccessful
+      ),
+      exhaustMap(() => {
+        return this.notification.load().pipe(
+          map(response => loadNotificationsEffectSuccessful({ notifications: response.data })),
+          catchError(error => of(loadNotificationsEffectFailed({ error })))
+        )
       })
     );
   });
