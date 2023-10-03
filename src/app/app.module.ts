@@ -16,6 +16,7 @@ import { SchoolService } from './services/school.service';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StudentService } from './services/student.service';
 import { NotificationsService } from './services/notifications.service';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { key, reducer } from './store/app.reducer';
 import routes from './app.routes';
@@ -51,6 +52,7 @@ import routes from './app.routes';
     NotificationsService,
 
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
   bootstrap: [AppComponent],
 })
