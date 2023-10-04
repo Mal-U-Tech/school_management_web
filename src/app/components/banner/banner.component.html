@@ -2,7 +2,7 @@
   [class.info]="type === 'info'"
   [class.warning]="type === 'warning'"
   [class.error]="type === 'error'">
-  <div class="tw-m-4 tw-mt-2 tw-ml-1 tw-flex tw-justify-center">
+  <div class="tw-m-4 icon tw-ml-1 tw-flex tw-justify-center">
     <ng-container [ngSwitch]="type">
       <mat-icon *ngSwitchCase="'info'" color="primary">info_outline</mat-icon>
       <mat-icon *ngSwitchCase="'warning'">warning_outline</mat-icon>

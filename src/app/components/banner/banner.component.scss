@@ -21,7 +21,7 @@ $warning: var.$warn-palette;
 .info {
   color: mat.get-color-from-palette($primary, 800);
   background-color: mat.get-color-from-palette($primary, 50);
-  box-shadow: 0 0 8px 1px mat.get-color-from-palette($primary, 50);
+  box-shadow: 0 0 8px 1px rgba(mat.get-color-from-palette($primary, 50), 0.5);
 
   &::ng-deep {
     > button {
@@ -51,6 +51,10 @@ $warning: var.$warn-palette;
   line-height: 24px;
   flex: 1;
 
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+
   &::ng-deep {
     > p {
       margin: 4px;
@@ -58,3 +62,7 @@ $warning: var.$warn-palette;
   }
 }
 
+.icon {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}

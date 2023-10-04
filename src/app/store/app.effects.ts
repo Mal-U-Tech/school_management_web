@@ -127,7 +127,10 @@ export class AppEffects {
       ),
       exhaustMap(() => {
         return this.notification.load().pipe(
-          map(response => loadNotificationsEffectSuccessful({ notifications: response.data })),
+          map(response => {
+            const notifications = response.data;
+            return loadNotificationsEffectSuccessful({ notifications });
+          }),
           catchError(error => of(loadNotificationsEffectFailed({ error })))
         )
       })

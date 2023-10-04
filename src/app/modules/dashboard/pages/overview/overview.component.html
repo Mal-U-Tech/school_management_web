@@ -11,6 +11,13 @@
 
     <hr class="tw-my-6"/>
 
+    <ng-container *ngIf="notifications$ | async as notifications">
+      <app-banner [type]="notification.type" *ngFor="let notification of notifications" class="tw-mb-6">
+        <p message>{{ notification.message }}</p>
+        <button mat-flat-button [routerLink]="[notification.payload.id, 'classes']" controls>View</button>
+      </app-banner>
+    </ng-container>
+
     <ng-container *ngIf="!(loading$ | async)">
       <div class="school tw-mb-12" *ngFor="let school of (schools$ | async)">
         <div class="tw-flex tw-items-center tw-mb-4">

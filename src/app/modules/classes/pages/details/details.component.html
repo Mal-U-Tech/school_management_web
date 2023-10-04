@@ -16,6 +16,12 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
+      <ng-container *ngIf="notifications$ | async as notifications">
+        <app-banner [type]="notification.type" *ngFor="let notification of getclassnotifications(notifications, class)" class="tw-mb-4">
+          <p message>{{ notification.message }}</p>
+        </app-banner>
+      </ng-container>
+
       <app-banner class="tw-mb-4" type="warning" *ngIf="showstudentwarning(class)">
         <p message>
         <b>{{ class.name }}</b> does not have any subjects allocated, please add more subjects to the class.
