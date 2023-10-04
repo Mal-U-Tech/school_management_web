@@ -17,7 +17,7 @@
       </mat-expansion-panel-header>
 
       <ng-container *ngIf="notifications$ | async as notifications">
-        <app-banner [type]="notification.type" *ngFor="let notification of getclassnotifications(notifications, class)" class="tw-mb-4">
+        <app-banner [type]="notification.type" *ngFor="let notification of getclassnotifications(notifications, class)" class="tw-mb-4" (observed)="observed(notification)">
           <p message>{{ notification.message }}</p>
         </app-banner>
       </ng-container>

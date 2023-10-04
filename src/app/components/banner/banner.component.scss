@@ -55,9 +55,16 @@ $warning: var.$warn-palette;
   flex-flow: column;
   justify-content: center;
 
-  &::ng-deep {
-    > p {
-      margin: 4px;
+  > .message {
+    &::ng-deep {
+      > p {
+        margin: 4px;
+      }
+    }
+
+    > mat-icon {
+      margin-top: 4px;
+      margin-bottom: 4px;
     }
   }
 }
@@ -65,4 +72,8 @@ $warning: var.$warn-palette;
 .icon {
   margin-top: 4px;
   margin-bottom: 4px;
+}
+
+.controls {
+  margin-top: 8px;
 }

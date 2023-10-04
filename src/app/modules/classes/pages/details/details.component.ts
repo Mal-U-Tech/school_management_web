@@ -5,7 +5,7 @@ import {
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { showClassStudentWarning, showClassSubjectCountWarning, showClassSubjectWarning } from 'src/app/utilities/class.utilities';
-import { userClickClassExpandable } from '../../store/classes.actions';
+import { notificationBannerObserved, userClickClassExpandable } from '../../store/classes.actions';
 import { selectAppEntityNotifications } from 'src/app/store/app.selectors';
 import { EntityType, INotification } from 'src/app/interfaces/notification.interface';
 
@@ -38,5 +38,9 @@ export class DetailsComponent {
 
   getclassnotifications(notifications: INotification[], data: IClass) {
     return notifications.filter((n) => n.payload.id === data.id);
+  }
+
+  observed(notification: INotification) {
+    this.store.dispatch(notificationBannerObserved({ notification }))
   }
 }

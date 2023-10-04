@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
-import { EntityType } from 'src/app/interfaces/notification.interface';
+import { EntityType, INotification } from 'src/app/interfaces/notification.interface';
 import { ISchool } from 'src/app/interfaces/school.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
 import {
@@ -11,6 +11,7 @@ import {
   selectAppUser,
 } from 'src/app/store/app.selectors';
 import { showClassWarning } from 'src/app/utilities/class.utilities';
+import { clickDismissDashboardBanner } from '../../store/dashboard.actions';
 
 @Component({
   selector: 'app-overview',
@@ -53,5 +54,9 @@ export class OverviewComponent {
       (school.students?.length ?? 0) -
       new Set(studentslist.map((s) => s.user_id)).size
     );
+  }
+
+  dismiss(notification: INotification) {
+    this.store.dispatch(clickDismissDashboardBanner({ notification }));
   }
 }

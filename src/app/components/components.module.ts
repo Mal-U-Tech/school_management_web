@@ -6,6 +6,7 @@ import { ContentComponent } from './content/content.component';
 import { BannerComponent } from './banner/banner.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [LoaderComponent, PanelComponent, ContentComponent, BannerComponent],
@@ -14,6 +15,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
 
     MatProgressSpinnerModule,
+    MatButtonModule,
     MatIconModule,
   ],
 })

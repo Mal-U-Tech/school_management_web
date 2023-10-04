@@ -11,9 +11,12 @@
   </div>
 
   <div class="content">
-    <ng-content select="[message]"></ng-content>
+    <div class="message tw-flex tw-items-start">
+      <ng-content select="[message]"></ng-content>
+      <mat-icon *ngIf="dismissable" class="tw-ml-auto tw-cursor-pointer" (click)="dismissed.next(true)">close</mat-icon>
+    </div>
 
-    <div class="tw-flex tw-items-center tw-justify-end controls"
+    <div class="tw-flex tw-items-center tw-justify-start controls"
       [class.info]="type === 'info'"
       [class.warning]="type === 'warning'"
       [class.error]="type === 'error'">

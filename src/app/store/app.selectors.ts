@@ -30,7 +30,9 @@ export const selectAppLoading = createSelector(
 
 const selectAppNotifications = createSelector(
   selectAppState,
-  (state) => state.notifications
+  (state) => state.notifications.filter((n) => {
+    return (new Date(n.received)).getTime() < 1;
+  })
 );
 
 export const selectAppEntityNotifications = (entity: EntityType) => createSelector(

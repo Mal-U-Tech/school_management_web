@@ -16,4 +16,10 @@ export class NotificationsService {
   load() {
     return this.http.get<IPayload<INotification<IClass | ISubject | ISchool>>>(environment.notifications.api);
   }
+
+  mark(ids: string[]) {
+    return this.http.put(environment.notifications.api, {
+      notifications: ids
+    })
+  }
 }

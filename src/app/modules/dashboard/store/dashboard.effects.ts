@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
-import { filter, map } from 'rxjs/operators';
+import { exhaustMap, filter, map } from 'rxjs/operators';
 import { selectDashboardMenu } from './dashboard.selectors';
 import { IMenu, IMenuItem } from '../interfaces/menu.interface';
-import { routerMenuUpdateEffect } from './dashboard.actions';
+import { clickDismissDashboardBanner, routerMenuUpdateEffect } from './dashboard.actions';
+import { NotificationsService } from 'src/app/services/notifications.service';
+import { notificationBannerObserved } from '../../classes/store/classes.actions';
 
 @Injectable()
 export class DashboardEffects {
@@ -14,7 +16,21 @@ export class DashboardEffects {
     private readonly actions$: Actions,
 
     private readonly store: Store,
+
+    private readonly notifications: NotificationsService,
   ) {}
+
+  mark$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        clickDismissDashboardBanner,
+        notificationBannerObserved,
+      ),
+      exhaustMap((action) => {
+        return this.notifications.mark([action.notification.id])
+      })
+    )
+  }, { dispatch: false });
 
   $menu = createEffect(() => {
     return this.actions$.pipe(

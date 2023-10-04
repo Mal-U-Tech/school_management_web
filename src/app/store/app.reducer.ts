@@ -12,7 +12,8 @@ import {
   loginEffectSuccessful,
   registerEffectSuccessful,
 } from '../modules/authenticate/store/authenticate.actions';
-import { toolbarLogoutClick } from '../modules/dashboard/store/dashboard.actions';
+import { clickDismissDashboardBanner, toolbarLogoutClick } from '../modules/dashboard/store/dashboard.actions';
+import { marknotification } from '../utilities/notification.utilities';
 
 export const key = 'app';
 
@@ -70,6 +71,14 @@ export const reducer = createReducer(
     (state, action): AppState => ({
       ...state,
       notifications: action.notifications
+    })
+  ),
+
+  on(
+    clickDismissDashboardBanner,
+    (state, action): AppState => ({
+      ...state,
+      notifications: marknotification(state.notifications, action.notification)
     })
   )
 );
