@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { ClassState, initial } from './classes.state';
-import { loadClassStudentsEffectFailed, loadClassStudentsEffectSuccess, userClickClassExpandable } from './classes.actions';
+import { loadClassEffect, loadClassStudentsEffectFailed, loadClassStudentsEffectSuccess, userClickClassExpandable } from './classes.actions';
 
 export const key = 'classes';
 
@@ -36,5 +36,12 @@ export const reducer = createReducer<ClassState>(
         error
       }
     })
-  )
+  ),
+  on(
+    loadClassEffect,
+    (state, action): ClassState => ({
+      ...state,
+      class: action.class
+    }),
+  ),
 );

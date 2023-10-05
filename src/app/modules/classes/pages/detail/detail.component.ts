@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectCurrentClass } from '../../store/classes.selectors';
 
 @Component({
   selector: 'app-detail',
@@ -6,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent {
+  class$ = this.store.select(selectCurrentClass);
 
+  constructor(
+    private readonly store: Store,
+  ) {}
 }
