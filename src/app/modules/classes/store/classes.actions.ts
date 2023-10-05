@@ -22,3 +22,8 @@ export const notificationBannerObserved = createAction(
   '[Dashboard] Notification Banner Observed',
   props<{ notification: INotification; }>()
 )
+
+export const loadClassEffect = createAction(
+  '[Classes] Load Class Effect',
+  props<{ class: IClass; }>()
+);

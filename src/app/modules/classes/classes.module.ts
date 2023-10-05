@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetailsComponent } from './pages/details/details.component';
+import { ListComponent } from './pages/list/list.component';
 import { RouterModule } from '@angular/router';
 import { ComponentsModule } from '../../components/components.module';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -18,9 +18,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { key, reducer } from './store/classes.reducer';
 
 import routes from './classes.routes';
+import { DetailComponent } from './pages/detail/detail.component';
 
 @NgModule({
-  declarations: [DetailsComponent, StudentsComponent, TeachersComponent],
+  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

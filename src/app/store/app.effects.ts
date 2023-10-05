@@ -61,7 +61,6 @@ export class AppEffects {
 
   landed$ = createEffect(() => {
     const actions = [
-      userLandingEffectSuccessful,
       loadSchoolsEffectSuccessful,
       loadPermissionEffectSuccess,
     ];

@@ -10,11 +10,11 @@ import { selectAppEntityNotifications } from 'src/app/store/app.selectors';
 import { EntityType, INotification } from 'src/app/interfaces/notification.interface';
 
 @Component({
-  selector: 'app-details',
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.scss'],
+  selector: 'app-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss'],
 })
-export class DetailsComponent {
+export class ListComponent {
   classes$ = this.store.select(selectSchoolClasses);
   notifications$ = this.store.select(selectAppEntityNotifications(EntityType.class));
 

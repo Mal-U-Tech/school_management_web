@@ -20,11 +20,12 @@ import { MatRippleModule } from '@angular/material/core';
 import { OverviewComponent } from './pages/overview/overview.component';
 import { TitleComponent } from './components/title/title.component';
 import { ComponentsModule } from '../../components/components.module';
+import { EffectsModule } from '@ngrx/effects';
+import { DashboardEffects } from './store/dashboard.effects';
+import { MatBadgeModule } from '@angular/material/badge';
 import { key, reducer } from './store/dashboard.reducer';
 
 import routes from './dashboard.routes';
-import { EffectsModule } from '@ngrx/effects';
-import { DashboardEffects } from './store/dashboard.effects';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { DashboardEffects } from './store/dashboard.effects';
     MatTooltipModule,
     MatRippleModule,
     MatChipsModule,
+    MatBadgeModule,
 
     // internal imports
     ComponentsModule,

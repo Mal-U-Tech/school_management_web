@@ -1,9 +1,14 @@
 import { Routes } from '@angular/router';
-import { DetailsComponent } from './pages/details/details.component';
+import { ListComponent } from './pages/list/list.component';
+import { DetailComponent } from './pages/detail/detail.component';
 
 export default [
   {
     path: '',
-    component: DetailsComponent,
+    component: ListComponent,
+  },
+  {
+    path: ':id',
+    component: DetailComponent,
   }
 ] as Routes;

@@ -12,7 +12,7 @@
           <mat-icon class="warning" *ngIf="showsubjectwarning(class) || showstudentwarning(class)">warning</mat-icon>
         </mat-panel-title>
         <mat-panel-description class="tw-flex tw-justify-end description">
-          <mat-icon color="primary" matTooltip="click to view class details">link</mat-icon>
+          <mat-icon [routerLink]="[class.id]" color="primary" matTooltip="click to view class details">link</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
