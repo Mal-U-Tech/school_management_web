@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, Output } from '@angular/core';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-banner',
@@ -7,25 +7,24 @@ import { Subject, debounceTime } from 'rxjs';
   styleUrls: ['./banner.component.scss']
 })
 export class BannerComponent {
-  _observed = new Subject();
+  _observed = new Subject<Element>();
   _observer = new window.IntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
-      this._observed.next(true);
+      this._observed.next(entry.target);
     }
-    this._observed.next(false);
   }, { root: null, threshold: 0.9 });
 
   @Input() type: 'info' | 'warning' | 'error' = 'info';
   @Input() dismissable = false;
 
   @Output() dismissed = new Subject();
-  @Output() observed = this._observed.pipe(
-    debounceTime(4000)
-  );
+  @Output() observed = this._observed;
 
   constructor(
     private readonly ref: ElementRef
   ) {
-    this._observer.observe(this.ref.nativeElement);
+    setTimeout(() => {
+      this._observer.observe(this.ref.nativeElement);
+    }, 4000);
   }
 }

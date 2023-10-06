@@ -37,11 +37,11 @@
 </table>
 
 <div class="tw-flex tw-mt-3 tw-items-center">
-  <button mat-flat-button color="primary" class="update tw-mr-auto">Update Class</button>
+  <button mat-flat-button color="primary" class="update tw-mr-auto" [routerLink]="[class?.id]">Update Class</button>
 
   <mat-paginator
     showFirstLastButtons
-    [length]="students?.length ?? 0"
+    [length]="students.length"
     [pageSizeOptions]="[5, 10, 20, 50]"
     [disabled]="(loading$ | async)"
     [pageSize]="10"

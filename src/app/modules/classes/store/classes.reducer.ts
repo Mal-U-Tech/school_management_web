@@ -6,10 +6,10 @@ import {
   loadClassStudentsEffectSuccess,
   nameChangeDialogClose,
   updateClassEffectFailed,
-  updateClassEffectSuccessful,
   userClickClassExpandable,
   userClickNameChangeSave,
 } from './classes.actions';
+import { updateAppSchoolEffect } from 'src/app/store/app.actions';
 
 export const key = 'classes';
 
@@ -70,7 +70,7 @@ export const reducer = createReducer<ClassState>(
   ),
 
   on(
-    updateClassEffectSuccessful,
+    updateAppSchoolEffect,
     (state): ClassState => ({
       ...state,
       api: {

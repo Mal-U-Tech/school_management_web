@@ -50,7 +50,7 @@
 
       <app-teachers class="tw-flex tw-flex-col tw-mb-4" *ngIf="(class.users?.length ?? 0) > 0" [teachers]="class.users ?? []"></app-teachers>
 
-      <app-students *ngIf="(class.students?.length ?? 0) > 0" [students]="class.students ?? []"></app-students>
+      <app-students *ngIf="(class.students?.length ?? 0) > 0" [class]="class"></app-students>
 
     </mat-expansion-panel>
   </mat-accordion>

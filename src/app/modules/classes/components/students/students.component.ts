@@ -5,11 +5,11 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { IStudent } from '../../../../interfaces/student.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Store } from '@ngrx/store';
 import { selectClassAPIError, selectClassAPILoading } from '../../store/classes.selectors';
+import { IClass } from 'src/app/interfaces/class.interface';
 
 @Component({
   selector: 'app-students',
@@ -17,7 +17,7 @@ import { selectClassAPIError, selectClassAPILoading } from '../../store/classes.
   styleUrls: ['./students.component.scss'],
 })
 export class StudentsComponent implements AfterViewInit {
-  @Input() students?: IStudent[];
+  @Input() class?: IClass;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
 
@@ -26,6 +26,10 @@ export class StudentsComponent implements AfterViewInit {
 
   loading$ = this.store.select(selectClassAPILoading);
   error$ = this.store.select(selectClassAPIError);
+
+  get students() {
+    return this.class?.students ?? []
+  }
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
