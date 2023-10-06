@@ -81,7 +81,7 @@ export class ViewClassTeacherTableComponent implements AfterViewInit, OnInit {
             teacher: {
               name: temp.teacher_id.user_id.name,
               contact: temp.teacher_id.user_id.contact,
-              surname: temp.teacher_id.user_id.name,
+              surname: temp.teacher_id.user_id.surname,
             },
             class: temp.class_id,
             year: temp.year,
