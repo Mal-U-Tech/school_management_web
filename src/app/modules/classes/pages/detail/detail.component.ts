@@ -4,6 +4,7 @@ import { selectCurrentClass } from '../../store/classes.selectors';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { NameDialogComponent } from '../../components/name-dialog/name-dialog.component';
+import { ISubject } from 'src/app/interfaces/subject.interface';
 
 @Component({
   selector: 'app-detail',
@@ -12,6 +13,8 @@ import { NameDialogComponent } from '../../components/name-dialog/name-dialog.co
 })
 export class DetailComponent {
   class$ = this.store.select(selectCurrentClass);
+
+  subject_columns = ['options', 'name', 'remove']
 
   constructor(
     private readonly store: Store,
@@ -24,5 +27,9 @@ export class DetailComponent {
       data: value,
       width: '440px'
     })
+  }
+
+  gettooltip(value: IClass, subject: ISubject) {
+    return `Remove ${subject.name} from ${value.name}`
   }
 }

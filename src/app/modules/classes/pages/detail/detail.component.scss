@@ -8,6 +8,13 @@ $color: mat.get-color-config(sty.$theme);
 $primary: map.get($color, "primary");
 $warning: var.$warn-palette;
 
+:host ::ng-deep.mat-mdc-row {
+  height: 40px !important;
+}
+:host ::ng-deep.mat-mdc-header-row {
+  height: 48px !important;
+}
+
 .title {
   color: mat.get-color-from-palette($primary, 500);
   margin: 0;
@@ -16,4 +23,16 @@ $warning: var.$warn-palette;
 hr {
   background-color: mat.get-color-from-palette($primary, 100);
   width: 100%;
+}
+
+.mat-column-options, .mat-column-remove {
+  width: 32px;
+}
+
+.subjects {
+  > h2 {
+    color: mat.get-color-from-palette($primary, 500);
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
 }
