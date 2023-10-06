@@ -1,0 +1,19 @@
+
+@use "src/styles.scss" as sty;
+@use "src/variables.scss" as var;
+@use "@angular/material" as mat;
+@use "sass:map";
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, "primary");
+$warning: var.$warn-palette;
+
+.title {
+  color: mat.get-color-from-palette($primary, 500);
+  margin: 0;
+}
+
+hr {
+  background-color: mat.get-color-from-palette($primary, 100);
+  width: 100%;
+}

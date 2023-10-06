@@ -52,3 +52,8 @@ export const tokenExpiredLogoutEffect = createAction(
 export const appInitializedEffect = createAction(
   '[App] App Initialized Effect'
 )
+
+export const updateAppSchoolEffect = createAction(
+  '[App] Update App School Effect',
+  props<{ school: ISchool }>()
+)

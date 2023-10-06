@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { SchoolsState, initial } from './schools.state';
 import { loadSchoolEffect, routerUpdateTabEffect } from './schools.actions';
+import { updateAppSchoolEffect } from 'src/app/store/app.actions';
 
 export const key = 'schools';
 
@@ -15,9 +16,10 @@ export const reducer = createReducer(
   ),
   on(
     loadSchoolEffect,
+    updateAppSchoolEffect,
     (state, action): SchoolsState => ({
       ...state,
-      school: action.school,
+      school: action.school.id,
     })
   ),
 );

@@ -1,1 +1,16 @@
-<p>detail works!</p>
+<ng-container *ngIf="(class$ | async) as class">
+  <app-content>
+    <div class="tw-flex tw-items-center">
+      <h1 class="title">{{ class.name }}</h1>
+
+      <button mat-icon-button [matMenuTriggerFor]="general" class="tw-ml-auto"><mat-icon color="primary">more_vert</mat-icon></button>
+    </div>
+
+    <hr class="tw-mb-6"/>
+
+  </app-content>
+
+  <mat-menu #general>
+    <button mat-menu-item (click)="changename(class)">Change Name</button>
+  </mat-menu>
+</ng-container>

@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { StudentService } from 'src/app/services/student.service';
-import { loadClassEffect, loadClassStudentsEffectFailed, loadClassStudentsEffectSuccess, userClickClassExpandable } from './classes.actions';
+import {
+  loadClassEffect,
+  loadClassStudentsEffectFailed,
+  loadClassStudentsEffectSuccess,
+  updateClassEffectFailed,
+  updateClassEffectSuccessful,
+  userClickClassExpandable,
+  userClickNameChangeSave,
+} from './classes.actions';
 import { catchError, exhaustMap, filter, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { routerNavigatedAction } from '@ngrx/router-store';
-import { selectCurrentSchool } from '../../schools/store/schools.selectors';
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
+import { ClassService } from '../services/class.service';
+import { selectAppSchools } from 'src/app/store/app.selectors';
 
 @Injectable()
 export class ClassesEffects {
@@ -16,19 +25,35 @@ export class ClassesEffects {
 
     private readonly store: Store,
 
-    private readonly student: StudentService
+    private readonly student: StudentService,
+    private readonly service: ClassService
   ) {}
+
+  nameupdate$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(userClickNameChangeSave),
+      exhaustMap((action) => {
+        return this.service.update(action).pipe(
+          map((response) => updateClassEffectSuccessful({ class: response })),
+          catchError((error) => of(updateClassEffectFailed({ error })))
+        );
+      })
+    );
+  });
 
   class$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(
-        userClickClassExpandable,
-      ),
-      exhaustMap(action => {
-        return this.student.grades(action.class.school_id, action.class.students?.map(s => s.user_id) ?? []).pipe(
-          map(students => loadClassStudentsEffectSuccess({ students })),
-          catchError(error => of(loadClassStudentsEffectFailed({ error })))
-        )
+      ofType(userClickClassExpandable),
+      exhaustMap((action) => {
+        return this.student
+          .grades(
+            action.class.school_id,
+            action.class.students?.map((s) => s.user_id) ?? []
+          )
+          .pipe(
+            map((students) => loadClassStudentsEffectSuccess({ students })),
+            catchError((error) => of(loadClassStudentsEffectFailed({ error })))
+          );
       })
     );
   });
@@ -36,17 +61,18 @@ export class ClassesEffects {
   detail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(routerNavigatedAction),
-      concatLatestFrom(
-        () => this.store.select(selectCurrentSchool),
-      ),
-      map(([{ payload }, school]) => {
+      concatLatestFrom(() => this.store.select(selectAppSchools)),
+      map(([{ payload }, schools]) => {
         const url = payload.routerState.url;
-        const [,,,,id,] = url.split('/');
+        const [, , school_id, , class_id] = url.split('/');
 
-        return school?.classes?.find((c) => c.id === id);
+        // first get the school
+        const school = schools.find((s) => s.id === school_id)!;
+        // then get the class
+        return school?.classes?.find((c) => c.id === class_id);
       }),
       filter((s) => !!s),
-      map((c) => loadClassEffect({ class: c as IClass })),
+      map((c) => loadClassEffect({ class: c as IClass }))
     );
   });
 }

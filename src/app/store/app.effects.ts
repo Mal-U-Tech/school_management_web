@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import {
   appInitializedEffect,
   loadNotificationsEffectFailed,
@@ -10,6 +10,7 @@ import {
   loadSchoolsEffectSuccessful,
   tokenExpiredLogoutEffect,
   tokenExpiredLogoutEffectComplete,
+  updateAppSchoolEffect,
   userAppLanding,
   userLandingEffectSuccessful,
 } from './app.actions';
@@ -34,12 +35,16 @@ import { PermissionService } from '../services/permission.service';
 import { forkJoin, of } from 'rxjs';
 import { SchoolService } from '../services/school.service';
 import { NotificationsService } from '../services/notifications.service';
+import { updateClassEffectSuccessful } from '../modules/classes/store/classes.actions';
+import { selectCurrentSchool } from '../modules/schools/store/schools.selectors';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AppEffects {
   constructor(
     private actions$: Actions,
 
+    private store: Store,
     private router: Router,
 
     private app: AppService,
@@ -86,11 +91,7 @@ export class AppEffects {
             ).pipe(
               map((school_profiles) =>
                 loadSchoolsEffectSuccessful({
-                  schools: school_profiles.sort(
-                    (a, b) =>
-                      new Date(b.updated_at).getTime() -
-                      new Date(a.updated_at).getTime()
-                  ),
+                  schools: school_profiles,
                 })
               )
             )
@@ -99,6 +100,20 @@ export class AppEffects {
         );
       })
     );
+  });
+
+  reload$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(
+        updateClassEffectSuccessful,
+      ),
+      concatLatestFrom(() => this.store.select(selectCurrentSchool)),
+      exhaustMap(([, school]) => {
+        return this.school.profile(school?.id as string).pipe(
+          map((school) => updateAppSchoolEffect({ school }))
+        )
+      })
+    )
   });
 
   permissions$ = createEffect(() => {

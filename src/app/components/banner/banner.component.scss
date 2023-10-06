@@ -6,6 +6,7 @@
 $color: mat.get-color-config(sty.$theme);
 $primary: map.get($color, "primary");
 $warning: var.$warn-palette;
+$error: map.get($color, "warn");
 
 :host {
   display: flex;
@@ -21,7 +22,7 @@ $warning: var.$warn-palette;
 .info {
   color: mat.get-color-from-palette($primary, 800);
   background-color: mat.get-color-from-palette($primary, 50);
-  box-shadow: 0 0 8px 1px rgba(mat.get-color-from-palette($primary, 50), 0.5);
+  // box-shadow: 0 0 4px 1px rgba(mat.get-color-from-palette($primary, 50), 0.5);
 
   &::ng-deep {
     > button {
@@ -32,16 +33,31 @@ $warning: var.$warn-palette;
   }
 }
 
+.error {
+  color: mat.get-color-from-palette($error, 800);
+  background-color: mat.get-color-from-palette($error, 50);
+  // box-shadow: 0 0 4px 1px mat.get-color-from-palette($error, 50);
+
+  &::ng-deep {
+    > button {
+      background: mat.get-color-from-palette($error, 800);
+      color: white;
+      font-weight: 400;
+    }
+  }
+}
+
 .warning {
   color: mat.get-color-from-palette($warning, 800);
   background-color: mat.get-color-from-palette($warning, 50);
-  box-shadow: 0 0 8px 1px mat.get-color-from-palette($warning, 50);
+  // box-shadow: 0 0 4px 1px mat.get-color-from-palette($warning, 50);
 
   &::ng-deep {
     > button {
       background: mat.get-color-from-palette($warning, 800);
       color: white;
       font-weight: 400;
+      margin-top: 8px;
     }
   }
 }
@@ -72,8 +88,4 @@ $warning: var.$warn-palette;
 .icon {
   margin-top: 4px;
   margin-bottom: 4px;
-}
-
-.controls {
-  margin-top: 8px;
 }

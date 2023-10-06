@@ -27,3 +27,22 @@ export const loadClassEffect = createAction(
   '[Classes] Load Class Effect',
   props<{ class: IClass; }>()
 );
+
+export const userClickNameChangeSave = createAction(
+  '[Classes] User Click Name Change Save',
+  props<{ name: string; id: string; }>()
+)
+
+export const updateClassEffectSuccessful = createAction(
+  '[Classes] Update Class Effect Successful',
+  props<{ class: IClass }>()
+)
+
+export const updateClassEffectFailed = createAction(
+  '[Classes] Update Class Effect Failed',
+  props<{ error: Error }>()
+);
+
+export const nameChangeDialogClose = createAction(
+  '[Classes] Name Change Dialog Close'
+);

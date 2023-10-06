@@ -24,6 +24,11 @@ export const selectClassAPIError = createSelector(
   ({ error }) => error
 );
 
+export const selectClassAPIComplete = createSelector(
+  selectClassAPI,
+  ({ complete }) => complete
+);
+
 export const selectSchoolClasses = createSelector(
   selectCurrentSchool,
   (school) => {
@@ -68,6 +73,7 @@ export const selectSchoolClasses = createSelector(
 );
 
 export const selectCurrentClass = createSelector(
+  selectCurrentSchool,
   selectClassState,
-  (state) => state.class
+  (school, state) => school?.classes?.find(c => c.id === state.class)
 );

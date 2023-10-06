@@ -15,15 +15,24 @@ import { TeachersComponent } from './components/teachers/teachers.component';
 import { StoreModule } from '@ngrx/store';
 import { ClassesEffects } from './store/classes.effects';
 import { EffectsModule } from '@ngrx/effects';
-import { key, reducer } from './store/classes.reducer';
-
-import routes from './classes.routes';
 import { DetailComponent } from './pages/detail/detail.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { NameDialogComponent } from './components/name-dialog/name-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ClassService } from './services/class.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { key, reducer } from './store/classes.reducer';
+import routes from './classes.routes';
 
 @NgModule({
-  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent],
+  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent, NameDialogComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature(key, reducer),
     EffectsModule.forFeature([ClassesEffects]),
@@ -36,9 +45,17 @@ import { DetailComponent } from './pages/detail/detail.component';
     MatRippleModule,
     MatButtonModule,
     MatTooltipModule,
+    MatMenuModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
 
     // internal modules
     ComponentsModule,
   ],
+  providers: [
+    ClassService
+  ]
 })
 export class ClassesModule {}

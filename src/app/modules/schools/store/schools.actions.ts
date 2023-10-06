@@ -10,3 +10,4 @@ export const loadSchoolEffect = createAction(
   '[Schools] Load School Effect',
   props<{ school: ISchool }>()
 );
+

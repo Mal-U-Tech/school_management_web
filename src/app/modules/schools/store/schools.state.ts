@@ -1,8 +1,6 @@
-import { ISchool } from 'src/app/interfaces/school.interface';
-
 export interface SchoolsState {
   tab: string;
-  school?: ISchool;
+  school?: string;
 }
 
 export const initial = {
