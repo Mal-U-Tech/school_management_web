@@ -18,9 +18,13 @@
             <ng-container matColumnDef="options">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let subject">
-                <button mat-icon-button>
+                <button mat-icon-button [matMenuTriggerFor]="menu">
                   <mat-icon color="primary">more_horizontal</mat-icon>
                 </button>
+
+                <mat-menu #menu>
+                  <button mat-menu-item (click)="remove(class, subject)" class="warn"><mat-icon color="warn">delete</mat-icon> Remove</button>
+                </mat-menu>
               </td>
             </ng-container>
 
@@ -34,7 +38,7 @@
             <ng-container matColumnDef="remove">
               <th mat-header-cell *matHeaderCellDef></th>
               <td mat-cell *matCellDef="let subject">
-                <button mat-icon-button [matTooltip]="gettooltip(class, subject)">
+                <button mat-icon-button [matTooltip]="gettooltip(class, subject)" (click)="remove(class, subject)">
                   <mat-icon color="warn">delete</mat-icon>
                 </button>
               </td>
@@ -49,6 +53,6 @@
   </app-content>
 
   <mat-menu #general>
-    <button mat-menu-item (click)="changename(class)">Change Name</button>
+    <button mat-menu-item (click)="changename(class)" class="primary"><mat-icon color="primary">edit</mat-icon> Change Name</button>
   </mat-menu>
 </ng-container>

@@ -7,6 +7,7 @@
 $color: mat.get-color-config(sty.$theme);
 $primary: map.get($color, "primary");
 $warning: var.$warn-palette;
+$error : map.get($color, "warn");
 
 :host ::ng-deep.mat-mdc-row {
   height: 40px !important;
@@ -35,4 +36,12 @@ hr {
     font-weight: 400;
     margin-bottom: 8px;
   }
+}
+
+.primary {
+  color: mat.get-color-from-palette($primary, 500);
+}
+
+.warn {
+  color: mat.get-color-from-palette($error, 500);
 }

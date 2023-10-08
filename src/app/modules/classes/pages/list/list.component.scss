@@ -11,6 +11,9 @@ $warning: var.$warn-palette;
   color: mat.get-color-from-palette($primary, 500);
   font-weight: 400;
 }
+h2.title {
+  margin-bottom: 8px;
+}
 
 .description {
   margin-right: 0 !important;

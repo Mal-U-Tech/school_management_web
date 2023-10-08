@@ -27,9 +27,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { key, reducer } from './store/classes.reducer';
 import routes from './classes.routes';
+import { RemoveSubjectDialogComponent } from './components/remove-subject-dialog/remove-subject-dialog.component';
 
 @NgModule({
-  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent, NameDialogComponent],
+  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent, NameDialogComponent, RemoveSubjectDialogComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

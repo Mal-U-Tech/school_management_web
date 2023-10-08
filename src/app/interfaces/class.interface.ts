@@ -1,6 +1,6 @@
-import { IStudent } from "./student.interface";
-import { ISubject } from "./subject.interface";
-import { IUser } from "./user.interface";
+import { IStudent } from './student.interface';
+import { ISubject } from './subject.interface';
+import { IUser } from './user.interface';
 
 export interface IClass {
   id: string;

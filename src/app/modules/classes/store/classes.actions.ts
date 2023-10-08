@@ -46,3 +46,12 @@ export const updateClassEffectFailed = createAction(
 export const nameChangeDialogClose = createAction(
   '[Classes] Name Change Dialog Close'
 );
+
+export const removeSubjectDialogClose = createAction(
+  '[Classes] Remove Subject Dialog Close',
+);
+
+export const userClickRemoveClassSubject = createAction(
+  '[Classes] User Click Remove Class Subject',
+  props<{ subject: string; class: IClass; }>()
+)
