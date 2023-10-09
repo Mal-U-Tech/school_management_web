@@ -51,7 +51,16 @@ export const removeSubjectDialogClose = createAction(
   '[Classes] Remove Subject Dialog Close',
 );
 
+export const updateSubjectsDialogClose = createAction(
+  '[Classes] Update Subjects Dialog Close'
+);
+
 export const userClickRemoveClassSubject = createAction(
   '[Classes] User Click Remove Class Subject',
   props<{ subject: string; class: IClass; }>()
+)
+
+export const userClickUpdateSubjectsSave = createAction(
+  '[Classes] User Click Update Subjects Save',
+  props<{ id: string; subjects: string[]; }>()
 )

@@ -38,10 +38,26 @@ hr {
   }
 }
 
+.nosubjects {
+  > p {
+    color: mat.get-color-from-palette($primary, 500);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+}
+
 .primary {
   color: mat.get-color-from-palette($primary, 500);
 }
 
 .warn {
   color: mat.get-color-from-palette($error, 500);
+}
+
+.hint {
+  margin-bottom: 24px;
+
+  > div > p {
+    margin: 0 !important;
+  }
 }

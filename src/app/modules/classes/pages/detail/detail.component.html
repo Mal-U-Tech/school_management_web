@@ -14,6 +14,16 @@
       <h2>Subjects</h2>
       <app-panel>
         <div class="tw-m-6">
+
+          <div class="tw-flex tw-items-center hint">
+            <div class="tw-flex tw-items-center">
+              <mat-icon color="primary" class="tw-mr-4">info_outline</mat-icon>
+              <p class="tw-m-0" class="primary">Update the subjects ({{ class.subjects?.length ?? 0}}) that are associated to <b>{{ class.name }}</b></p>
+            </div>
+
+            <button mat-flat-button color="primary" class="tw-ml-auto" (click)="updatesubjects(class)">Update</button>
+          </div>
+
           <table mat-table [dataSource]="class?.subjects ?? []">
             <ng-container matColumnDef="options">
               <th mat-header-cell *matHeaderCellDef></th>
@@ -43,6 +53,16 @@
                 </button>
               </td>
             </ng-container>
+
+            <tr *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="subject_columns.length">
+                <div class="tw-flex tw-flex-col tw-items-center tw-mt-4 nosubjects">
+                  <p>{{ class.name }} has no subjects associated.</p>
+
+                  <button mat-stroked-button color="primary" (click)="updatesubjects(class)">Add Subjects</button>
+                </div>
+              </td>
+            </tr>
 
             <tr mat-header-row *matHeaderRowDef="subject_columns"></tr>
             <tr mat-row *matRowDef="let row; columns: subject_columns"></tr>

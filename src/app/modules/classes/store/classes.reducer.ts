@@ -10,6 +10,7 @@ import {
   userClickClassExpandable,
   userClickNameChangeSave,
   userClickRemoveClassSubject,
+  userClickUpdateSubjectsSave,
 } from './classes.actions';
 import { updateAppSchoolEffect } from 'src/app/store/app.actions';
 
@@ -21,6 +22,7 @@ export const reducer = createReducer<ClassState>(
     userClickClassExpandable,
     userClickNameChangeSave,
     userClickRemoveClassSubject,
+    userClickUpdateSubjectsSave,
     (state): ClassState => ({
       ...state,
       api: {

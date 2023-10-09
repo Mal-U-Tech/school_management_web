@@ -1,0 +1,40 @@
+<h2 mat-dialog-title class="title">Update {{ data.name }} Subjects</h2>
+
+<div mat-dialog-content>
+  <app-banner *ngIf="error$ | async" type="error" class="tw-my-4 banner">
+    <p message>Something went wrong. Please try again.</p>
+  </app-banner>
+
+  <div class="hint">
+    <mat-icon>info_outline</mat-icon>
+    <p>Add or remove some of the subjects associated with {{ data.name }}.</p>
+  </div>
+
+  <div [formGroup]="form" *ngIf="(subjects$ | async) as subjects">
+    <mat-form-field appearance="outline" class="tw-w-full">
+      <mat-label>Select Subjects</mat-label>
+      <mat-select formControlName="subjects" multiple panelClass="selector">
+        <mat-select-trigger>
+          <mat-chip-listbox>
+            <mat-chip *ngFor="let item of form.controls.subjects.value" [removable]="true" (removed)="removesubject(item)" color="primary">
+              {{ getsubject(item, subjects).name }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+          </mat-chip-listbox>
+        </mat-select-trigger>
+        <mat-option *ngFor="let subject of subjects" [value]="subject.id">{{ subject.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.subjects.hasError('required')">A class should have at least 1 subject.</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions class="controls">
+  <button mat-button class="tw-ml-auto" [disabled]="loading$ | async" (click)="close()">Cancel</button>
+  <button mat-flat-button color="primary" class="tw-mx-4" [disabled]="form.invalid || (loading$ | async) || (error$ | async)" (click)="submit()">
+    <ng-container *ngIf="!(loading$ | async)">Save</ng-container>
+    <mat-progress-spinner *ngIf="loading$ | async" diameter="20" mode="indeterminate"></mat-progress-spinner>
+  </button>
+</div>
+
+<ng-container *ngIf="(complete$ | async) && close()"></ng-container>

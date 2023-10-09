@@ -24,13 +24,24 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ClassService } from './services/class.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UpdateSubjectsDialogComponent } from './components/update-subjects-dialog/update-subjects-dialog.component';
+import { RemoveSubjectDialogComponent } from './components/remove-subject-dialog/remove-subject-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
 
 import { key, reducer } from './store/classes.reducer';
 import routes from './classes.routes';
-import { RemoveSubjectDialogComponent } from './components/remove-subject-dialog/remove-subject-dialog.component';
 
 @NgModule({
-  declarations: [ListComponent, StudentsComponent, TeachersComponent, DetailComponent, NameDialogComponent, RemoveSubjectDialogComponent],
+  declarations: [
+    ListComponent,
+    StudentsComponent,
+    TeachersComponent,
+    DetailComponent,
+    NameDialogComponent,
+    RemoveSubjectDialogComponent,
+    UpdateSubjectsDialogComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -51,12 +62,12 @@ import { RemoveSubjectDialogComponent } from './components/remove-subject-dialog
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
+    MatChipsModule,
 
     // internal modules
     ComponentsModule,
   ],
-  providers: [
-    ClassService
-  ]
+  providers: [ClassService],
 })
 export class ClassesModule {}

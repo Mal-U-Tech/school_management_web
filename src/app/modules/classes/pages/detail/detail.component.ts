@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NameDialogComponent } from '../../components/name-dialog/name-dialog.component';
 import { ISubject } from 'src/app/interfaces/subject.interface';
 import { RemoveSubjectDialogComponent } from '../../components/remove-subject-dialog/remove-subject-dialog.component';
+import { UpdateSubjectsDialogComponent } from '../../components/update-subjects-dialog/update-subjects-dialog.component';
 
 @Component({
   selector: 'app-detail',
@@ -32,6 +33,13 @@ export class DetailComponent {
 
   gettooltip(value: IClass, subject: ISubject) {
     return `Remove ${subject.name} from ${value.name}`
+  }
+
+  updatesubjects(value: IClass) {
+    this.dialog.open(UpdateSubjectsDialogComponent, {
+      data: value,
+      width: '440px'
+    })
   }
 
   remove(value:IClass, subject: ISubject) {

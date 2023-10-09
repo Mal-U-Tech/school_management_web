@@ -15,3 +15,8 @@ export const selectCurrentSchool = createSelector(
   selectSchoolState,
   (schools, { school }) => schools.find(s => s.id === school)
 )
+
+export const selectCurrentSchoolSubjects = createSelector(
+  selectCurrentSchool,
+  (school) => school?.subjects ?? []
+);
