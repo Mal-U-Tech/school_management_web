@@ -77,3 +77,8 @@ export const userClickRemoveClassTeacher = createAction(
   '[Classes] User Click Remove Class Teacher',
   props<{ teacher: string; class: IClass }>()
 )
+
+export const userClickUpdateTeachersSave = createAction(
+  '[Classes] User Click Update Teachers Save',
+  props<{ id: string, users: string[]; }>()
+)

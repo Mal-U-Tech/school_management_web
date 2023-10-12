@@ -15,6 +15,7 @@ import {
   userClickRemoveClassSubject,
   userClickRemoveClassTeacher,
   userClickUpdateSubjectsSave,
+  userClickUpdateTeachersSave,
 } from './classes.actions';
 import { updateAppSchoolEffect } from 'src/app/store/app.actions';
 
@@ -28,6 +29,7 @@ export const reducer = createReducer<ClassState>(
     userClickRemoveClassSubject,
     userClickUpdateSubjectsSave,
     userClickRemoveClassTeacher,
+    userClickUpdateTeachersSave,
     (state): ClassState => ({
       ...state,
       api: {

@@ -12,6 +12,7 @@ import {
   userClickRemoveClassSubject,
   userClickRemoveClassTeacher,
   userClickUpdateSubjectsSave,
+  userClickUpdateTeachersSave,
 } from './classes.actions';
 import { catchError, exhaustMap, filter, map } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -31,6 +32,18 @@ export class ClassesEffects {
     private readonly student: StudentService,
     private readonly service: ClassService
   ) {}
+
+  teachersupdate$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(userClickUpdateTeachersSave),
+      exhaustMap((action) => {
+        return this.service.update(action).pipe(
+          map((response) => updateClassEffectSuccessful({ class: response })),
+          catchError(error => of(updateClassEffectFailed({ error }))),
+        )
+      })
+    )
+  });
 
   teacherremove$ = createEffect(() => {
     return this.actions$.pipe(

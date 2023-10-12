@@ -1,1 +1,40 @@
-<p>update-teachers-dialog works!</p>
+<h2 mat-dialog-title class="title">Add &amp; Remove {{ data.name }} Teachers</h2>
+
+<div mat-dialog-content>
+  <app-banner *ngIf="error$ | async" type="error" class="tw-my-4 banner">
+    <p message>Something went wrong. Please try again.</p>
+  </app-banner>
+
+  <div class="hint">
+    <mat-icon>info_outline</mat-icon>
+    <p>Add or remove some of the subjects associated with {{ data.name }}.</p>
+  </div>
+
+  <div [formGroup]="form" *ngIf="(users$ | async) as users">
+    <mat-form-field appearance="outline" class="tw-w-full">
+      <mat-label>Select Subjects</mat-label>
+      <mat-select formControlName="users" multiple panelClass="selector">
+        <mat-select-trigger>
+          <mat-chip-listbox>
+            <mat-chip *ngFor="let item of form.controls.users.value" [removable]="true" (removed)="removeuser(item)" color="primary">
+              {{ getuser(item, users).firstname }} {{ getuser(item, users).lastname }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+          </mat-chip-listbox>
+        </mat-select-trigger>
+        <mat-option *ngFor="let user of users" [value]="user.id">{{ user.firstname }} {{ user.lastname }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.users.hasError('required')">A class should have at least 1 teacher.</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions class="controls">
+  <button mat-button class="tw-ml-auto" [disabled]="loading$ | async" (click)="close()">Cancel</button>
+  <button mat-flat-button color="primary" class="tw-mx-4" [disabled]="form.invalid || (loading$ | async) || (error$ | async)" (click)="submit()">
+    <ng-container *ngIf="!(loading$ | async)">Save</ng-container>
+    <mat-progress-spinner *ngIf="loading$ | async" diameter="20" mode="indeterminate"></mat-progress-spinner>
+  </button>
+</div>
+
+<ng-container *ngIf="(complete$ | async) && close()"></ng-container>
