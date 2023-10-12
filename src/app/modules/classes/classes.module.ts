@@ -31,6 +31,8 @@ import { MatChipsModule } from '@angular/material/chips';
 
 import { key, reducer } from './store/classes.reducer';
 import routes from './classes.routes';
+import { RemoveTeacherDialogComponent } from './components/remove-teacher-dialog/remove-teacher-dialog.component';
+import { UpdateTeachersDialogComponent } from './components/update-teachers-dialog/update-teachers-dialog.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import routes from './classes.routes';
     NameDialogComponent,
     RemoveSubjectDialogComponent,
     UpdateSubjectsDialogComponent,
+    RemoveTeacherDialogComponent,
+    UpdateTeachersDialogComponent,
   ],
   imports: [
     CommonModule,

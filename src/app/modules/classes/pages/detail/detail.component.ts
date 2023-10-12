@@ -7,6 +7,9 @@ import { NameDialogComponent } from '../../components/name-dialog/name-dialog.co
 import { ISubject } from 'src/app/interfaces/subject.interface';
 import { RemoveSubjectDialogComponent } from '../../components/remove-subject-dialog/remove-subject-dialog.component';
 import { UpdateSubjectsDialogComponent } from '../../components/update-subjects-dialog/update-subjects-dialog.component';
+import { IUser } from 'src/app/interfaces/user.interface';
+import { UpdateTeachersDialogComponent } from '../../components/update-teachers-dialog/update-teachers-dialog.component';
+import { RemoveTeacherDialogComponent } from '../../components/remove-teacher-dialog/remove-teacher-dialog.component';
 
 @Component({
   selector: 'app-detail',
@@ -16,7 +19,8 @@ import { UpdateSubjectsDialogComponent } from '../../components/update-subjects-
 export class DetailComponent {
   class$ = this.store.select(selectCurrentClass);
 
-  subject_columns = ['options', 'name', 'remove']
+  subject_columns = ['options', 'name', 'remove'];
+  teacher_columns = ['options', 'name', 'remove'];
 
   constructor(
     private readonly store: Store,
@@ -31,22 +35,43 @@ export class DetailComponent {
     })
   }
 
-  gettooltip(value: IClass, subject: ISubject) {
+  getsubjecttooltip(value: IClass, subject: ISubject) {
     return `Remove ${subject.name} from ${value.name}`
+  }
+
+  getteachertooltip(value: IClass, teacher: IUser) {
+    return `Remove ${teacher.firstname} ${teacher.lastname} from ${value.name}`
   }
 
   updatesubjects(value: IClass) {
     this.dialog.open(UpdateSubjectsDialogComponent, {
       data: value,
-      width: '440px'
+      width: '540px'
     })
   }
 
-  remove(value:IClass, subject: ISubject) {
+  updateteachers(value: IClass) {
+    this.dialog.open(UpdateTeachersDialogComponent, {
+      data: value,
+      width: '540px'
+    })
+  }
+
+  removesubject(value:IClass, subject: ISubject) {
     this.dialog.open(RemoveSubjectDialogComponent, {
       data: {
         class: value,
         subject,
+      },
+      width: '440px'
+    })
+  }
+
+  removeteacher(value: IClass, teacher: IUser) {
+    this.dialog.open(RemoveTeacherDialogComponent, {
+      data: {
+        class: value,
+        teacher,
       },
       width: '440px'
     })

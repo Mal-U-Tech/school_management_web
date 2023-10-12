@@ -30,7 +30,7 @@ hr {
   width: 32px;
 }
 
-.subjects {
+.subjects, .teachers {
   > h2 {
     color: mat.get-color-from-palette($primary, 500);
     font-weight: 400;

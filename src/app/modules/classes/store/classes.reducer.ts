@@ -6,10 +6,14 @@ import {
   loadClassStudentsEffectSuccess,
   nameChangeDialogClose,
   removeSubjectDialogClose,
+  removeTeacherDialogClose,
   updateClassEffectFailed,
+  updateSubjectsDialogClose,
+  updateTeachersDialogClose,
   userClickClassExpandable,
   userClickNameChangeSave,
   userClickRemoveClassSubject,
+  userClickRemoveClassTeacher,
   userClickUpdateSubjectsSave,
 } from './classes.actions';
 import { updateAppSchoolEffect } from 'src/app/store/app.actions';
@@ -23,6 +27,7 @@ export const reducer = createReducer<ClassState>(
     userClickNameChangeSave,
     userClickRemoveClassSubject,
     userClickUpdateSubjectsSave,
+    userClickRemoveClassTeacher,
     (state): ClassState => ({
       ...state,
       api: {
@@ -65,6 +70,9 @@ export const reducer = createReducer<ClassState>(
   on(
     nameChangeDialogClose,
     removeSubjectDialogClose,
+    updateSubjectsDialogClose,
+    removeTeacherDialogClose,
+    updateTeachersDialogClose,
     (state): ClassState => ({
       ...state,
       api: {

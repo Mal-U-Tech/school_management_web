@@ -10,6 +10,7 @@ import {
   userClickClassExpandable,
   userClickNameChangeSave,
   userClickRemoveClassSubject,
+  userClickRemoveClassTeacher,
   userClickUpdateSubjectsSave,
 } from './classes.actions';
 import { catchError, exhaustMap, filter, map } from 'rxjs/operators';
@@ -30,6 +31,22 @@ export class ClassesEffects {
     private readonly student: StudentService,
     private readonly service: ClassService
   ) {}
+
+  teacherremove$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(userClickRemoveClassTeacher),
+      exhaustMap((action) => {
+        const payload = {
+          id: action.class.id,
+          users: action.class?.users?.map(u => u.id)?.filter(u => u !== action.teacher) as string[],
+        };
+        return this.service.update(payload).pipe(
+          map((response) => updateClassEffectSuccessful({ class: response })),
+          catchError(error => of(updateClassEffectFailed({ error })))
+        )
+      })
+    )
+  });
 
   subjectsupdate$ = createEffect(() => {
     return this.actions$.pipe(
