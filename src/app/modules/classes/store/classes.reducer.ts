@@ -10,7 +10,6 @@ import {
   updateClassEffectFailed,
   updateSubjectsDialogClose,
   updateTeachersDialogClose,
-  userClickClassExpandable,
   userClickNameChangeSave,
   userClickRemoveClassSubject,
   userClickRemoveClassTeacher,
@@ -24,12 +23,12 @@ export const key = 'classes';
 export const reducer = createReducer<ClassState>(
   initial,
   on(
-    userClickClassExpandable,
     userClickNameChangeSave,
     userClickRemoveClassSubject,
     userClickUpdateSubjectsSave,
     userClickRemoveClassTeacher,
     userClickUpdateTeachersSave,
+    loadClassEffect,
     (state): ClassState => ({
       ...state,
       api: {

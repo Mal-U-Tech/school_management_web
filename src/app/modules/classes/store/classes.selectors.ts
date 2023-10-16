@@ -73,7 +73,7 @@ export const selectSchoolClasses = createSelector(
 );
 
 export const selectCurrentClass = createSelector(
-  selectCurrentSchool,
+  selectSchoolClasses,
   selectClassState,
-  (school, state) => school?.classes?.find(c => c.id === state.class)
+  (classes, state) => classes?.find(c => c.id === state.class)
 );

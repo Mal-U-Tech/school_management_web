@@ -7,7 +7,6 @@ import {
   loadClassStudentsEffectSuccess,
   updateClassEffectFailed,
   updateClassEffectSuccessful,
-  userClickClassExpandable,
   userClickNameChangeSave,
   userClickRemoveClassSubject,
   userClickRemoveClassTeacher,
@@ -20,7 +19,7 @@ import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { ClassService } from '../services/class.service';
-import { selectAppSchools } from 'src/app/store/app.selectors';
+import { selectSchoolClasses } from './classes.selectors';
 
 @Injectable()
 export class ClassesEffects {
@@ -103,7 +102,7 @@ export class ClassesEffects {
 
   class$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(userClickClassExpandable),
+      ofType(loadClassEffect),
       exhaustMap((action) => {
         return this.student
           .grades(
@@ -121,15 +120,14 @@ export class ClassesEffects {
   detail$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(routerNavigatedAction),
-      concatLatestFrom(() => this.store.select(selectAppSchools)),
-      map(([{ payload }, schools]) => {
+      concatLatestFrom(() => this.store.select(selectSchoolClasses)),
+      map(([{ payload }, classes]) => {
         const url = payload.routerState.url;
-        const [, , school_id, , class_id] = url.split('/');
+        const [, , , , class_id] = url.split('/');
 
-        // first get the school
-        const school = schools.find((s) => s.id === school_id)!;
         // then get the class
-        return school?.classes?.find((c) => c.id === class_id);
+        console.log(class_id, classes);
+        return classes?.find((c) => c.id === class_id);
       }),
       filter((s) => !!s),
       map((c) => loadClassEffect({ class: c as IClass }))

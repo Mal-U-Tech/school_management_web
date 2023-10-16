@@ -33,6 +33,8 @@ import { key, reducer } from './store/classes.reducer';
 import routes from './classes.routes';
 import { RemoveTeacherDialogComponent } from './components/remove-teacher-dialog/remove-teacher-dialog.component';
 import { UpdateTeachersDialogComponent } from './components/update-teachers-dialog/update-teachers-dialog.component';
+import { RemoveStudentDialogComponent } from './components/remove-student-dialog/remove-student-dialog.component';
+import { UpdateStudentsDialogComponent } from './components/update-students-dialog/update-students-dialog.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +47,8 @@ import { UpdateTeachersDialogComponent } from './components/update-teachers-dial
     UpdateSubjectsDialogComponent,
     RemoveTeacherDialogComponent,
     UpdateTeachersDialogComponent,
+    RemoveStudentDialogComponent,
+    UpdateStudentsDialogComponent,
   ],
   imports: [
     CommonModule,

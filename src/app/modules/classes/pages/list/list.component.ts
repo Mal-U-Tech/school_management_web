@@ -5,7 +5,7 @@ import {
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { showClassStudentWarning, showClassSubjectCountWarning, showClassSubjectWarning } from 'src/app/utilities/class.utilities';
-import { notificationBannerObserved, userClickClassExpandable } from '../../store/classes.actions';
+import { notificationBannerObserved } from '../../store/classes.actions';
 import { selectAppEntityNotifications } from 'src/app/store/app.selectors';
 import { EntityType, INotification } from 'src/app/interfaces/notification.interface';
 
@@ -33,7 +33,6 @@ export class ListComponent {
   }
 
   opened(value: IClass) {
-    this.store.dispatch(userClickClassExpandable({ class: value }));
   }
 
   getclassnotifications(notifications: INotification[], data: IClass) {

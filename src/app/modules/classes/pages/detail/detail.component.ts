@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectCurrentClass } from '../../store/classes.selectors';
+import { selectClassAPIError, selectClassAPILoading, selectCurrentClass } from '../../store/classes.selectors';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { NameDialogComponent } from '../../components/name-dialog/name-dialog.component';
@@ -10,6 +10,7 @@ import { UpdateSubjectsDialogComponent } from '../../components/update-subjects-
 import { IUser } from 'src/app/interfaces/user.interface';
 import { UpdateTeachersDialogComponent } from '../../components/update-teachers-dialog/update-teachers-dialog.component';
 import { RemoveTeacherDialogComponent } from '../../components/remove-teacher-dialog/remove-teacher-dialog.component';
+import { IStudent } from 'src/app/interfaces/student.interface';
 
 @Component({
   selector: 'app-detail',
@@ -20,7 +21,11 @@ export class DetailComponent {
   class$ = this.store.select(selectCurrentClass);
 
   subject_columns = ['options', 'name', 'remove'];
-  teacher_columns = ['options', 'name', 'remove'];
+  teacher_columns = ['options', 'name', 'contact', 'remove'];
+  student_columns = ['avatar', 'name', 'contact', 'remove'];
+
+  loading$ = this.store.select(selectClassAPILoading);
+  error$ = this.store.select(selectClassAPIError);
 
   constructor(
     private readonly store: Store,
@@ -43,6 +48,10 @@ export class DetailComponent {
     return `Remove ${teacher.firstname} ${teacher.lastname} from ${value.name}`
   }
 
+  getstudenttooltip(value: IClass, student: IStudent) {
+    return `Remove ${student.user?.firstname} ${student.user?.lastname} from ${value.name}`
+  }
+
   updatesubjects(value: IClass) {
     this.dialog.open(UpdateSubjectsDialogComponent, {
       data: value,
@@ -55,6 +64,10 @@ export class DetailComponent {
       data: value,
       width: '540px'
     })
+  }
+
+  updatestudents(value: IClass) {
+
   }
 
   removesubject(value:IClass, subject: ISubject) {
@@ -75,5 +88,9 @@ export class DetailComponent {
       },
       width: '440px'
     })
+  }
+
+  removestudent(value: IClass, student: IStudent) {
+
   }
 }

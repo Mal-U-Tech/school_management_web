@@ -30,7 +30,7 @@ hr {
   width: 32px;
 }
 
-.subjects, .teachers {
+.subjects, .teachers, .students {
   > h2 {
     color: mat.get-color-from-palette($primary, 500);
     font-weight: 400;
@@ -60,4 +60,52 @@ hr {
   > div > p {
     margin: 0 !important;
   }
+}
+
+.avatar {
+  padding: 0;
+  color: mat.get-color-from-palette($primary, 400);
+  // box-shadow: 0 0 2px 1px #0001;
+  background-color: #fff0;
+
+  width: 32px;
+  height: 32px;
+  border-radius: 24px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  > img {
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    height: 100%;
+  }
+  > mat-icon {
+    font-size: 32px;
+    width: inherit;
+    height: inherit;
+  }
+}
+
+a {
+  color: mat.get-color-from-palette($primary, 400);
+  font-weight: 500;
+}
+
+.mat-column-avatar {
+  width: 32px;
+}
+.mat-column-name {
+  width: 180px;
+}
+
+.update {
+  font-weight: 400;
+}
+
+.loader {
+  min-height: 128px;
 }
