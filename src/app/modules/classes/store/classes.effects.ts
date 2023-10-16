@@ -126,7 +126,6 @@ export class ClassesEffects {
         const [, , , , class_id] = url.split('/');
 
         // then get the class
-        console.log(class_id, classes);
         return classes?.find((c) => c.id === class_id);
       }),
       filter((s) => !!s),
