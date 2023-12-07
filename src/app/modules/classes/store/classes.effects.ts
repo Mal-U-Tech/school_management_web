@@ -124,6 +124,7 @@ export class ClassesEffects {
       map(([{ payload }, classes]) => {
         const url = payload.routerState.url;
         const [, , , , class_id] = url.split('/');
+        console.log(class_id)
 
         // then get the class
         return classes?.find((c) => c.id === class_id);

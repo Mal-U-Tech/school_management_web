@@ -11,6 +11,8 @@ import { IUser } from 'src/app/interfaces/user.interface';
 import { UpdateTeachersDialogComponent } from '../../components/update-teachers-dialog/update-teachers-dialog.component';
 import { RemoveTeacherDialogComponent } from '../../components/remove-teacher-dialog/remove-teacher-dialog.component';
 import { IStudent } from 'src/app/interfaces/student.interface';
+import { UpdateStudentsDialogComponent } from '../../components/update-students-dialog/update-students-dialog.component';
+import { RemoveStudentDialogComponent } from '../../components/remove-student-dialog/remove-student-dialog.component';
 
 @Component({
   selector: 'app-detail',
@@ -67,7 +69,10 @@ export class DetailComponent {
   }
 
   updatestudents(value: IClass) {
-
+    this.dialog.open(UpdateStudentsDialogComponent, {
+      data: value,
+      width: '540px',
+    })
   }
 
   removesubject(value:IClass, subject: ISubject) {
@@ -91,6 +96,12 @@ export class DetailComponent {
   }
 
   removestudent(value: IClass, student: IStudent) {
-
+    this.dialog.open(RemoveStudentDialogComponent, {
+      data: {
+        class: value,
+        student,
+      },
+      width: '440px',
+    })
   }
 }
