@@ -20,7 +20,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/school-management-system-sms",
             "index": "src/index.html",
@@ -64,7 +64,6 @@
             "development": {
               "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -75,14 +74,14 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "school-management-system-SMS:build"
+            "buildTarget": "school-management-system-SMS:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "school-management-system-SMS:build:production"
+              "buildTarget": "school-management-system-SMS:build:production"
             },
             "development": {
-              "browserTarget": "school-management-system-SMS:build:development"
+              "buildTarget": "school-management-system-SMS:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +89,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "school-management-system-SMS:build"
+            "buildTarget": "school-management-system-SMS:build"
           }
         },
         "test": {
