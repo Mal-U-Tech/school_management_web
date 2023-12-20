@@ -20,6 +20,10 @@ import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { ClassService } from '../services/class.service';
 import { selectSchoolClasses } from './classes.selectors';
+import { MatDialog } from '@angular/material/dialog';
+import { AddStudentDialogComponent } from '../../students/components/add-student-dialog/add-student-dialog.component';
+import { showAddStudentDialog } from '../../students/store/students.actions';
+import { DIALOG_WIDTH } from 'src/app/constants/dialog.constant';
 
 @Injectable()
 export class ClassesEffects {
@@ -29,8 +33,24 @@ export class ClassesEffects {
     private readonly store: Store,
 
     private readonly student: StudentService,
-    private readonly service: ClassService
+    private readonly service: ClassService,
+    private readonly dialog: MatDialog
   ) {}
+
+  addstudent$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(showAddStudentDialog),
+        map(() =>
+          this.dialog.open(AddStudentDialogComponent, {
+            width: DIALOG_WIDTH.medium,
+            data: {},
+          })
+        )
+      );
+    },
+    { dispatch: false }
+  );
 
   teachersupdate$ = createEffect(() => {
     return this.actions$.pipe(

@@ -1,6 +1,6 @@
 import { ITab } from '../interfaces/tab.interface';
 
-export const TABS: ITab[] = [
+export const SCHOOL_TABS: ITab[] = [
   {
     name: 'Classes',
     route: ['classes'],

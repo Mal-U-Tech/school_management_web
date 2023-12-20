@@ -1,0 +1,54 @@
+@use 'sass:map';
+@use 'src/styles.scss' as sty;
+@use 'src/variables.scss' as var;
+@use '@angular/material' as mat;
+
+$color: mat.get-color-config(sty.$theme);
+$primary: map.get($color, 'primary');
+$accent: map.get($color, 'accent');
+
+.title {
+  padding: 24px;
+  padding-bottom: 8px;
+  > h1 {
+    margin: 0;
+    color: mat.get-color-from-palette($primary, 900);
+  }
+}
+
+.container {
+  padding-bottom: 0;
+  width: calc(100% - 24px);
+  > hr {
+    margin: 0 24px;
+    margin-right: 0;
+    border: 0;
+    height: 0.5px;
+    background-color: mat.get-color-from-palette($primary, 100);
+  }
+}
+
+a {
+  font-weight: 500;
+  letter-spacing: 0;
+  width: min-content;
+  height: 40px !important;
+  padding: 0 12px;
+
+  &:first-child {
+    padding: 0px 24px;
+    padding-right: 12px;
+  }
+}
+
+:host ::ng-deep .mdc-tab {
+  min-width: 0
+}
+
+:host ::ng-deep .mdc-tab-indicator__content {
+  border: none !important;
+  background-color: mat.get-color-from-palette($primary, 600);
+  height: 3px !important;
+  border-top-left-radius: 2px !important;
+  border-top-right-radius: 2px !important;
+}

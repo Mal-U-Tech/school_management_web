@@ -40,6 +40,10 @@ $icons: 15pt;
     }
   }
   > mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 18px;
+
     transition: transform 256ms;
     transform: rotate(0deg);
   }

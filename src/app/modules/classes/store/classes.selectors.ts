@@ -4,6 +4,9 @@ import { IUser } from '../../../interfaces/user.interface';
 import { ISubject } from '../../../interfaces/subject.interface';
 import { ClassState } from './classes.state';
 import { key } from './classes.reducer';
+import { selectAppPermissions } from 'src/app/store/app.selectors';
+import { POLICY } from 'src/app/constants/policy.constant';
+import { PERMISSIONS } from 'src/app/constants/permissions.constant';
 
 const selectClassState = createFeatureSelector<ClassState>(key);
 
@@ -76,4 +79,11 @@ export const selectCurrentClass = createSelector(
   selectSchoolClasses,
   selectClassState,
   (classes, state) => classes?.find(c => c.id === state.class)
+);
+
+export const selectUserHasAddStudentPermission = createSelector(
+  selectAppPermissions,
+  (permissions) => {
+    return permissions.some(p => p.name === PERMISSIONS.school && p.policy === POLICY.update);
+  }
 );

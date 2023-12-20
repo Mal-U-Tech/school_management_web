@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectCurrentSchool, selectSchoolCurrentTab } from '../../store/schools.selectors';
-import { TABS } from '../../constants/tabs.constant';
+import { SCHOOL_TABS as SCHOOL_TABS } from '../../constants/tabs.constant';
 
 @Component({
   selector: 'app-overview',
@@ -12,7 +12,7 @@ export class OverviewComponent {
   active$ = this.store.select(selectSchoolCurrentTab);
   school$ = this.store.select(selectCurrentSchool);
 
-  tabs = TABS;
+  tabs = SCHOOL_TABS;
 
   constructor(
     private readonly store: Store

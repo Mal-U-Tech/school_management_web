@@ -7,12 +7,12 @@
 
   <div class="hint">
     <mat-icon>info_outline</mat-icon>
-    <p>Add or remove some of the subjects associated with {{ data.name }}.</p>
+    <p>Add or remove some of the teachers associated with {{ data.name }}.</p>
   </div>
 
   <div [formGroup]="form" *ngIf="(users$ | async) as users">
     <mat-form-field appearance="outline" class="tw-w-full">
-      <mat-label>Select Subjects</mat-label>
+      <mat-label>Select Teachers</mat-label>
       <mat-select formControlName="users" multiple panelClass="selector">
         <mat-select-trigger>
           <mat-chip-listbox>

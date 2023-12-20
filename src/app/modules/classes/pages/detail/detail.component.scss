@@ -98,8 +98,11 @@ a {
 .mat-column-avatar {
   width: 32px;
 }
-.mat-column-name {
+.teachers .mat-column-name {
   width: 180px;
+}
+.subjects .mat-column-name {
+  width: auto;
 }
 
 .update {

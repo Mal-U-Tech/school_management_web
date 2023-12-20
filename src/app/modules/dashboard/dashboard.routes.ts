@@ -12,6 +12,11 @@ export default [
         component: OverviewComponent,
       },
       {
+        path: 'settings',
+        loadChildren: () =>
+          import('../settings/settings.module').then((m) => m.SettingsModule),
+      },
+      {
         path: ':id',
         loadChildren: () =>
           import('../schools/schools.module').then((m) => m.SchoolsModule),

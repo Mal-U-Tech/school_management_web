@@ -15,23 +15,23 @@ export const loadClassStudentsEffectFailed = createAction(
 
 export const notificationBannerObserved = createAction(
   '[Dashboard] Notification Banner Observed',
-  props<{ notification: INotification; }>()
-)
+  props<{ notification: INotification }>()
+);
 
 export const loadClassEffect = createAction(
   '[Classes] Load Class Effect',
-  props<{ class: IClass; }>()
+  props<{ class: IClass }>()
 );
 
 export const userClickNameChangeSave = createAction(
   '[Classes] User Click Name Change Save',
-  props<{ name: string; id: string; }>()
-)
+  props<{ name: string; id: string }>()
+);
 
 export const updateClassEffectSuccessful = createAction(
   '[Classes] Update Class Effect Successful',
   props<{ class: IClass }>()
-)
+);
 
 export const updateClassEffectFailed = createAction(
   '[Classes] Update Class Effect Failed',
@@ -43,7 +43,7 @@ export const nameChangeDialogClose = createAction(
 );
 
 export const removeSubjectDialogClose = createAction(
-  '[Classes] Remove Subject Dialog Close',
+  '[Classes] Remove Subject Dialog Close'
 );
 
 export const removeTeacherDialogClose = createAction(
@@ -58,22 +58,31 @@ export const updateTeachersDialogClose = createAction(
   '[Classes] Update Teachers Dialog Close'
 );
 
+export const updateStudentsDialogClose = createAction(
+  '[Classes] Update Students Dialog Close'
+);
+
 export const userClickRemoveClassSubject = createAction(
   '[Classes] User Click Remove Class Subject',
-  props<{ subject: string; class: IClass; }>()
-)
+  props<{ subject: string; class: IClass }>()
+);
 
 export const userClickUpdateSubjectsSave = createAction(
   '[Classes] User Click Update Subjects Save',
-  props<{ id: string; subjects: string[]; }>()
-)
+  props<{ id: string; subjects: string[] }>()
+);
 
 export const userClickRemoveClassTeacher = createAction(
   '[Classes] User Click Remove Class Teacher',
   props<{ teacher: string; class: IClass }>()
-)
+);
 
 export const userClickUpdateTeachersSave = createAction(
   '[Classes] User Click Update Teachers Save',
-  props<{ id: string, users: string[]; }>()
-)
+  props<{ id: string; users: string[] }>()
+);
+
+export const userClickUpdateStudentsSave = createAction(
+  '[Classes] User Click Update Students Save',
+  props<{ id: string; students: string[] }>()
+);

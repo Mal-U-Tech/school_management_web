@@ -13,8 +13,8 @@ export const selectSchoolCurrentTab = createSelector(
 export const selectCurrentSchool = createSelector(
   selectAppSchools,
   selectSchoolState,
-  (schools, { school }) => schools.find(s => s.id === school)
-)
+  (schools, { school }) => schools.find((s) => s.id === school)
+);
 
 export const selectCurrentSchoolSubjects = createSelector(
   selectCurrentSchool,
@@ -24,4 +24,9 @@ export const selectCurrentSchoolSubjects = createSelector(
 export const selectCurrentSchoolUsers = createSelector(
   selectCurrentSchool,
   (school) => school?.users ?? []
-)
+);
+
+export const selectCurrentSchoolStudents = createSelector(
+  selectCurrentSchool,
+  (school) => school?.students ?? []
+);

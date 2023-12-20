@@ -20,7 +20,7 @@
               <p class="tw-m-0" class="primary">Update the teachers ({{ class.users?.length ?? 0}}) associated with <b>{{ class.name }}</b></p>
             </div>
 
-            <button mat-flat-button color="primary" class="tw-ml-auto" (click)="updateteachers(class)">Update</button>
+            <button mat-flat-button color="primary" class="tw-ml-auto" [disabled]="(class.users?.length ?? 0) < 1" (click)="updateteachers(class)">Update</button>
           </div>
 
           <table mat-table [dataSource]="class?.users ?? []">
@@ -89,7 +89,7 @@
               <p class="tw-m-0" class="primary">Update the subjects ({{ class.subjects?.length ?? 0}}) that are associated to <b>{{ class.name }}</b></p>
             </div>
 
-            <button mat-flat-button color="primary" class="tw-ml-auto" (click)="updatesubjects(class)">Update</button>
+            <button mat-flat-button color="primary" class="tw-ml-auto" [disabled]="(class.subjects?.length ?? 0) < 1" (click)="updatesubjects(class)">Update</button>
           </div>
 
           <table mat-table [dataSource]="class?.subjects ?? []">
@@ -149,7 +149,7 @@
               <p class="tw-m-0" class="primary">Add & Remove students ({{ class.students?.length ?? 0}}) in <b>{{ class.name }}</b></p>
             </div>
 
-            <button mat-flat-button color="primary" class="tw-ml-auto" (click)="updatestudents(class)">Update</button>
+            <button mat-flat-button color="primary" class="tw-ml-auto" [disabled]="(class.students?.length ?? 0) < 1" (click)="updatestudents(class)">Update</button>
           </div>
 
           <table mat-table [dataSource]="context.loading ? [] : (class?.students ?? [])" *ngIf="({ loading: loading$ | async }) as context">
@@ -191,9 +191,16 @@
             <tr *matNoDataRow>
               <td class="mat-cell" [attr.colspan]="subject_columns.length">
                 <div class="tw-flex tw-flex-col tw-items-center tw-mt-4 nosubjects" *ngIf="!context.loading">
-                  <p>{{ class.name }} has no students associated.</p>
+                  <p>
+                  {{ class.name }} has no students associated.
+                  @if ((add_student_permission$ | async) === false) {
+                    You do not have permission to add new students.
+                  }
+                  </p>
 
-                  <button mat-stroked-button color="primary" (click)="updatestudents(class)">Add Students</button>
+                  @if (add_student_permission$ | async) {
+                    <button mat-stroked-button color="primary" routerLink="../../students" (click)="addstudents()">Add Students</button>
+                  }
                 </div>
 
                 <app-loader class="loader" *ngIf="context.loading"></app-loader>

@@ -19,7 +19,7 @@ we define the first part, the title section
     </div>
   </div>
 
-  <mat-icon (click)="toggled = !toggled">expand_more</mat-icon>
+  <mat-icon (click)="toggled = !toggled" *ngIf="(items?.length ?? 0) > 0">expand_more</mat-icon>
 </div>
 
 <mat-divider *ngIf="toggled"></mat-divider>

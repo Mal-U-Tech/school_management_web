@@ -25,6 +25,13 @@ so we layout the drawer as title, menu stuff, then footer with version and contr
   >
   </app-section>
 
+  <app-section
+    title="Settings"
+    icon="settings"
+    [active]="active$ | async"
+    [route]="['settings']">
+  </app-section>
+
   <div class="loading" [class.loading_expanded]="expanded" *ngIf="loading$ | async">
     <mat-progress-spinner [diameter]="expanded ? 20 : 24" mode="indeterminate"></mat-progress-spinner>
   </div>

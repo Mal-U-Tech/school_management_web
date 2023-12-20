@@ -1,0 +1,12 @@
+@use "../name-dialog/name-dialog.component.scss";
+
+.hint {
+  > p {
+    margin: 0 !important;
+  }
+}
+
+.selector {
+  max-height: 64px;
+}
+

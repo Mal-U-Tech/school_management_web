@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { SchoolsState, initial } from './schools.state';
-import { loadSchoolEffect, routerUpdateTabEffect } from './schools.actions';
+import { loadSchoolEffect, routerUpdateSchoolTabEffect } from './schools.actions';
 import { updateAppSchoolEffect } from 'src/app/store/app.actions';
 
 export const key = 'schools';
@@ -8,7 +8,7 @@ export const key = 'schools';
 export const reducer = createReducer(
   initial,
   on(
-    routerUpdateTabEffect,
+    routerUpdateSchoolTabEffect,
     (state, action): SchoolsState => ({
       ...state,
       tab: action.tab,

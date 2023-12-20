@@ -28,13 +28,13 @@ import { UpdateSubjectsDialogComponent } from './components/update-subjects-dial
 import { RemoveSubjectDialogComponent } from './components/remove-subject-dialog/remove-subject-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-
-import { key, reducer } from './store/classes.reducer';
-import routes from './classes.routes';
 import { RemoveTeacherDialogComponent } from './components/remove-teacher-dialog/remove-teacher-dialog.component';
 import { UpdateTeachersDialogComponent } from './components/update-teachers-dialog/update-teachers-dialog.component';
 import { RemoveStudentDialogComponent } from './components/remove-student-dialog/remove-student-dialog.component';
 import { UpdateStudentsDialogComponent } from './components/update-students-dialog/update-students-dialog.component';
+
+import { key, reducer } from './store/classes.reducer';
+import routes from './classes.routes';
 
 @NgModule({
   declarations: [
