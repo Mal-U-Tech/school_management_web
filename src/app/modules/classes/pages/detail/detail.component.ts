@@ -19,6 +19,8 @@ import { IStudent } from 'src/app/interfaces/student.interface';
 import { UpdateStudentsDialogComponent } from '../../components/update-students-dialog/update-students-dialog.component';
 import { RemoveStudentDialogComponent } from '../../components/remove-student-dialog/remove-student-dialog.component';
 import { showAddStudentDialog } from 'src/app/modules/students/store/students.actions';
+import { selectCurrentSchool } from 'src/app/modules/schools/store/schools.selectors';
+import { DIALOG_WIDTH } from 'src/app/constants/dialog.constant';
 
 @Component({
   selector: 'app-detail',
@@ -29,6 +31,7 @@ export class DetailComponent {
   class$ = this.store.select(selectCurrentClass);
   loading$ = this.store.select(selectClassAPILoading);
   error$ = this.store.select(selectClassAPIError);
+  school$ = this.store.select(selectCurrentSchool);
 
   add_student_permission$ = this.store.select(selectUserHasAddStudentPermission);
 
@@ -45,7 +48,7 @@ export class DetailComponent {
   changename(value: IClass) {
     this.dialog.open(NameDialogComponent, {
       data: value,
-      width: '440px',
+      width: DIALOG_WIDTH.small,
     });
   }
 
@@ -64,21 +67,21 @@ export class DetailComponent {
   updatesubjects(value: IClass) {
     this.dialog.open(UpdateSubjectsDialogComponent, {
       data: value,
-      width: '540px',
+      width: DIALOG_WIDTH.medium,
     });
   }
 
   updateteachers(value: IClass) {
     this.dialog.open(UpdateTeachersDialogComponent, {
       data: value,
-      width: '540px',
+      width: DIALOG_WIDTH.medium,
     });
   }
 
   updatestudents(value: IClass) {
     this.dialog.open(UpdateStudentsDialogComponent, {
       data: value,
-      width: '540px',
+      width: DIALOG_WIDTH.medium,
     });
   }
 
@@ -92,7 +95,7 @@ export class DetailComponent {
         class: value,
         subject,
       },
-      width: '440px',
+      width: DIALOG_WIDTH.small,
     });
   }
 
@@ -102,7 +105,7 @@ export class DetailComponent {
         class: value,
         teacher,
       },
-      width: '440px',
+      width: DIALOG_WIDTH.small,
     });
   }
 
@@ -112,7 +115,7 @@ export class DetailComponent {
         class: value,
         student,
       },
-      width: '440px',
+      width: DIALOG_WIDTH.small,
     });
   }
 }

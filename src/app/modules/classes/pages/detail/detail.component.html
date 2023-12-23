@@ -16,7 +16,7 @@
         <div class="tw-m-6">
           <div class="tw-flex tw-items-center hint">
             <div class="tw-flex tw-items-center">
-              <mat-icon color="primary" class="tw-mr-4">info_outline</mat-icon>
+              <mat-icon color="primary" class="tw-mr-1">info_outline</mat-icon>
               <p class="tw-m-0" class="primary">Update the teachers ({{ class.users?.length ?? 0}}) associated with <b>{{ class.name }}</b></p>
             </div>
 
@@ -85,7 +85,7 @@
 
           <div class="tw-flex tw-items-center hint">
             <div class="tw-flex tw-items-center">
-              <mat-icon color="primary" class="tw-mr-4">info_outline</mat-icon>
+              <mat-icon color="primary" class="tw-mr-1">info_outline</mat-icon>
               <p class="tw-m-0" class="primary">Update the subjects ({{ class.subjects?.length ?? 0}}) that are associated to <b>{{ class.name }}</b></p>
             </div>
 
@@ -145,11 +145,11 @@
         <div class="tw-m-6">
           <div class="tw-flex tw-items-center hint">
             <div class="tw-flex tw-items-center">
-              <mat-icon color="primary" class="tw-mr-4">info_outline</mat-icon>
+              <mat-icon color="primary" class="tw-mr-1">info_outline</mat-icon>
               <p class="tw-m-0" class="primary">Add & Remove students ({{ class.students?.length ?? 0}}) in <b>{{ class.name }}</b></p>
             </div>
 
-            <button mat-flat-button color="primary" class="tw-ml-auto" [disabled]="(class.students?.length ?? 0) < 1" (click)="updatestudents(class)">Update</button>
+            <button mat-flat-button color="primary" class="tw-ml-auto" [disabled]="((school$ | async)?.students?.length ?? 0) < 1" (click)="updatestudents(class)">Update</button>
           </div>
 
           <table mat-table [dataSource]="context.loading ? [] : (class?.students ?? [])" *ngIf="({ loading: loading$ | async }) as context">

@@ -5,12 +5,13 @@ import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StudentsEffects } from './store/students.effects';
 import { StoreModule } from '@ngrx/store';
+import { AddStudentDialogComponent } from './components/add-student-dialog/add-student-dialog.component';
 
 import routes from './students.routes';
 import { key, reducer } from './store/students.reducer';
 
 @NgModule({
-  declarations: [DetailsComponent],
+  declarations: [DetailsComponent, AddStudentDialogComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

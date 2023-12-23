@@ -124,6 +124,10 @@ export class ClassesEffects {
     return this.actions$.pipe(
       ofType(loadClassEffect),
       exhaustMap((action) => {
+        if ((action.class?.students?.length ?? 0) < 1) {
+          return of(loadClassStudentsEffectSuccess({ students: [] }));
+        }
+
         return this.student
           .grades(
             action.class.school_id,
@@ -144,7 +148,6 @@ export class ClassesEffects {
       map(([{ payload }, classes]) => {
         const url = payload.routerState.url;
         const [, , , , class_id] = url.split('/');
-        console.log(class_id)
 
         // then get the class
         return classes?.find((c) => c.id === class_id);

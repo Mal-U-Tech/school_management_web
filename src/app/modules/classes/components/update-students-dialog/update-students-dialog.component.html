@@ -1,6 +1,7 @@
 <h2 mat-dialog-title class="title">Update {{ data.name }} Students</h2>
 
 <div mat-dialog-content>
+  {{ error$ | async | json }}
   <app-banner *ngIf="error$ | async" type="error" class="tw-my-4 banner">
     <p message>Something went wrong. Please try again.</p>
   </app-banner>

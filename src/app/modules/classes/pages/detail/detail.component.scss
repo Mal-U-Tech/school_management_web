@@ -60,6 +60,15 @@ hr {
   > div > p {
     margin: 0 !important;
   }
+  > div:first-child {
+    font-size: 9pt;
+    > mat-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12pt;
+    }
+  }
 }
 
 .avatar {

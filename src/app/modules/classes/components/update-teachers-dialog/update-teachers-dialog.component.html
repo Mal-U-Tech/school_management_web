@@ -17,12 +17,18 @@
         <mat-select-trigger>
           <mat-chip-listbox>
             <mat-chip *ngFor="let item of form.controls.users.value" [removable]="true" (removed)="removeuser(item)" color="primary">
-              {{ getuser(item, users).firstname }} {{ getuser(item, users).lastname }}
+              <p class="tw-m-0" *ngIf="getuser(item, users) as user">
+                {{ user.firstname }} {{ user.lastname }} - {{ user.email }}
+              </p>
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
           </mat-chip-listbox>
         </mat-select-trigger>
-        <mat-option *ngFor="let user of users" [value]="user.id">{{ user.firstname }} {{ user.lastname }}</mat-option>
+        <mat-option *ngFor="let user of users" [value]="user.id">
+          <p class="tw-m-0">
+            {{ user.firstname }} {{ user.lastname }} - {{ user.email }}
+          </p>
+        </mat-option>
       </mat-select>
       <mat-error *ngIf="form.controls.users.hasError('required')">A class should have at least 1 teacher.</mat-error>
     </mat-form-field>
