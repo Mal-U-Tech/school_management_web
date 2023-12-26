@@ -6,7 +6,7 @@ export const routerUpdateSchoolTabEffect = createAction(
   props<{ tab: string }>()
 );
 
-export const loadSchoolEffect = createAction(
+export const selectSchoolEffect = createAction(
   '[Schools] Load School Effect',
   props<{ school: ISchool }>()
 );

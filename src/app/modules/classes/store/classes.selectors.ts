@@ -81,9 +81,3 @@ export const selectCurrentClass = createSelector(
   (classes, state) => classes?.find(c => c.id === state.class)
 );
 
-export const selectUserHasAddStudentPermission = createSelector(
-  selectAppPermissions,
-  (permissions) => {
-    return permissions.some(p => p.name === PERMISSIONS.school && p.policy === POLICY.update);
-  }
-);

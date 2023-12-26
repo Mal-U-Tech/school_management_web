@@ -11,6 +11,8 @@ import {
 } from '@angular/router';
 import { distinctUntilChanged, filter, map } from 'rxjs';
 import { IBreadCrumb } from 'src/app/interfaces/breadcrumb.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-toolbar',
@@ -37,6 +39,10 @@ export class ToolbarComponent {
 
   logout() {
     this.store.dispatch(toolbarLogoutClick());
+  }
+
+  getavatar(user: IUser) {
+    return `${environment.users.bucket}/${user.avatar}`;
   }
 
   // we define a function that will format the route event into something that can be used to render a chip list

@@ -5,6 +5,8 @@ import { EntityType, INotification } from '../interfaces/notification.interface'
 import { ISchool } from '../interfaces/school.interface';
 import { IClass } from '../interfaces/class.interface';
 import { ISubject } from '../interfaces/subject.interface';
+import { PERMISSIONS } from '../constants/permissions.constant';
+import { POLICY } from '../constants/policy.constant';
 
 const selectAppState = createFeatureSelector<AppState>(key);
 
@@ -52,3 +54,11 @@ export const selectAppEntityNotifications = (entity: EntityType) => createSelect
       }
     })
 );
+
+export const selectUserHasPermission = (permission: PERMISSIONS, policy: POLICY) => createSelector(
+  selectAppPermissions,
+  (permissions) => {
+    return permissions.some(p => p.name === permission && p.policy === policy);
+  }
+);
+

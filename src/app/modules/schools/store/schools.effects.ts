@@ -4,7 +4,7 @@ import { routerNavigatedAction } from '@ngrx/router-store';
 import { Store } from '@ngrx/store';
 import { filter, map } from 'rxjs/operators';
 import { selectAppSchools } from '../../../store/app.selectors';
-import { loadSchoolEffect, routerUpdateSchoolTabEffect } from './schools.actions';
+import { selectSchoolEffect, routerUpdateSchoolTabEffect } from './schools.actions';
 import { ISchool } from '../../../interfaces/school.interface';
 
 @Injectable()
@@ -28,7 +28,7 @@ export class SchoolsEffects {
         return schools.find((s) => s.id === id);
       }),
       filter((s) => !!s),
-      map((school) => loadSchoolEffect({ school: school as ISchool })),
+      map((school) => selectSchoolEffect({ school: school as ISchool })),
     )
   });
 

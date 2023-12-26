@@ -7,6 +7,7 @@ export const environment = {
 
   users: {
     api: 'https://svemc526i4.execute-api.us-east-1.amazonaws.com/dev',
+    bucket: 'https://users-ms-dev-bucket.s3.amazonaws.com'
   },
   permissions: {
     api: 'https://qvd5y9k6uc.execute-api.us-east-1.amazonaws.com/dev',

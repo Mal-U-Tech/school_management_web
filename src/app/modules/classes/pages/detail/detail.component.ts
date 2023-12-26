@@ -4,7 +4,6 @@ import {
   selectClassAPIError,
   selectClassAPILoading,
   selectCurrentClass,
-  selectUserHasAddStudentPermission,
 } from '../../store/classes.selectors';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +20,9 @@ import { RemoveStudentDialogComponent } from '../../components/remove-student-di
 import { showAddStudentDialog } from 'src/app/modules/students/store/students.actions';
 import { selectCurrentSchool } from 'src/app/modules/schools/store/schools.selectors';
 import { DIALOG_WIDTH } from 'src/app/constants/dialog.constant';
+import { POLICY } from 'src/app/constants/policy.constant';
+import { PERMISSIONS } from 'src/app/constants/permissions.constant';
+import { selectUserHasPermission } from 'src/app/store/app.selectors';
 
 @Component({
   selector: 'app-detail',
@@ -33,7 +35,7 @@ export class DetailComponent {
   error$ = this.store.select(selectClassAPIError);
   school$ = this.store.select(selectCurrentSchool);
 
-  add_student_permission$ = this.store.select(selectUserHasAddStudentPermission);
+  add_student_permission$ = this.store.select(selectUserHasPermission(PERMISSIONS.school, POLICY.update));
 
   subject_columns = ['options', 'name', 'remove'];
   teacher_columns = ['options', 'name', 'contact', 'remove'];
