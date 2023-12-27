@@ -1,10 +1,56 @@
-<h2 mat-dialog-title class="title">Add &amp; Invite new students to {{ (school$ | async)?.name }}</h2>
+<ng-container *ngIf="(api$ | async) as api">
+  <h2 mat-dialog-title class="title">Add &amp; Invite new students to {{ (school$ | async)?.name }}</h2>
 
-<div mat-dialog-content>
+  <div mat-dialog-content class="content">
+    <app-banner *ngIf="api?.error" type="error" class="tw-my-4 banner">
+      <p message>Something went wrong. Please try again.</p>
+    </app-banner>
 
-</div>
+    <div class="hint">
+      <mat-icon>info_outline</mat-icon>
+      <p>Invite new students to {{ data.name }}.</p>
+    </div>
 
-<div mat-dialog-actions>
-  <button mat-button>Cancel</button>
-  <button mat-flat-button>Add</button>
-</div>
+    @for (item of form.controls; track item; let index = $index) {
+    <div class="tw-mt-4 tw-w-100 tw-flex tw-gap-3 user" [formGroup]="$any(item)">
+      <mat-form-field appearance="outline">
+        <mat-label>Email Address</mat-label>
+        <input matInput type="email" placeholder="Example: pat@example.com" formControlName="email"/>
+        <mat-error *ngIf="getemail(item).hasError('email')">
+          Invalid email address.
+        </mat-error>
+        <mat-error *ngIf="getemail(item).hasError('required')">
+          Email Address required.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input formControlName="firstname" type="text" matInput />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input formControlName="lastname" type="text" matInput />
+      </mat-form-field>
+
+      @if (index === (form.controls.length - 1)) {
+      <button mat-icon-button color="primary" (click)="add()"><mat-icon>add</mat-icon></button>
+      } @else {
+      <button mat-icon-button color="warn" (click)="remove(index)"><mat-icon>delete</mat-icon></button>
+      }
+    </div>
+    }
+
+  </div>
+
+  <div mat-dialog-actions class="controls tw-flex tw-justify-end" *ngIf="(school$ | async) as school">
+    <button mat-button (click)="close()" [disabled]="api?.loading">Cancel</button>
+    <button mat-flat-button color="primary" (click)="submit(school)" class="tw-ml-4" [disabled]="form.invalid || api?.loading">
+      <ng-container *ngIf="!api.loading">Send Invites</ng-container>
+      <mat-progress-spinner *ngIf="api.loading" diameter="20" mode="indeterminate"></mat-progress-spinner>
+    </button>
+  </div>
+
+  <ng-container *ngIf="!api.error && api.complete && close()"></ng-container>
+</ng-container>

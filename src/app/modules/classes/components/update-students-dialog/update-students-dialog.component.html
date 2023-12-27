@@ -18,14 +18,15 @@
           <mat-chip-listbox>
             <mat-chip *ngFor="let item of form.controls.students.value" [removable]="true" (removed)="removestudent(item)" color="primary">
               <ng-container *ngIf="getstudent(item, students) as student">
-                {{ student.user.firstname }} {{ student.user.lastname }}
+                {{ student.user.firstname }} {{ student.user.lastname }} - {{ student.user.email }}
               </ng-container>
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
           </mat-chip-listbox>
         </mat-select-trigger>
 
-        <mat-option *ngFor="let student of students" [value]="student.user_id">{{ student.user.firstname }} {{ student.user.lastname }}</mat-option>
+        <mat-option *ngFor="let student of students"
+          [value]="student.user_id">{{ student.user.firstname }} {{ student.user.lastname }} - {{ student.user.email }}</mat-option>
       </mat-select>
       <mat-error *ngIf="form.controls.students.hasError('required')">A class should have at least 1 student.</mat-error>
     </mat-form-field>
@@ -34,7 +35,7 @@
 
 <div mat-dialog-actions class="controls">
   <button mat-button class="tw-ml-auto" [disabled]="loading$ | async" (click)="close()">Cancel</button>
-  <button mat-flat-button color="primary" class="tw-mx-4" [disabled]="form.invalid || (loading$ | async) || (error$ | async)" (click)="submit()">
+  <button mat-flat-button color="primary" class="tw-mx-4" [disabled]="form.invalid || (loading$ | async)" (click)="submit()">
     <ng-container *ngIf="!(loading$ | async)">Save</ng-container>
     <mat-progress-spinner *ngIf="loading$ | async" diameter="20" mode="indeterminate"></mat-progress-spinner>
   </button>

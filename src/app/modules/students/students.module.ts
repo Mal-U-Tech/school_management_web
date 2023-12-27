@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import routes from './students.routes';
 import { key, reducer } from './store/students.reducer';
@@ -42,6 +43,7 @@ import { key, reducer } from './store/students.reducer';
     MatTableModule,
     MatTooltipModule,
     MatPaginatorModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class StudentsModule {}

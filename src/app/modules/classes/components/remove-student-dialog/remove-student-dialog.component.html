@@ -1,1 +1,22 @@
-<p>remove-student-dialog works!</p>
+<h2 mat-dialog-title class="title">Remove {{ data.student.user.firstname ?? '' }} {{ data.student.user.lastname ?? '' }} from {{ data.class.name }}</h2>
+
+<div mat-dialog-content>
+  <app-banner *ngIf="error$ | async" type="error" class="tw-my-4 banner">
+    <p message>Something went wrong. Please try again.</p>
+  </app-banner>
+
+  <div class="hint">
+    <mat-icon>info_outline</mat-icon>
+    <p>Are you sure you would like to remove <b>{{ data.student.user.firstname ?? '' }} {{ data.student.user.lastname ?? '' }}</b> from the class <b>{{ data.class.name }}</b>?</p>
+  </div>
+</div>
+
+<div mat-dialog-actions class="controls">
+  <button mat-button class="tw-ml-auto" [disabled]="loading$ | async" (click)="close()">Cancel</button>
+  <button mat-flat-button color="warn" class="tw-mx-4" [disabled]="(loading$ | async)" (click)="submit()">
+    <ng-container *ngIf="!(loading$ | async)">Remove</ng-container>
+    <mat-progress-spinner *ngIf="loading$ | async" diameter="20" mode="indeterminate"></mat-progress-spinner>
+  </button>
+</div>
+
+<ng-container *ngIf="(complete$ | async) && close()"></ng-container>

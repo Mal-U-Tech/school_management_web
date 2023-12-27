@@ -31,7 +31,7 @@ $theme: mat.define-light-theme(
       primary: $primary,
       accent: $accent,
       warn: $warn,
-      error: $warn
+      error: $warn,
     ),
     typography: $typography,
   )
@@ -133,7 +133,10 @@ hr {
 
 .tooltip-warn {
   .mdc-tooltip__surface {
-    background-color: mat.get-color-from-palette(var.$warn-palette, 900) !important;
+    background-color: mat.get-color-from-palette(
+      var.$warn-palette,
+      900
+    ) !important;
 
     color: mat.get-color-from-palette(
       map.get(var.$warn-palette, "contrast"),
@@ -141,3 +144,4 @@ hr {
     );
   }
 }
+

@@ -35,7 +35,7 @@ import { PermissionService } from '../services/permission.service';
 import { forkJoin, of } from 'rxjs';
 import { SchoolService } from '../services/school.service';
 import { NotificationsService } from '../services/notifications.service';
-import { updateClassEffectSuccessful } from '../modules/classes/store/classes.actions';
+import { ClassUpdateEffectActions } from '../modules/classes/store/classes.actions';
 import { selectCurrentSchool } from '../modules/schools/store/schools.selectors';
 import { Store } from '@ngrx/store';
 
@@ -105,7 +105,7 @@ export class AppEffects {
   reload$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(
-        updateClassEffectSuccessful,
+        ClassUpdateEffectActions.success,
       ),
       concatLatestFrom(() => this.store.select(selectCurrentSchool)),
       exhaustMap(([, school]) => {

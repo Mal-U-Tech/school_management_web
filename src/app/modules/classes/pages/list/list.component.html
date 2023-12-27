@@ -1,7 +1,7 @@
 <app-content>
   <h2 class="title">Classes</h2>
   <mat-accordion hideToggle>
-    <mat-expansion-panel *ngFor="let class of classes$ | async" (opened)="opened(class)">
+    <mat-expansion-panel *ngFor="let class of classes$ | async">
 
       <mat-expansion-panel-header>
         <mat-panel-title class="title tw-flex tw-items-center tw-gap-3">

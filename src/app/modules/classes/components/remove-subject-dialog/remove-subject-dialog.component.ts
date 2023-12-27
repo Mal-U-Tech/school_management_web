@@ -4,8 +4,7 @@ import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { ISubject } from 'src/app/interfaces/subject.interface';
 import { selectClassAPIComplete, selectClassAPIError, selectClassAPILoading } from '../../store/classes.selectors';
-import { asapScheduler } from 'rxjs';
-import { removeSubjectDialogClose, userClickRemoveClassSubject } from '../../store/classes.actions';
+import { ClassUpdateSubjectActions } from '../../store/classes.actions';
 
 @Component({
   selector: 'app-remove-subject-dialog',
@@ -34,11 +33,10 @@ export class RemoveSubjectDialogComponent implements AfterViewChecked {
   }
 
   submit() {
-    this.store.dispatch(userClickRemoveClassSubject({ class: this.data.class, subject: this.data.subject.id }));
+    this.store.dispatch(ClassUpdateSubjectActions.submit({ class: this.data.class, subject: this.data.subject.id }))
   }
 
   close() {
-    asapScheduler.schedule(() => this.store.dispatch(removeSubjectDialogClose()));
     this.dialogref.close();
   }
 }

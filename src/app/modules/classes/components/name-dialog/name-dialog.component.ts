@@ -1,7 +1,11 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IClass } from 'src/app/interfaces/class.interface';
-import { MatDialogRef } from '@angular/material/dialog';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import {
@@ -9,8 +13,7 @@ import {
   selectClassAPIError,
   selectClassAPILoading,
 } from '../../store/classes.selectors';
-import { nameChangeDialogClose, userClickNameChangeSave } from '../../store/classes.actions';
-import { asapScheduler } from 'rxjs';
+import { ClassNameChangeActions } from '../../store/classes.actions';
 
 @Component({
   selector: 'app-name-dialog',
@@ -40,13 +43,12 @@ export class NameDialogComponent implements AfterViewChecked {
   }
 
   close() {
-    asapScheduler.schedule(() => this.store.dispatch(nameChangeDialogClose()));
     this.dialogref.close();
   }
 
   submit() {
     this.store.dispatch(
-      userClickNameChangeSave({
+      ClassNameChangeActions.submit({
         id: this.data.id,
         ...this.form.getRawValue(),
       })

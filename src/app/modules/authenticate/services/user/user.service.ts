@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { IUser } from '../../../../interfaces/user.interface';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { InviteDTO } from 'src/app/dtos/invite.dto';
 
 @Injectable()
 export class UserService {
@@ -24,6 +25,10 @@ export class UserService {
     return this.http
       .put<IUser>(environment.users.api, user)
       .pipe(map((user) => this.store(user)));
+  }
+
+  invite(invite: InviteDTO) {
+    return this.http.post<null>(`${environment.users.api}/invite`, invite);
   }
 
   private store(user: IUser) {

@@ -1,11 +1,23 @@
-import { createAction, createActionGroup, props } from '@ngrx/store';
+import {
+  createActionGroup,
+  emptyProps,
+  props,
+} from '@ngrx/store';
 import { IStudentFilter } from '../interfaces/student_filter.interface';
 import { IPayload } from 'src/app/interfaces/payload.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
+import { InviteDTO } from 'src/app/dtos/invite.dto';
 
-export const showAddStudentDialog = createAction(
-  '[Students] Show Add Student Dialog'
-);
+export const AddStudentActions = createActionGroup({
+  source: 'Add Student Actions',
+  events: {
+    show: emptyProps(),
+    submit: props<{ invite: InviteDTO; }>(),
+
+    success: emptyProps(),
+    failed: props<{ error: Error }>(),
+  },
+});
 
 export const UpdateStudentFilterActions = createActionGroup({
   source: 'Student Filter Effect',
@@ -22,5 +34,6 @@ export const StudentListPageActions = createActionGroup({
   events: {
     init: props<Pick<IStudentFilter, 'school'>>(),
     search: props<Pick<IStudentFilter, 'search'>>(),
+    page: props<Pick<IStudentFilter, 'page' | 'size'>>(),
   },
 });

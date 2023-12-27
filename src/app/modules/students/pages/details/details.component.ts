@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { NonNullableFormBuilder } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectCurrentSchool } from 'src/app/modules/schools/store/schools.selectors';
-import { StudentListPageActions, showAddStudentDialog } from '../../store/students.actions';
+import { AddStudentActions, StudentListPageActions } from '../../store/students.actions';
 import { debounceTime, map } from 'rxjs';
 import { selectStudentApi, selectStudents } from '../../store/students.selectors';
 import { PERMISSIONS } from 'src/app/constants/permissions.constant';
 import { POLICY } from 'src/app/constants/policy.constant';
 import { selectUserHasPermission } from 'src/app/store/app.selectors';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-details',
@@ -36,7 +37,14 @@ export class DetailsComponent {
     private readonly builder: NonNullableFormBuilder,
   ) {}
 
-  addstudents() {
-    this.store.dispatch(showAddStudentDialog());
+  page(event: PageEvent) {
+    this.store.dispatch(StudentListPageActions.page({
+      page: event.pageIndex,
+      size: event.pageSize,
+    }));
+  }
+
+  add() {
+    this.store.dispatch(AddStudentActions.show());
   }
 }

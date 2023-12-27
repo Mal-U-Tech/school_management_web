@@ -4,8 +4,7 @@ import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { IUser } from 'src/app/interfaces/user.interface';
 import { selectClassAPIComplete, selectClassAPIError, selectClassAPILoading } from '../../store/classes.selectors';
-import { asapScheduler } from 'rxjs';
-import { removeTeacherDialogClose, userClickRemoveClassTeacher } from '../../store/classes.actions';
+import { ClassUpdateTeacherActions } from '../../store/classes.actions';
 
 @Component({
   selector: 'app-remove-teacher-dialog',
@@ -34,11 +33,10 @@ export class RemoveTeacherDialogComponent implements AfterViewChecked {
   }
 
   submit() {
-    this.store.dispatch(userClickRemoveClassTeacher({ class: this.data.class, teacher: this.data.teacher.id }));
+    this.store.dispatch(ClassUpdateTeacherActions.submit({ class: this.data.class, teacher: this.data.teacher.id }));
   }
 
   close() {
-    asapScheduler.schedule(() => this.store.dispatch(removeTeacherDialogClose()));
     this.dialogref.close();
   }
 }

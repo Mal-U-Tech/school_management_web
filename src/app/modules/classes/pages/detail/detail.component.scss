@@ -39,6 +39,7 @@ hr {
 }
 
 .nosubjects {
+  min-height: 280px;
   > p {
     color: mat.get-color-from-palette($primary, 500);
     font-weight: 400;

@@ -57,3 +57,9 @@ export const updateAppSchoolEffect = createAction(
   '[App] Update App School Effect',
   props<{ school: ISchool }>()
 )
+
+export const notificationBannerObserved = createAction(
+  '[Dashboard] Notification Banner Observed',
+  props<{ notification: INotification }>()
+);
+

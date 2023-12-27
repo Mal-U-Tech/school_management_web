@@ -7,7 +7,7 @@ import { selectDashboardMenu } from './dashboard.selectors';
 import { IMenu, IMenuItem } from '../interfaces/menu.interface';
 import { clickDismissDashboardBanner, routerMenuUpdateEffect } from './dashboard.actions';
 import { NotificationsService } from 'src/app/services/notifications.service';
-import { notificationBannerObserved } from '../../classes/store/classes.actions';
+import { notificationBannerObserved } from 'src/app/store/app.actions';
 
 @Injectable()
 export class DashboardEffects {

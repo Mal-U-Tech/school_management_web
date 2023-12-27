@@ -13,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TeachersComponent } from './components/teachers/teachers.component';
 import { StoreModule } from '@ngrx/store';
-import { ClassesEffects } from './store/classes.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { DetailComponent } from './pages/detail/detail.component';
 import { MatMenuModule } from '@angular/material/menu';
@@ -32,6 +31,7 @@ import { RemoveTeacherDialogComponent } from './components/remove-teacher-dialog
 import { UpdateTeachersDialogComponent } from './components/update-teachers-dialog/update-teachers-dialog.component';
 import { RemoveStudentDialogComponent } from './components/remove-student-dialog/remove-student-dialog.component';
 import { UpdateStudentsDialogComponent } from './components/update-students-dialog/update-students-dialog.component';
+import { ClassDetailEffects, ClassDialogEffects, ClassStudentsEffects, ClassSubjectEffects, ClassTeacherEffects } from './store/effects';
 
 import { key, reducer } from './store/classes.reducer';
 import routes from './classes.routes';
@@ -55,7 +55,13 @@ import routes from './classes.routes';
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     StoreModule.forFeature(key, reducer),
-    EffectsModule.forFeature([ClassesEffects]),
+    EffectsModule.forFeature([
+      ClassDetailEffects,
+      ClassDialogEffects,
+      ClassStudentsEffects,
+      ClassSubjectEffects,
+      ClassTeacherEffects,
+    ]),
 
     // material imports
     MatExpansionModule,

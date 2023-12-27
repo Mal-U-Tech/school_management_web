@@ -4,9 +4,6 @@ import { IUser } from '../../../interfaces/user.interface';
 import { ISubject } from '../../../interfaces/subject.interface';
 import { ClassState } from './classes.state';
 import { key } from './classes.reducer';
-import { selectAppPermissions } from 'src/app/store/app.selectors';
-import { POLICY } from 'src/app/constants/policy.constant';
-import { PERMISSIONS } from 'src/app/constants/permissions.constant';
 
 const selectClassState = createFeatureSelector<ClassState>(key);
 

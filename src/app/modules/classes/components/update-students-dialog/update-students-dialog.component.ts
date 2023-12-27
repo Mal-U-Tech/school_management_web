@@ -15,11 +15,7 @@ import {
 } from '../../store/classes.selectors';
 import { selectCurrentSchoolStudents } from 'src/app/modules/schools/store/schools.selectors';
 import { IStudent } from 'src/app/interfaces/student.interface';
-import { asapScheduler } from 'rxjs';
-import {
-  updateStudentsDialogClose,
-  userClickUpdateStudentsSave,
-} from '../../store/classes.actions';
+import { ClassUpdateStudentActions } from '../../store/classes.actions';
 
 @Component({
   selector: 'app-update-students-dialog',
@@ -36,7 +32,7 @@ export class UpdateStudentsDialogComponent implements AfterViewInit {
   form = this.builder.group({
     id: [this.data.id],
     students: [
-      this.data.subjects?.map(({ id }) => id) ?? [],
+      this.data.students?.map(({ user_id }) => user_id) ?? [],
       [Validators.required, Validators.minLength(1)],
     ],
   });
@@ -55,9 +51,6 @@ export class UpdateStudentsDialogComponent implements AfterViewInit {
   }
 
   close() {
-    asapScheduler.schedule(() =>
-      this.store.dispatch(updateStudentsDialogClose())
-    );
     this.dialogref.close();
   }
 
@@ -65,15 +58,15 @@ export class UpdateStudentsDialogComponent implements AfterViewInit {
     const data = this.form.value;
 
     this.store.dispatch(
-      userClickUpdateStudentsSave({
-        id: data.id as string,
-        students: data.students as string[],
+      ClassUpdateStudentActions.save({
+        id: data.id!,
+        students: data.students!,
       })
     );
   }
 
-  getstudent(id: string, subjects: IStudent[]) {
-    return subjects.find((s) => s.user_id === id)!;
+  getstudent(id: string, students: IStudent[]) {
+    return students.find((s) => s.user_id === id)!;
   }
 
   removestudent(subject: string) {

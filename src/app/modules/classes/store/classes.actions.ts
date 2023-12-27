@@ -1,88 +1,73 @@
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+import { ClassUpdateDTO } from 'src/app/dtos/class_update.dto';
 import { IClass } from 'src/app/interfaces/class.interface';
-import { INotification } from 'src/app/interfaces/notification.interface';
 import { IStudent } from 'src/app/interfaces/student.interface';
+import { ISubject } from 'src/app/interfaces/subject.interface';
+import { IUser } from 'src/app/interfaces/user.interface';
 
-export const loadClassStudentsEffectSuccess = createAction(
-  '[Classes] Load Class Students Effect Success',
-  props<{ students: IStudent[] }>()
-);
+export const ClassStudentsEffectActions = createActionGroup({
+  source: 'Class Students Effect Actions',
+  events: {
+    success: props<{ students: IStudent[]; }>(),
+    failed: props<{ error: Error; }>()
+  }
+})
 
-export const loadClassStudentsEffectFailed = createAction(
-  '[Classes] Load Class Students Effect Failed',
-  props<{ error: Error }>()
-);
+export const ClassUpdateEffectActions = createActionGroup({
+  source: 'Class Update Effect Actions',
+  events: {
+    update: props<{ class: Partial<Omit<ClassUpdateDTO, 'id'>> & Pick<ClassUpdateDTO, 'id'>; }>(),
+    init: props<{ class: IClass; }>(),
 
-export const notificationBannerObserved = createAction(
-  '[Dashboard] Notification Banner Observed',
-  props<{ notification: INotification }>()
-);
+    success: props<{ class: IClass; }>(),
+    failed: props<{ error: Error; }>(),
+  }
+});
 
-export const loadClassEffect = createAction(
-  '[Classes] Load Class Effect',
-  props<{ class: IClass }>()
-);
+export const ClassNameChangeActions = createActionGroup({
+  source: 'Class Name Change Actions',
+  events: {
+    submit: props<{ name: string; id: string; }>()
+  }
+});
 
-export const userClickNameChangeSave = createAction(
-  '[Classes] User Click Name Change Save',
-  props<{ name: string; id: string }>()
-);
+export const ClassDetailPageActions = createActionGroup({
+  source: 'Class Detail Page Actions',
+  events: {
+    addstudent: emptyProps(),
+    changename: emptyProps(),
+  },
+});
 
-export const updateClassEffectSuccessful = createAction(
-  '[Classes] Update Class Effect Successful',
-  props<{ class: IClass }>()
-);
+export const ClassUpdateStudentActions = createActionGroup({
+  source: 'Class Update Student Actions',
+  events: {
+    update: emptyProps(),
+    remove: props<{ student: IStudent }>(),
 
-export const updateClassEffectFailed = createAction(
-  '[Classes] Update Class Effect Failed',
-  props<{ error: Error }>()
-);
+    save: props<{ id: string; students: string[]; }>(),
+    submit: props<{ class: IClass; student: string; }>(),
+  }
+})
 
-export const nameChangeDialogClose = createAction(
-  '[Classes] Name Change Dialog Close'
-);
+export const ClassUpdateSubjectActions = createActionGroup({
+  source: 'Class Update Subject Actions',
+  events: {
+    update: emptyProps(),
+    remove: props<{ subject: ISubject }>(),
 
-export const removeSubjectDialogClose = createAction(
-  '[Classes] Remove Subject Dialog Close'
-);
+    save: props<{ id: string; subjects: string[]; }>(),
+    submit: props<{ class: IClass; subject: string; }>(),
+  }
+});
 
-export const removeTeacherDialogClose = createAction(
-  '[Classes] Remove Teacher Dialog Close'
-);
+export const ClassUpdateTeacherActions = createActionGroup({
+  source: 'Class Update Teacher Actions',
+  events: {
+    update: emptyProps(),
+    remove: props<{ teacher: IUser }>(),
 
-export const updateSubjectsDialogClose = createAction(
-  '[Classes] Update Subjects Dialog Close'
-);
-
-export const updateTeachersDialogClose = createAction(
-  '[Classes] Update Teachers Dialog Close'
-);
-
-export const updateStudentsDialogClose = createAction(
-  '[Classes] Update Students Dialog Close'
-);
-
-export const userClickRemoveClassSubject = createAction(
-  '[Classes] User Click Remove Class Subject',
-  props<{ subject: string; class: IClass }>()
-);
-
-export const userClickUpdateSubjectsSave = createAction(
-  '[Classes] User Click Update Subjects Save',
-  props<{ id: string; subjects: string[] }>()
-);
-
-export const userClickRemoveClassTeacher = createAction(
-  '[Classes] User Click Remove Class Teacher',
-  props<{ teacher: string; class: IClass }>()
-);
-
-export const userClickUpdateTeachersSave = createAction(
-  '[Classes] User Click Update Teachers Save',
-  props<{ id: string; users: string[] }>()
-);
-
-export const userClickUpdateStudentsSave = createAction(
-  '[Classes] User Click Update Students Save',
-  props<{ id: string; students: string[] }>()
-);
+    save: props<{ id: string; users: string[]; }>(),
+    submit: props<{ class: IClass; teacher: string; }>(),
+  }
+});

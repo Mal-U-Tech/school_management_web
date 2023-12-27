@@ -3,8 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { selectClassAPIComplete, selectClassAPIError, selectClassAPILoading } from '../../store/classes.selectors';
-import { asapScheduler } from 'rxjs';
-import { updateSubjectsDialogClose, userClickUpdateSubjectsSave } from '../../store/classes.actions';
+import { ClassUpdateSubjectActions } from '../../store/classes.actions';
 import { selectCurrentSchoolSubjects } from 'src/app/modules/schools/store/schools.selectors';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { ISubject } from 'src/app/interfaces/subject.interface';
@@ -40,16 +39,15 @@ export class UpdateSubjectsDialogComponent implements AfterViewChecked {
   }
 
   close() {
-    asapScheduler.schedule(() => this.store.dispatch(updateSubjectsDialogClose()));
     this.dialogref.close();
   }
 
   submit() {
     const data = this.form.value;
 
-    this.store.dispatch(userClickUpdateSubjectsSave({
-      id: data.id as string,
-      subjects: data.subjects as string[]
+    this.store.dispatch(ClassUpdateSubjectActions.save({
+      id: data.id!,
+      subjects: data.subjects!
     }));
   }
 

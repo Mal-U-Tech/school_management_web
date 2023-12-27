@@ -5,7 +5,7 @@ import {
 import { Store } from '@ngrx/store';
 import { IClass } from 'src/app/interfaces/class.interface';
 import { showClassStudentWarning, showClassSubjectCountWarning, showClassSubjectWarning } from 'src/app/utilities/class.utilities';
-import { notificationBannerObserved } from '../../store/classes.actions';
+import { notificationBannerObserved } from 'src/app/store/app.actions';
 import { selectAppEntityNotifications } from 'src/app/store/app.selectors';
 import { EntityType, INotification } from 'src/app/interfaces/notification.interface';
 
@@ -30,9 +30,6 @@ export class ListComponent {
 
   showstudentwarning(value: IClass): boolean {
     return showClassStudentWarning(value);
-  }
-
-  opened(value: IClass) {
   }
 
   getclassnotifications(notifications: INotification[], data: IClass) {

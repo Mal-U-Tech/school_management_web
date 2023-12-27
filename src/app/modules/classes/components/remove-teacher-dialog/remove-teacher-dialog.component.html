@@ -13,7 +13,7 @@
 
 <div mat-dialog-actions class="controls">
   <button mat-button class="tw-ml-auto" [disabled]="loading$ | async" (click)="close()">Cancel</button>
-  <button mat-flat-button color="warn" class="tw-mx-4" [disabled]="(loading$ | async) || (error$ | async)" (click)="submit()">
+  <button mat-flat-button color="warn" class="tw-mx-4" [disabled]="(loading$ | async)" (click)="submit()">
     <ng-container *ngIf="!(loading$ | async)">Remove</ng-container>
     <mat-progress-spinner *ngIf="loading$ | async" diameter="20" mode="indeterminate"></mat-progress-spinner>
   </button>

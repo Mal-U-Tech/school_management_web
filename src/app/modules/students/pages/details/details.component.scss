@@ -47,6 +47,7 @@ hr {
 }
 
 .nosubjects {
+  min-height: 280px;
   > p {
     color: mat.get-color-from-palette($primary, 500);
     font-weight: 400;
@@ -127,5 +128,9 @@ a {
 }
 
 .loader {
-  min-height: 128px;
+  min-height: 280px;
+}
+
+.search + button {
+  height: 54px;
 }

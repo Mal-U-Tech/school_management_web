@@ -4,8 +4,7 @@ import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IClass } from 'src/app/interfaces/class.interface';
-import { asapScheduler } from 'rxjs';
-import { updateTeachersDialogClose, userClickUpdateTeachersSave } from '../../store/classes.actions';
+import { ClassUpdateTeacherActions } from '../../store/classes.actions';
 import { selectCurrentSchoolUsers } from 'src/app/modules/schools/store/schools.selectors';
 import { IUser } from 'src/app/interfaces/user.interface';
 
@@ -40,14 +39,13 @@ export class UpdateTeachersDialogComponent implements AfterViewChecked {
   }
 
   close() {
-    asapScheduler.schedule(() => this.store.dispatch(updateTeachersDialogClose()));
     this.dialogref.close();
   }
 
   submit() {
     const data = this.form.value as { id: string; users: string[] };
 
-    this.store.dispatch(userClickUpdateTeachersSave(data));
+    this.store.dispatch(ClassUpdateTeacherActions.save(data));
   }
 
   getuser(item: string, users: IUser[]) {

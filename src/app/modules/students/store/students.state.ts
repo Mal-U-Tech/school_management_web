@@ -14,6 +14,7 @@ export const initial: StudentsState = {
   filter: DEFAULT_STUDENT_FILTER,
   api: {
     loading: false,
+    complete: false,
   },
   students: {
     count: 0,
