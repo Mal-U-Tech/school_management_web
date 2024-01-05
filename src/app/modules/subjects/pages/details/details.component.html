@@ -1,1 +1,12 @@
-<p>students works!</p>
+<ng-container *ngIf="subjects$ | async as subjects">
+    <app-content>
+      <div class="tw-mb-8 tw-flex tw-justify-between tw-items-center">
+        <div class="tw-flex tw-flex-col tw-items-start">
+          <h1 class="title">Subjects</h1>
+          <p>
+          subjects {{ subjects.length }} <!-- <ng-container *ngIf="subjects.length > 1 || subjects.length < 1">s</ng-container> -->
+          </p>
+        </div>
+        </div>
+    </app-content>
+  </ng-container>
