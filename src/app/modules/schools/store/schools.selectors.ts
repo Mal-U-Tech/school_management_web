@@ -30,3 +30,8 @@ export const selectCurrentSchoolStudents = createSelector(
   selectCurrentSchool,
   (school) => school?.students ?? []
 );
+
+export const selectCurrentSchoolClasses = createSelector(
+  selectCurrentSchool,
+  (school) => school?.classes ?? []
+);

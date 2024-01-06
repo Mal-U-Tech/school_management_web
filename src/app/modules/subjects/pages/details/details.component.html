@@ -4,9 +4,52 @@
         <div class="tw-flex tw-flex-col tw-items-start">
           <h1 class="title">Subjects</h1>
           <p>
-          subjects {{ subjects.length }} <!-- <ng-container *ngIf="subjects.length > 1 || subjects.length < 1">s</ng-container> -->
+          Subjects {{ subjects.length }} <!-- <ng-container *ngIf="subjects.length > 1 || subjects.length < 1">s</ng-container> -->
           </p>
         </div>
         </div>
+
+        <app-panel>
+          <table mat-table [dataSource]="subjects" class="tw-p-6">
+    
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let subject" class="tw-capitalize">
+                {{ subject.name?.toLowerCase() ?? '' }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="classes">
+              <th mat-header-cell *matHeaderCellDef>Classes</th>
+              <td mat-cell *matCellDef="let subject" class="tw-capitalize">
+                {{ getClassCount(subject.id) | async }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="students">
+              <th mat-header-cell *matHeaderCellDef>Students</th>
+              <td mat-cell *matCellDef="let subject" class="tw-capitalize">
+                {{ getStudentCount(subject.id) | async }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="teachers">
+              <th mat-header-cell *matHeaderCellDef>Teachers</th>
+              <td mat-cell *matCellDef="let subject" class="tw-capitalize">
+                {{ getTeacherCount(subject.id) | async }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="last_updated">
+              <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+              <td mat-cell *matCellDef="let subject" class="tw-capitalize">
+                <!-- {{ subject.updated_at?.toString() ?? ''}} -->
+                {{ getDateOfLastUpdate(subject.id) | async }}
+              </td>
+            </ng-container>
+    
+            <tr *matNoDataRow>
+            </tr>
+    
+            <tr mat-header-row *matHeaderRowDef="columns"></tr>
+            <tr mat-row *matRowDef="let row; columns: columns"></tr>
+          </table>
+        </app-panel>
     </app-content>
   </ng-container>
