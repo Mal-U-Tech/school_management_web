@@ -22,7 +22,7 @@
 
     <div class="tw-flex tw-flex-col tw-gap-4 tw-mt-2">
       <button mat-raised-button color="primary" type="button" [disabled]="form.invalid || (loading$ | async)" (click)="submit()">
-        <ng-container *ngIf="!(loading$ | async)">Login</ng-container>
+        <ng-container *ngIf="(loading$ | async) === false">Login</ng-container>
         <mat-progress-spinner *ngIf="loading$ | async" class="spinner" diameter="24" mode="indeterminate"></mat-progress-spinner>
       </button>
       <mat-error class="tw-text-center error" *ngIf="error$ | async">Incorrect email address or password.</mat-error>

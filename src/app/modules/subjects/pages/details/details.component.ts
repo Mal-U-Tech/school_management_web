@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectCurrentSchoolSubjects } from 'src/app/modules/schools/store/schools.selectors';
-import { selectCountOfSubjectClasses, selectCountOfSubjectStudents, selectCountOfSubjectTeachers, selectDateOfLastUpdate } from '../../store/subjects.selectors';
+import { selectCountOfSubjectClasses, selectCountOfSubjectStudents, selectCountOfSubjectTeachers } from '../../store/subjects.selectors';
 
 @Component({
   selector: 'app-details',
@@ -29,8 +29,5 @@ export class DetailsComponent {
   }
   getTeacherCount(subject : string){
     return this.store.select(selectCountOfSubjectTeachers(subject));
-  }
-  getDateOfLastUpdate(subject : string){
-    return this.store.select(selectDateOfLastUpdate(subject));
   }
 }

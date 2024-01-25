@@ -56,7 +56,7 @@
 
     <div class="tw-flex tw-flex-col tw-gap-4 tw-mt-3">
       <button (click)="submit()" type="button" color="primary" mat-raised-button [disabled]="form.invalid">
-        <ng-container *ngIf="!(loading$ | async)">Register</ng-container>
+        <ng-container *ngIf="(loading$ | async) === false">Register</ng-container>
         <mat-progress-spinner *ngIf="loading$ | async" class="spinner" diameter="24" mode="indeterminate"></mat-progress-spinner>
       </button>
 

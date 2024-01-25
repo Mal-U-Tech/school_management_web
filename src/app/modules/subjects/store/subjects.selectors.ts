@@ -18,8 +18,3 @@ export const selectCountOfSubjectTeachers = (subject : string) => createSelector
     return countOfTeachers;
 });
 
-export const selectDateOfLastUpdate = (subject : string) => createSelector(selectCurrentSchoolSubjects, (subjects) => {
-    let stringOfLastUpdated : string = '';
-    (subjects.filter((s) => s.id === subject)).forEach((item) => stringOfLastUpdated = item.updated_at.toString().slice(0, 10).replace(/-/g, '/'));
-    return stringOfLastUpdated;
-});
